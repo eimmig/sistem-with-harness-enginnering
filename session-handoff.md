@@ -3,19 +3,27 @@
 Preencha isto ao final de cada sessão de trabalho. A próxima sessão deve conseguir retomar lendo só este arquivo + `progress.md` + `feature_list.json`.
 
 ## Bloqueios
-- Nenhum. Todas as decisões de negócio pendentes (D-01, D-02, D-03, D-05) foram confirmadas pelo solicitante do desafio nesta sessão. `feature_list.json` já foi revisado para refletir as mudanças. Pronto para começar `F01`.
+- Nenhum. F01 implementado e passando. `feature_list.json` atualizado com evidência.
 
 ## Arquivos Tocados Nesta Sessão
-- `backend/pom.xml`: dependência `org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.3` adicionada (linha 3.x, compatível com Spring Boot 4 / Spring Framework 7).
-- `backend/src/main/java/.../config/OpenApiConfig.java`: criado (metadados básicos de `Info` para o Swagger UI).
-- `docs/vault/`: base de conhecimento Obsidian criada do zero — `Início.md`, `Visão Geral do Sistema.md`, `Glossário de Domínio.md`, `Arquitetura.md`, `Mapa de Funcionalidades.md` e uma nota por módulo futuro (`Hóspede`, `Categoria de Quarto`, `Quarto`, `Reserva`, `Diária`, `Taxa de Estacionamento`, `Check-in e Check-out.md`), ligadas por wikilinks.
-- `DECISIONS.md`: D-14 adicionada (justifica tratar Swagger/OpenAPI e Obsidian como infraestrutura, fora do fluxo de `feature_list.json`).
-- `README.md`: seções "Documentação da API (Swagger / OpenAPI)" e "Base de Conhecimento (Obsidian)" adicionadas; stack e árvore de diretórios atualizadas.
-- `progress.md`: itens concluídos desta sessão registrados.
-- `.gitignore`: `docs/vault/.obsidian/` ignorado (config local do app, não conteúdo).
-- Nenhuma mudança em `feature_list.json` — Swagger e Obsidian não viraram itens rastreados (decisão do usuário, ver D-14). `activeFeature` continua `null`, nenhuma funcionalidade de negócio implementada.
+- `backend/src/main/java/.../guest/Guest.java`: entidade JPA (`id`, `name`, `document`, `phone`).
+- `backend/src/main/java/.../guest/GuestRepository.java`: `JpaRepository<Guest, Long>`.
+- `backend/src/main/java/.../guest/GuestRequest.java` / `GuestResponse.java`: DTOs (records) — request com `@NotBlank` em nome/documento/telefone.
+- `backend/src/main/java/.../guest/GuestController.java`: `POST /api/guests`, persiste via `GuestRepository`, retorna 201.
+- `backend/src/test/java/.../guest/GuestControllerTest.java`: `@WebMvcTest` + `@MockitoBean` (não `@MockBean` — removido no Spring Boot 4/Spring 7, ver nota abaixo), 4 testes (criação + validação de cada campo obrigatório).
+- `backend/src/test/java/.../guest/GuestRepositoryTest.java`: `@DataJpaTest`, 2 testes (persistência + busca por id).
+- `feature_list.json`: F01 marcado `passing` com evidência (`./mvnw test -Dtest=GuestControllerTest,GuestRepositoryTest` → 6/6 verdes; suíte completa → 7/7 verdes).
+- `progress.md`: atualizado com o que foi concluído e o próximo passo.
+
+## Nota técnica importante para próximas features
+Spring Boot 4.1 renomeou pacotes de anotações de teste em relação ao 3.x — confirmado lendo os jars em `~/.m2` (não documentação, que ainda referencia os pacotes antigos):
+- `@WebMvcTest` → `org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest` (não mais `org.springframework.boot.test.autoconfigure.web.servlet`).
+- `@DataJpaTest` → `org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest`.
+- `@MockBean` foi **removido**; usar `@MockitoBean` de `org.springframework.test.context.bean.override.mockito.MockitoBean` (de `spring-test`).
+- Em testes `@WebMvcTest`, não há bean `ObjectMapper` garantido no contexto fatiado — instancie um `new ObjectMapper()` local no teste em vez de `@Autowired`.
 
 ## Próxima Sessão
 1. Ler `progress.md` (seção "Próximo Passo Recomendado") e `feature_list.json`.
-2. Rodar `./init.sh` para confirmar que o ambiente ainda está saudável (passou nesta sessão: backend compila/testa com Swagger incluso, frontend builda e os 3 testes passam).
-3. Marcar `F01` como `"status": "active"` em `feature_list.json` e começar a implementação — uma funcionalidade por vez, sem avançar para a próxima antes de `F01` estar `passing` com evidência registrada. Lembrar: código em inglês (D-13), domínio documentado em português. Ao criar o `GuestController`, ele já vai aparecer automaticamente no Swagger UI (`/swagger-ui.html`) sem configuração extra.
+2. Rodar `./init.sh` para confirmar que o ambiente ainda está saudável.
+3. Escolher a próxima funcionalidade `not_started` sem dependências pendentes — **F02** (busca de hóspede, depende só de F01/passing) ou **F03** (cadastro de categoria de quarto, sem dependências) são as candidatas óbvias. Marcar `active` em `feature_list.json`, implementar só ela, rodar `./mvnw test` e registrar evidência antes de considerar `passing`.
+4. Lembrar: código em inglês (D-13), domínio documentado em português; usar os pacotes de teste corretos (nota técnica acima) para não perder tempo com imports quebrados.

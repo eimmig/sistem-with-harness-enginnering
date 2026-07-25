@@ -1,13 +1,13 @@
 # Progresso do Projeto
 
 ## Última Atualização
-2026-07-25 — adicionada documentação de API (Swagger/OpenAPI via springdoc) e base de conhecimento Obsidian em `docs/vault/` (D-14); tratadas como infraestrutura, fora do fluxo de `feature_list.json`.
+2026-07-25 — F01 (Cadastro de hóspede) implementado e passando: entidade `Guest`, `GuestRepository`, `GuestController` (POST `/api/guests`), `GuestControllerTest` + `GuestRepositoryTest` verdes.
 
 ## Objetivo Atual
-Fase de **inicialização** concluída (nenhuma funcionalidade de negócio implementada ainda — por design, ver `CLAUDE.md`). Todas as decisões de negócio confirmadas, `feature_list.json` atualizado. Pronto para começar `F01`.
+Primeira funcionalidade de negócio (F01) concluída. Pronto para escolher a próxima funcionalidade `not_started` sem dependências pendentes (candidatas: F02, F03).
 
 ## Próximo Passo Recomendado
-1. Marcar `F01` como `active` em `feature_list.json` e começar a implementação (uma funcionalidade por vez).
+1. Escolher a próxima funcionalidade em `feature_list.json` (F02 depende só de F01, que já é `passing`; F03 não tem dependências) e marcar `active`.
 2. Re-rodar `./init.sh` antes de considerar cada funcionalidade concluída.
 
 ## Estado Atual
@@ -24,9 +24,10 @@ Fase de **inicialização** concluída (nenhuma funcionalidade de negócio imple
 - [x] Decisões de negócio D-01, D-02, D-03, D-05 confirmadas; D-12 e D-13 registradas; `feature_list.json` atualizado (F24/F25 adicionados, identificadores em inglês)
 - [x] Swagger/OpenAPI (springdoc 3.0.3) configurado no backend (`OpenApiConfig`), validado com `./mvnw test`; D-14 registrada
 - [x] Base de conhecimento Obsidian criada em `docs/vault/` (visão geral, glossário, arquitetura, mapa de funcionalidades, uma nota por módulo)
+- [x] **F01 — Cadastro de hóspede**: `Guest` (entidade), `GuestRepository`, `GuestRequest`/`GuestResponse` (DTOs com Bean Validation), `GuestController` (`POST /api/guests`); `GuestControllerTest` (4 testes) + `GuestRepositoryTest` (2 testes) passando; evidência registrada em `feature_list.json`.
 
 ## Em Andamento
-- (nenhum item ativo no momento — pronto para começar F01)
+- (nenhum item ativo no momento — F01 passou para `passing`)
 
 ## Bloqueado / Pendente de Confirmação
 - (nenhum bloqueio no momento)

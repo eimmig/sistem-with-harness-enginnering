@@ -22,4 +22,5 @@ Nome, documento, telefone (regra #12 em [[Visão Geral do Sistema]]).
 Um hóspede faz uma ou mais [[Reserva|reservas]]; cada reserva é o elo entre hóspede e [[Quarto]].
 
 ## Status atual
-Não implementado — nenhum controller/entidade existe ainda no código.
+- **F01 (cadastro) — implementado e `passing`.** `Guest` (entidade), `GuestRepository`, `GuestController` (`POST /api/guests`) em `backend/src/main/java/.../guest/`. Validação `@NotBlank` em nome/documento/telefone.
+- F02 (busca), F10/F11 (listagens), F13/F18/F19 (telas) — não implementados.

@@ -22,4 +22,4 @@ Vault do Obsidian com a visão de arquitetura e domínio do sistema de gestão d
 - [[Check-in e Check-out]]
 
 ## Estado atual
-Nenhuma funcionalidade de negócio foi implementada ainda (fase de inicialização concluída — ver [progress.md](../../progress.md)). Os módulos abaixo descrevem o *desenho pretendido*, não código existente.
+F01 (cadastro de hóspede) implementado e `passing` — primeira funcionalidade de negócio do sistema (ver [progress.md](../../progress.md)). As demais notas de módulo ainda descrevem o *desenho pretendido*, não código existente.

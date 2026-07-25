@@ -8,7 +8,7 @@ Espelha `feature_list.json`. Uma funcionalidade ativa por vez (WIP=1); `status: 
 
 | ID | Nome | Status | Módulo | Depende de |
 |---|---|---|---|---|
-| F01 | Cadastro de hóspede | not_started | [[Hóspede]] | — |
+| F01 | Cadastro de hóspede | **passing** | [[Hóspede]] | — |
 | F02 | Busca de hóspede | not_started | [[Hóspede]] | F01 |
 | F03 | Cadastro de categoria de quarto | not_started | [[Categoria de Quarto]] | — |
 | F04 | Configuração de preço por dia da semana | not_started | [[Categoria de Quarto]] | F03 |
