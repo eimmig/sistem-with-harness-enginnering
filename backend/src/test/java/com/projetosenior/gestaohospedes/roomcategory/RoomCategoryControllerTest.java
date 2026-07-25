@@ -1,6 +1,11 @@
 package com.projetosenior.gestaohospedes.roomcategory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.math.BigDecimal;
+import java.time.DayOfWeek;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
@@ -11,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -44,5 +50,63 @@ class RoomCategoryControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new RoomCategoryRequest(""))))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void updatePrices() throws Exception {
+        RoomCategory existing = new RoomCategory(1L, "Standard");
+        Map<DayOfWeek, BigDecimal> prices = allDaysPrices();
+        RoomCategory saved = new RoomCategory(1L, "Standard");
+        saved.setPrices(prices);
+        when(roomCategoryRepository.findById(1L)).thenReturn(Optional.of(existing));
+        when(roomCategoryRepository.save(any(RoomCategory.class))).thenReturn(saved);
+
+        mockMvc.perform(put("/api/room-categories/1/prices")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new RoomCategoryPricesRequest(prices))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.prices.MONDAY").value(120.0))
+                .andExpect(jsonPath("$.prices.SATURDAY").value(150.0));
+    }
+
+    @Test
+    void rejectsIncompleteWeekWhenUpdatingPrices() throws Exception {
+        Map<DayOfWeek, BigDecimal> prices = allDaysPrices();
+        prices.remove(DayOfWeek.SUNDAY);
+
+        mockMvc.perform(put("/api/room-categories/1/prices")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new RoomCategoryPricesRequest(prices))))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void rejectsNonPositivePriceWhenUpdatingPrices() throws Exception {
+        Map<DayOfWeek, BigDecimal> prices = allDaysPrices();
+        prices.put(DayOfWeek.MONDAY, BigDecimal.ZERO);
+
+        mockMvc.perform(put("/api/room-categories/1/prices")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new RoomCategoryPricesRequest(prices))))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void returnsNotFoundWhenUpdatingPricesOfUnknownCategory() throws Exception {
+        when(roomCategoryRepository.findById(99L)).thenReturn(Optional.empty());
+
+        mockMvc.perform(put("/api/room-categories/99/prices")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new RoomCategoryPricesRequest(allDaysPrices()))))
+                .andExpect(status().isNotFound());
+    }
+
+    private Map<DayOfWeek, BigDecimal> allDaysPrices() {
+        Map<DayOfWeek, BigDecimal> prices = new EnumMap<>(DayOfWeek.class);
+        for (DayOfWeek day : DayOfWeek.values()) {
+            boolean weekend = day == DayOfWeek.SATURDAY || day == DayOfWeek.SUNDAY;
+            prices.put(day, weekend ? new BigDecimal("150.00") : new BigDecimal("120.00"));
+        }
+        return prices;
     }
 }

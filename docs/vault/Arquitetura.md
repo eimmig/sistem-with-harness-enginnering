@@ -29,8 +29,9 @@ Controller → Service → Repository, padrão Spring Data JPA. Testes de contro
 - **D-12** — [[Quarto]] é entidade própria (número, categoria, status: `DISPONIVEL`/`SUJO`/`OCUPADO`).
 - **D-13** — código-fonte em inglês; ver [[Glossário de Domínio]].
 - **D-15** — busca de hóspede (`GET /api/guests`) usa filtros opcionais `name`/`document`/`phone` combinados por AND, partial match case-insensitive, via `Specification`/`JpaSpecificationExecutor` do Spring Data JPA. Ver [[Hóspede]].
+- **D-16** — preço por dia da semana da [[Categoria de Quarto]] é um `Map<DayOfWeek, BigDecimal>` embutido (`@ElementCollection`) em `RoomCategory`, não uma entidade própria; atualização via `PUT` exige as 7 diárias completas (sem update parcial de um único dia).
 
 ## Documentação da API
-Adicionado `springdoc-openapi-starter-webmvc-ui` (versão 3.0.3, compatível com Spring Boot 4 / Spring Framework 7) como infraestrutura — não é uma funcionalidade rastreada em `feature_list.json`. Configuração em `backend/src/main/java/com/projetosenior/gestaohospedes/config/OpenApiConfig.java`. A documentação se preenche automaticamente conforme os controllers de cada feature forem implementados; atualmente cobre `POST`/`GET /api/guests` (F01/F02) e `POST /api/room-categories` (F03).
+Adicionado `springdoc-openapi-starter-webmvc-ui` (versão 3.0.3, compatível com Spring Boot 4 / Spring Framework 7) como infraestrutura — não é uma funcionalidade rastreada em `feature_list.json`. Configuração em `backend/src/main/java/com/projetosenior/gestaohospedes/config/OpenApiConfig.java`. A documentação se preenche automaticamente conforme os controllers de cada feature forem implementados; atualmente cobre `POST`/`GET /api/guests` (F01/F02) e `POST /api/room-categories` + `PUT /api/room-categories/{id}/prices` (F03/F04).
 
 Ver também: [[Visão Geral do Sistema]], [[Mapa de Funcionalidades]].

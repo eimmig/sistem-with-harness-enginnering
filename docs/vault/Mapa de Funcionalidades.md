@@ -11,7 +11,7 @@ Espelha `feature_list.json`. Uma funcionalidade ativa por vez (WIP=1); `status: 
 | F01 | Cadastro de hóspede | **passing** | [[Hóspede]] | — |
 | F02 | Busca de hóspede | **passing** | [[Hóspede]] | F01 |
 | F03 | Cadastro de categoria de quarto | **passing** | [[Categoria de Quarto]] | — |
-| F04 | Configuração de preço por dia da semana | not_started | [[Categoria de Quarto]] | F03 |
+| F04 | Configuração de preço por dia da semana | **passing** | [[Categoria de Quarto]] | F03 |
 | F24 | Cadastro de quarto | not_started | [[Quarto]] | F03 |
 | F05 | Criação de reserva | not_started | [[Reserva]] | F01, F24 |
 | F06 | Cálculo de diária | not_started | [[Diária]] | F04, F05 |

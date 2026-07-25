@@ -20,4 +20,5 @@ Cada [[Quarto]] pertence a uma categoria. A categoria é a fonte do valor usado 
 
 ## Status atual
 - **F03 (cadastro) — implementado e `passing`.** `RoomCategory` (entidade: `id`, `name`), `RoomCategoryRepository`, `RoomCategoryController` (`POST /api/room-categories`) em `backend/src/main/java/.../roomcategory/`. Validação `@NotBlank` em nome.
-- F04 (preço por dia da semana), F14 (tela de configuração) — não implementados. O preço por categoria/dia da semana (regras #2 e #4) fica fora do escopo de F03 propositalmente — é responsabilidade de F04.
+- **F04 (preço por dia da semana) — implementado e `passing`.** `RoomCategory.prices` (`Map<DayOfWeek, BigDecimal>`, `@ElementCollection` em tabela auxiliar `room_category_price`), `RoomCategoryController#updatePrices` (`PUT /api/room-categories/{id}/prices`). Atualização exige as 7 chaves de `DayOfWeek` com valor positivo — não há update parcial de um único dia. Decisão de design em D-16 (ver [[Arquitetura]]).
+- F14 (tela de configuração) — não implementado.

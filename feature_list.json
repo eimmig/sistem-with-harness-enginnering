@@ -43,9 +43,9 @@
       "id": "F04",
       "name": "Configuracao de preco por dia da semana",
       "description": "Configurar preco por dia da semana (segunda a domingo) para cada categoria de quarto.",
-      "status": "not_started",
+      "status": "passing",
       "verification": "RoomCategoryControllerTest#updatePrices passando",
-      "evidence": null,
+      "evidence": "./mvnw test -Dtest=RoomCategoryControllerTest,RoomCategoryRepositoryTest em 2026-07-25: Tests run: 9, Failures: 0, Errors: 0 (BUILD SUCCESS). ./init.sh completo (backend + frontend) tambem passando.",
       "dependencies": ["F03"]
     },
     {

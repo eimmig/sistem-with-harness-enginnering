@@ -1,8 +1,12 @@
 package com.projetosenior.gestaohospedes.roomcategory;
 
-public record RoomCategoryResponse(Long id, String name) {
+import java.math.BigDecimal;
+import java.time.DayOfWeek;
+import java.util.Map;
+
+public record RoomCategoryResponse(Long id, String name, Map<DayOfWeek, BigDecimal> prices) {
 
     public static RoomCategoryResponse from(RoomCategory roomCategory) {
-        return new RoomCategoryResponse(roomCategory.getId(), roomCategory.getName());
+        return new RoomCategoryResponse(roomCategory.getId(), roomCategory.getName(), roomCategory.getPrices());
     }
 }
