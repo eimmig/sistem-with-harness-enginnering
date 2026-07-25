@@ -14,8 +14,8 @@ Sistema de gestão de hóspedes para um hotel: cadastro de hóspedes, reservas, 
 - **Frontend**: Angular 19, Angular Material, RxJS, Karma + Jasmine (padrão do Angular CLI).
 - **Banco**: PostgreSQL local via Docker Compose (`docker-compose.yml` na raiz).
 
-## Startup Workflow
-**Before writing code**, rode o entrypoint único de verificação a partir da raiz do repositório:
+## Fluxo de Inicialização
+Antes de escrever qualquer código, rode o entrypoint único de verificação a partir da raiz do repositório:
 ```sh
 ./init.sh
 ```
@@ -43,21 +43,20 @@ A especificação tem pontos que não respondem sozinhos — em vez de travar, a
 - **[D-02]** O preço aplicado à diária de fim de semana (bloco sábado→segunda) é o valor configurado para "Sábado" na grade de preços da categoria; o valor de "Domingo" fica registrado mas não é usado isoladamente para cobrança, já que domingo nunca inicia uma diária própria dentro dessa regra.
 - **[D-03]** Taxa de estacionamento na diária de fim de semana é cobrada uma única vez (R$ 20,00), decorrência direta de D-02.
 
-## Scope / Escopo
-- **One feature at a time** — trabalhe em **uma funcionalidade ativa por vez** (`status: "active"` em `feature_list.json`, WIP=1). Termine e verifique antes de começar a próxima.
+## Escopo
+- Trabalhe em **uma funcionalidade ativa por vez** (`status: "active"` em `feature_list.json`, WIP=1). Termine e verifique antes de começar a próxima.
 - Não aproveite a implementação de uma funcionalidade para "já que estou aqui" mexer em outra fora do escopo dela.
 - Reserva referencia uma `CategoriaQuarto`, não um quarto físico individual — controle de inventário/numeração de quartos está fora do escopo pedido (ver D-05 em `DECISIONS.md`).
 - Dependências entre funcionalidades estão no campo `dependencies` de cada item em `feature_list.json` — não inicie um item cujas dependências ainda não estejam `passing`.
 
-## Definition of Done
-Uma funcionalidade só é considerada **done only when** ela passa no comando de verificação listado no campo `verification` do item correspondente em `feature_list.json`, e a evidência (comando + resultado) é registrada no campo `evidence` — nunca quando "o código foi escrito e parece certo".
+## Definição de Pronto
+Uma funcionalidade só é considerada concluída quando passa no comando de verificação listado no campo `verification` do item correspondente em `feature_list.json`, e a evidência (comando + resultado) é registrada no campo `evidence` — nunca quando "o código foi escrito e parece certo".
 
 ## Convenções
 - Domínio modelado em português (`Hospede`, `Reserva`, `CategoriaQuarto`); nomes técnicos seguem convenção padrão Java/Angular.
-- Arquivos de harness (`AGENTS.md`, `feature_list.json`, `progress.md`, `session-handoff.md`) usam títulos bilíngues de propósito — texto livre em português, âncoras estruturais em inglês para ferramentas de validação.
 
-## End of Session Checklist
-**Before ending** uma sessão, garanta um estado limpo e restartable:
+## Checklist de Encerramento de Sessão
+Antes de encerrar uma sessão, garanta um estado limpo e reiniciável:
 - [ ] `./init.sh` passando (build + testes de backend e frontend)
 - [ ] `feature_list.json` e `progress.md` atualizados com o estado real
 - [ ] `session-handoff.md` atualizado (bloqueios, arquivos tocados, próximo passo)

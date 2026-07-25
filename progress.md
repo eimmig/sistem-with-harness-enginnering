@@ -1,12 +1,12 @@
-# Progress Log / Registro de Progresso
+# Progresso do Projeto
 
-## Last Updated
+## Última Atualização
 2026-07-25 — reconciliação do harness com o `skills/harness-creator` do repositório do curso (`init.sh`, `feature_list.json`, `session-handoff.md`).
 
-## Current Objective
+## Objetivo Atual
 Fase de **inicialização** concluída (nenhuma funcionalidade de negócio implementada ainda — por design, ver `AGENTS.md`). Aguardando confirmação das suposições de negócio (`DECISIONS.md`: D-01, D-02, D-03) antes de começar `F01`.
 
-## Recommended Next Step
+## Próximo Passo Recomendado
 1. Confirmar (ou ajustar) as suposições D-01, D-02 e D-03 com o solicitante do desafio.
 2. Rodar `./init.sh` para revalidar o ambiente do zero.
 3. Marcar `F01` como `active` em `feature_list.json` e começar a implementação (uma funcionalidade por vez).
