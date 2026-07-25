@@ -1,4 +1,4 @@
-# AGENTS.md
+# CLAUDE.md
 
 ## Visão Geral
 Sistema de gestão de hóspedes para um hotel: cadastro de hóspedes, reservas, check-in e check-out, com cálculo automático de diárias, taxa de estacionamento e taxa de atraso na saída.
@@ -24,10 +24,10 @@ Isso compila e testa o backend (via H2, não depende do Docker) e faz build + te
 ## Restrições Obrigatórias (regras de negócio)
 1. Uma "diária" padrão vai do check-in às 14h de um dia ao check-out até as 12h do dia seguinte.
 2. Diária de dia útil (segunda a sexta) tem valor configurável por categoria de quarto (valor sugerido de partida: R$ 120,00).
-3. A diária de fim de semana é um **bloco único**: começa às 14h de sábado e termina às 12h de segunda — cobre sábado e domingo como **uma única diária**, não duas (valor sugerido de partida: R$ 180,00).
+3. A diária de fim de semana é composta por três diárias individuais: sexta 14h→sábado 12h, sábado 14h→domingo 12h e domingo 14h→segunda 12h; essas três diárias devem ser somadas no fechamento.
 4. O valor da diária é **configurável por categoria de quarto e por dia da semana**, através de uma tela de configuração — não é uma constante fixa no código.
 5. Taxa de estacionamento (se o hóspede tiver carro e usar vaga): R$ 15,00 em diária de dia útil, R$ 20,00 em diária de fim de semana.
-6. Check-in só é permitido a partir das 14h00; antes disso o sistema deve emitir um alerta.
+6. Check-in a partir das 14h00 é permitido diretamente; antes disso, o sistema deve exibir um aviso e pedir confirmação explícita do atendente antes de prosseguir. Em qualquer horário, o check-in só pode ser realizado se o quarto estiver com status `DISPONIVEL` (ver D-01/D-12 em `DECISIONS.md`).
 7. Check-out até as 12h00 sem custo adicional; após esse horário, cobra-se 50% do valor da diária vigente (respeitando dia útil/fim de semana).
 8. No checkout, exibir o detalhamento completo do valor total antes de confirmar (diárias + estacionamento + eventual taxa de atraso).
 9. Buscar hóspedes por nome, documento e telefone.
@@ -36,24 +36,17 @@ Isso compila e testa o backend (via H2, não depende do Docker) e faz build + te
 12. Cadastro de hóspede: nome, documento, telefone (mínimo).
 13. Testes unitários obrigatórios nos dois lados (JUnit no backend; framework de testes do Angular CLI no frontend) cobrindo requisitos funcionais e regras de negócio.
 
-## Suposições Assumidas (a confirmar com o solicitante do desafio)
-A especificação tem pontos que não respondem sozinhos — em vez de travar, assumimos uma interpretação e registramos aqui e em `DECISIONS.md`.
-
-- **[D-01]** Alerta de check-in antes das 14h é um aviso não bloqueante (o atendente confirma e pode prosseguir mesmo assim).
-- **[D-02]** O preço aplicado à diária de fim de semana (bloco sábado→segunda) é o valor configurado para "Sábado" na grade de preços da categoria; o valor de "Domingo" fica registrado mas não é usado isoladamente para cobrança, já que domingo nunca inicia uma diária própria dentro dessa regra.
-- **[D-03]** Taxa de estacionamento na diária de fim de semana é cobrada uma única vez (R$ 20,00), decorrência direta de D-02.
-
 ## Escopo
 - Trabalhe em **uma funcionalidade ativa por vez** (`status: "active"` em `feature_list.json`, WIP=1). Termine e verifique antes de começar a próxima.
 - Não aproveite a implementação de uma funcionalidade para "já que estou aqui" mexer em outra fora do escopo dela.
-- Reserva referencia uma `CategoriaQuarto`, não um quarto físico individual — controle de inventário/numeração de quartos está fora do escopo pedido (ver D-05 em `DECISIONS.md`).
+- Reserva referencia um `Quarto` específico (não apenas uma `CategoriaQuarto`); cada quarto tem número, categoria e status (`DISPONIVEL`, `SUJO`, `OCUPADO`) — ver D-05 e D-12 em `DECISIONS.md`.
 - Dependências entre funcionalidades estão no campo `dependencies` de cada item em `feature_list.json` — não inicie um item cujas dependências ainda não estejam `passing`.
 
 ## Definição de Pronto
 Uma funcionalidade só é considerada concluída quando passa no comando de verificação listado no campo `verification` do item correspondente em `feature_list.json`, e a evidência (comando + resultado) é registrada no campo `evidence` — nunca quando "o código foi escrito e parece certo".
 
 ## Convenções
-- Domínio modelado em português (`Hospede`, `Reserva`, `CategoriaQuarto`); nomes técnicos seguem convenção padrão Java/Angular.
+- Código-fonte (classes, variáveis, constantes, mensagens de erro/validação) em inglês — ver D-13 em `DECISIONS.md`. A documentação do projeto (este arquivo, `DECISIONS.md`, `feature_list.json`) continua em português; é só o código que muda.
 
 ## Checklist de Encerramento de Sessão
 Antes de encerrar uma sessão, garanta um estado limpo e reiniciável:

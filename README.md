@@ -60,7 +60,7 @@ npm start                 # sobe em http://localhost:4200
 ## Estrutura do Repositório
 ```
 projeto-senior/
-├── AGENTS.md              # regras de negócio, stack e convenções do projeto
+├── CLAUDE.md              # regras de negócio, stack e convenções do projeto
 ├── DECISIONS.md           # decisões de arquitetura e suposições assumidas sobre pontos ambíguos do PDF
 ├── progress.md            # estado atual do trabalho
 ├── feature_list.json      # backlog de funcionalidades, com verificação e dependências por item
@@ -73,7 +73,7 @@ projeto-senior/
 
 ## Observações Importantes
 
-A especificação original tem alguns pontos que não respondem sozinhos (ex.: como a diária de fim de semana — que cobre sábado e domingo como um bloco único de 14h de sábado a 12h de segunda — interage com a taxa de estacionamento e com a tela de configuração de preço por dia da semana). As suposições assumidas para seguir em frente, com a motivação de cada uma, estão documentadas em [`DECISIONS.md`](./DECISIONS.md).
+A especificação original tem alguns pontos que não respondem sozinhos (ex.: como a estadia de fim de semana — composta por três diárias individuais: sexta 14h→sábado 12h, sábado 14h→domingo 12h e domingo 14h→segunda 12h — interage com a taxa de estacionamento e com a tela de configuração de preço por dia da semana). As suposições assumidas para seguir em frente, com a motivação de cada uma, estão documentadas em [`DECISIONS.md`](./DECISIONS.md).
 
 ## Testes
 

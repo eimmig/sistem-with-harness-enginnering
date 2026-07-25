@@ -7,8 +7,9 @@
     "status possiveis: not_started | active | blocked | passing"
   ],
   "notes": [
-    "F06 e F07 sao as funcionalidades de maior risco (mais regras de negocio implicitas) -- devem ganhar mais casos de teste do que as demais, cobrindo especialmente a fronteira sexta->sabado->domingo->segunda.",
-    "Itens do frontend dependem dos endpoints correspondentes do backend ja estarem 'passing'."
+    "F06 e F07 sao as funcionalidades de maior risco (mais regras de negocio implicitas) -- devem ganhar mais casos de teste do que as demais, cobrindo especialmente a transicao entre dias com precos diferentes (sexta/sabado/domingo/segunda).",
+    "Itens do frontend dependem dos endpoints correspondentes do backend ja estarem 'passing'.",
+    "Identificadores de codigo (classes, variaveis, constantes, mensagens de erro, nomes de arquivo) devem ser em ingles (ver DECISIONS.md D-13) -- por isso o campo 'verification' ja usa nomes de classe/arquivo em ingles (ex.: GuestControllerTest, room-form.component.spec.ts). Os campos 'name' e 'description' de cada feature continuam em portugues (sao documentacao do backlog, nao codigo). Glossario de traducao do dominio em DECISIONS.md D-13."
   ],
   "features": [
     {
@@ -16,7 +17,7 @@
       "name": "Cadastro de hospede",
       "description": "Cadastrar hospede (nome, documento, telefone) de forma persistente.",
       "status": "not_started",
-      "verification": "HospedeControllerTest + HospedeRepositoryTest passando",
+      "verification": "GuestControllerTest + GuestRepositoryTest passando",
       "evidence": null,
       "dependencies": []
     },
@@ -25,7 +26,7 @@
       "name": "Busca de hospede",
       "description": "Buscar hospede por nome, documento ou telefone.",
       "status": "not_started",
-      "verification": "HospedeControllerTest#buscaPorFiltro passando",
+      "verification": "GuestControllerTest#searchByFilter passando",
       "evidence": null,
       "dependencies": ["F01"]
     },
@@ -34,7 +35,7 @@
       "name": "Cadastro de categoria de quarto",
       "description": "Cadastrar categoria de quarto (ex.: Standard, Luxo).",
       "status": "not_started",
-      "verification": "CategoriaQuartoControllerTest passando",
+      "verification": "RoomCategoryControllerTest passando",
       "evidence": null,
       "dependencies": []
     },
@@ -43,52 +44,61 @@
       "name": "Configuracao de preco por dia da semana",
       "description": "Configurar preco por dia da semana (segunda a domingo) para cada categoria de quarto.",
       "status": "not_started",
-      "verification": "CategoriaQuartoControllerTest#atualizaPrecos passando",
+      "verification": "RoomCategoryControllerTest#updatePrices passando",
+      "evidence": null,
+      "dependencies": ["F03"]
+    },
+    {
+      "id": "F24",
+      "name": "Cadastro de quarto",
+      "description": "Cadastrar quarto (numero, categoria, status) e permitir alterar o status (DISPONIVEL, SUJO, OCUPADO) -- ver DECISIONS.md D-05/D-12.",
+      "status": "not_started",
+      "verification": "RoomControllerTest passando",
       "evidence": null,
       "dependencies": ["F03"]
     },
     {
       "id": "F05",
       "name": "Criacao de reserva",
-      "description": "Criar reserva (hospede + categoria + data de entrada/saida previstas).",
+      "description": "Criar reserva (hospede + quarto especifico + data de entrada/saida previstas) -- ver DECISIONS.md D-05.",
       "status": "not_started",
-      "verification": "ReservaControllerTest#criarReserva passando",
+      "verification": "ReservationControllerTest#createReservation passando",
       "evidence": null,
-      "dependencies": ["F01", "F03"]
+      "dependencies": ["F01", "F24"]
     },
     {
       "id": "F06",
       "name": "Calculo de diaria",
-      "description": "Calcular o valor da(s) diaria(s) de uma reserva, aplicando a regra de bloco unico do fim de semana (ver DECISIONS.md D-02).",
+      "description": "Calcular o valor da(s) diaria(s) de uma reserva somando o preco de cada dia individual (segunda a domingo) conforme a categoria do quarto reservado -- fim de semana nao e um bloco especial (ver DECISIONS.md D-02).",
       "status": "not_started",
-      "verification": "DiariaServiceTest passando (casos: so dia util, so fim de semana, atravessando os dois)",
+      "verification": "DailyRateServiceTest passando (casos: so dia util, so fim de semana, atravessando os dois)",
       "evidence": null,
       "dependencies": ["F04", "F05"]
     },
     {
       "id": "F07",
       "name": "Calculo de taxa de estacionamento",
-      "description": "Calcular taxa de estacionamento por diaria (dia util vs. fim de semana; cobranca unica no bloco de fim de semana -- ver DECISIONS.md D-03).",
+      "description": "Calcular taxa de estacionamento cobrada por dia de estadia, usando o valor do dia util ou fim de semana conforme o dia (ver DECISIONS.md D-03).",
       "status": "not_started",
-      "verification": "EstacionamentoServiceTest passando",
+      "verification": "ParkingFeeServiceTest passando",
       "evidence": null,
       "dependencies": ["F04", "F05"]
     },
     {
       "id": "F08",
       "name": "Check-in",
-      "description": "Realizar check-in de uma reserva; emitir alerta nao bloqueante (ver DECISIONS.md D-01) se antes das 14h.",
+      "description": "Realizar check-in de uma reserva; exigir confirmacao do atendente (ver DECISIONS.md D-01) se antes das 14h; bloquear o check-in se o quarto nao estiver com status DISPONIVEL.",
       "status": "not_started",
-      "verification": "ReservaControllerTest#checkinAntesDas14h + #checkinValido passando",
+      "verification": "ReservationControllerTest#checkInBefore2pm + #checkInValid + #checkInRoomUnavailable passando",
       "evidence": null,
-      "dependencies": ["F06", "F07"]
+      "dependencies": ["F06", "F07", "F24"]
     },
     {
       "id": "F09",
       "name": "Check-out",
       "description": "Realizar check-out de uma reserva; cobrar 50% de taxa extra se apos 12h; retornar detalhamento do total.",
       "status": "not_started",
-      "verification": "ReservaControllerTest#checkoutComAtraso + #checkoutDetalhamento passando",
+      "verification": "ReservationControllerTest#checkOutLate + #checkOutBreakdown passando",
       "evidence": null,
       "dependencies": ["F06", "F07", "F08"]
     },
@@ -97,7 +107,7 @@
       "name": "Listagem de hospedes no hotel",
       "description": "Listar hospedes atualmente no hotel (check-in feito, sem check-out).",
       "status": "not_started",
-      "verification": "HospedeControllerTest#hospedesNoHotel passando",
+      "verification": "GuestControllerTest#guestsInHotel passando",
       "evidence": null,
       "dependencies": ["F08"]
     },
@@ -106,7 +116,7 @@
       "name": "Listagem de hospedes sem check-in",
       "description": "Listar hospedes com reserva e sem check-in realizado.",
       "status": "not_started",
-      "verification": "HospedeControllerTest#hospedesSemCheckin passando",
+      "verification": "GuestControllerTest#guestsWithoutCheckIn passando",
       "evidence": null,
       "dependencies": ["F05"]
     },
@@ -115,7 +125,7 @@
       "name": "Tela de cadastro/busca de hospedes",
       "description": "Tela de cadastro e busca de hospedes.",
       "status": "not_started",
-      "verification": "hospede-form.component.spec.ts + hospede-busca.component.spec.ts passando",
+      "verification": "guest-form.component.spec.ts + guest-search.component.spec.ts passando",
       "evidence": null,
       "dependencies": ["F01", "F02"]
     },
@@ -124,25 +134,34 @@
       "name": "Tela de configuracao de precos",
       "description": "Tela de configuracao de precos por categoria/dia da semana.",
       "status": "not_started",
-      "verification": "categoria-preco.component.spec.ts passando",
+      "verification": "room-category-price.component.spec.ts passando",
       "evidence": null,
       "dependencies": ["F03", "F04"]
     },
     {
+      "id": "F25",
+      "name": "Tela de gestao de quartos",
+      "description": "Tela de cadastro de quartos e alteracao de status (DISPONIVEL, SUJO, OCUPADO).",
+      "status": "not_started",
+      "verification": "room-form.component.spec.ts passando",
+      "evidence": null,
+      "dependencies": ["F24"]
+    },
+    {
       "id": "F15",
       "name": "Tela de criacao de reserva",
-      "description": "Tela de criacao de reserva.",
+      "description": "Tela de criacao de reserva, com selecao de um quarto especifico.",
       "status": "not_started",
-      "verification": "reserva-form.component.spec.ts passando",
+      "verification": "reservation-form.component.spec.ts passando",
       "evidence": null,
-      "dependencies": ["F05"]
+      "dependencies": ["F05", "F25"]
     },
     {
       "id": "F16",
       "name": "Tela de check-in",
-      "description": "Tela de check-in, exibindo alerta quando antes das 14h.",
+      "description": "Tela de check-in, exibindo aviso e pedindo confirmacao do atendente quando antes das 14h.",
       "status": "not_started",
-      "verification": "checkin.component.spec.ts passando",
+      "verification": "check-in.component.spec.ts passando",
       "evidence": null,
       "dependencies": ["F08"]
     },
@@ -151,7 +170,7 @@
       "name": "Tela de check-out",
       "description": "Tela de check-out, exibindo detalhamento do total antes de confirmar.",
       "status": "not_started",
-      "verification": "checkout.component.spec.ts passando",
+      "verification": "check-out.component.spec.ts passando",
       "evidence": null,
       "dependencies": ["F09"]
     },
@@ -160,7 +179,7 @@
       "name": "Lista de hospedes no hotel (frontend)",
       "description": "Lista de hospedes atualmente no hotel.",
       "status": "not_started",
-      "verification": "hospedes-no-hotel.component.spec.ts passando",
+      "verification": "guests-in-hotel.component.spec.ts passando",
       "evidence": null,
       "dependencies": ["F10"]
     },
@@ -169,7 +188,7 @@
       "name": "Lista de hospedes sem check-in (frontend)",
       "description": "Lista de hospedes com reserva sem check-in.",
       "status": "not_started",
-      "verification": "hospedes-sem-checkin.component.spec.ts passando",
+      "verification": "guests-without-checkin.component.spec.ts passando",
       "evidence": null,
       "dependencies": ["F11"]
     },

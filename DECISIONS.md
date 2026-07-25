@@ -1,37 +1,32 @@
 # Decisões de Design
 
-## [D-01] 2026-07-25 — Alerta de check-in antes das 14h é não bloqueante
-- **Motivo**: o PDF diz "o sistema deverá emitir um alerta", não "impedir o check-in". Interpretação adotada: alerta de confirmação — o atendente vê o aviso e pode prosseguir mesmo assim.
+## [D-01] 2026-07-25 (revisado 2026-07-25) — Check-in antes das 14h exige confirmação do atendente; quarto precisa estar disponível
+- **Motivo**: o sistema deve exibir um aviso quando o check-in for solicitado antes das 14h e perguntar explicitamente ao atendente se deseja prosseguir mesmo assim (confirmação ativa, não apenas um aviso informativo). Além disso, o check-in só pode ser efetuado se o quarto estiver com status `DISPONIVEL` (ver D-12) — independentemente do horário, quarto `SUJO` ou `OCUPADO` bloqueia o check-in.
 - **Alternativa descartada**: bloquear completamente o check-in antes das 14h, sem opção de override.
-- **Status**: suposição, a confirmar com o solicitante do desafio.
+- **Status**: decisão confirmada pelo solicitante do desafio.
 
-## [D-02] 2026-07-25 — Preço da diária de fim de semana usa o valor configurado para "Sábado"
-- **Motivo**: a diária de fim de semana é um bloco único (sábado 14h → segunda 12h), mas a tela de configuração pedida permite preço por dia individual (segunda a domingo). Como domingo nunca inicia uma diária própria dentro dessa regra, adotamos o preço configurado para sábado como o preço da diária combinada.
-- **Alternativa descartada**: criar um campo de preço "fim de semana" separado dos 7 dias da semana — mais simples de implementar, porém contraria o pedido explícito de "configurar o valor de cada dia da semana".
-- **Status**: suposição, a confirmar.
+## [D-02] 2026-07-25 (revisado 2026-07-25) — Diária de fim de semana usa o mesmo cálculo da diária de dia útil; só o valor muda
+- **Motivo**: não há tratamento especial para o fim de semana como bloco. Cada diária (segunda a domingo) é calculada da mesma forma; a única diferença é o valor, configurável por categoria e por dia da semana na tela de configuração (ver restrição #4). O total da estadia é o somatório das diárias individuais de cada dia.
+- **Alternativa descartada**: tratar o fim de semana como uma diária única combinada (sexta a segunda) com regra própria — rejeitada porque o fim de semana não é um caso especial de cálculo, apenas dias com preço diferente.
+- **Status**: decisão confirmada pelo solicitante do desafio.
 
-## [D-03] 2026-07-25 — Taxa de estacionamento no fim de semana é cobrada uma única vez
-- **Motivo**: decorre diretamente de D-02 — se sábado+domingo formam uma única diária, a taxa de estacionamento correspondente (R$ 20,00) também é cobrada uma única vez para o bloco inteiro, não por noite.
-- **Status**: suposição, a confirmar.
+## [D-03] 2026-07-25 (revisado 2026-07-25) — Taxa de estacionamento é cobrada por dia
+- **Motivo**: consequência de D-02 — como não existe mais bloco de fim de semana, a taxa de estacionamento é cobrada uma vez por dia de estadia, usando o valor correspondente ao dia (dia útil ou fim de semana, conforme restrição #5).
+- **Status**: decisão confirmada pelo solicitante do desafio.
 
 ## [D-04] 2026-07-25 — Java 17 como versão alvo (compatível com "Java 11 ou superior")
 - **Motivo**: Spring Boot 3.x (linha atual estável) exige Java 17+. A JDK 25 está instalada localmente; o `pom.xml` fixa `<java.version>17</java.version>` para manter compatibilidade ampla com ambientes de avaliação que talvez não tenham a JDK mais recente, mesmo compilando localmente com uma JDK mais nova.
 
-## [D-05] 2026-07-25 — Reserva referencia uma CategoriaQuarto, não um quarto físico individual
-- **Motivo**: a especificação não pede controle de disponibilidade de quartos individuais, numeração de quartos nem inventário — apenas preço configurável por categoria e por dia da semana. Modelar quartos físicos individuais seria escopo não solicitado.
-- **Status**: decisão de escopo (não é uma suposição sobre requisito ambíguo).
+## [D-05] 2026-07-25 (revisado 2026-07-25) — Reserva referencia um Quarto específico, não uma CategoriaQuarto
+- **Motivo**: a reserva é alocada em um quarto físico específico, não apenas em uma categoria. Cada quarto tem vínculo com uma `CategoriaQuarto` (ver D-12), e é dessa categoria que vem o valor da diária.
+- **Alternativa descartada**: reserva referenciando só a categoria, sem quarto físico — decisão original de escopo, revertida porque o solicitante confirmou que o controle de quartos individuais faz parte do escopo.
+- **Status**: decisão confirmada pelo solicitante do desafio.
 
 ## [D-06] 2026-07-25 — Testes de frontend com Karma + Jasmine (padrão do Angular CLI)
 - **Motivo**: zero configuração adicional — já vem pronto com `ng new`, e o Chrome está instalado localmente para rodar os testes em modo headless. A alternativa (Jest) reduziria a dependência de navegador, mas exigiria configuração extra não pedida pelo desafio.
 
 ## [D-07] 2026-07-25 — Monorepo único (backend/ + frontend/) em vez de dois repositórios
 - **Motivo**: a especificação pede "criar repositório em um repositório GIT" (singular) e um único link para avaliação. Um monorepo simplifica isso sem ferir nenhum requisito técnico.
-
-## [D-11] 2026-07-25 — Harness reconciliado com `skills/harness-creator` do repositório do curso
-- **Motivo**: o curso que motivou este projeto (`learn-harness-engineering`) inclui uma skill própria com um script de validação (`validate-harness.mjs`) que pontua o harness em 5 subsistemas. A primeira versão do harness deste projeto (`AGENTS.md` + `FEATURES.md` + `PROGRESS.md` + `DECISIONS.md`, sem `init.sh` nem `session-handoff.md`) pontuou 28/100 — não porque a substância estivesse errada, mas porque faltavam artefatos reais que o validador (corretamente) exige: um entrypoint de verificação executável e um arquivo de handoff dedicado.
-- **Mudanças**: `FEATURES.md` (tabela Markdown) foi substituído por `feature_list.json` (schema com `id`/`name`/`description`/`status`/`verification`/`evidence`/`dependencies`) para evitar ter duas fontes da mesma informação; `PROGRESS.md` virou `progress.md` (nome exato esperado pela ferramenta, e portável entre sistemas de arquivos case-sensitive); `session-handoff.md` e `init.sh` foram criados do zero.
-- **Alternativa descartada**: manter os dois formatos (Markdown para humanos + JSON para a ferramenta) em paralelo — rejeitada por violar o princípio de fonte única da verdade (uma tabela e um JSON descrevendo o mesmo backlog inevitavelmente divergem com o tempo).
-- **Atualização**: os títulos bilíngues que `AGENTS.md`, `progress.md` e `session-handoff.md` ganharam nessa reconciliação (ex.: "Startup Workflow", "Definition of Done") existiam só para o `validate-harness.mjs` reconhecer as seções por substring em inglês — o validador foi usado como teste pontual, não como requisito do desafio. Foram revertidos para português puro logo em seguida; os artefatos em si (`init.sh`, `feature_list.json`, `session-handoff.md`) permanecem, só o texto voltou a ser 100% português. Rodar `validate-harness.mjs` de novo após essa reversão volta a mostrar uma pontuação mais baixa nesses subsistemas — esperado e aceito.
 
 ## [D-09] 2026-07-25 — PostgreSQL do Docker exposto na porta 5433, não 5432
 - **Motivo**: durante a validação da inicialização, descobrimos um PostgreSQL nativo já instalado e escutando na porta 5432 desta máquina, disputando a porta com o container Docker. O backend acabava conectando no Postgres nativo (sem o banco `gestao_hospedes`) em vez do container, causando `FATAL: banco de dados "gestao_hospedes" não existe`. Ambientes de desenvolvedores/avaliadores frequentemente têm um Postgres local instalado, então evitar a porta padrão é mais robusto. `docker-compose.yml` mapeia `5433:5432`; `application.properties` aponta para `localhost:5433`.
@@ -41,5 +36,25 @@
 - **Motivo**: o linter do editor sinalizou a senha fixa `postgres` em `application.properties` como segredo hardcoded. Trocado para `${DB_USER:postgres}` / `${DB_PASSWORD:postgres}` (Spring) e `${DB_USER:-postgres}` / `${DB_PASSWORD:-postgres}` (docker-compose) — mantém o valor padrão funcionando sem configuração extra localmente, mas permite sobrescrever via variável de ambiente em outros ambientes, sem precisar versionar nenhuma credencial real.
 
 ## [D-08] 2026-07-25 — Spring Boot 4.1.0 (versão atual do Spring Initializr) e H2 para testes
-- **Motivo**: o Spring Initializr gerou o projeto na versão estável atual, Spring Boot 4.1.0 (compatível com "Java 11 ou superior" e mais recente que a linha 3.x mencionada inicialmente no `AGENTS.md` — corrigido lá).
+- **Motivo**: o Spring Initializr gerou o projeto na versão estável atual, Spring Boot 4.1.0 (compatível com "Java 11 ou superior" e mais recente que a linha 3.x mencionada inicialmente no `CLAUDE.md` — corrigido lá).
 - **Testes**: `src/main/resources/application.properties` aponta para o PostgreSQL do `docker-compose.yml`; `src/test/resources/application.properties` aponta para H2 em memória. Isso permite que `./mvnw test` funcione sem depender do Docker estar rodando — o Postgres real só é necessário para `spring-boot:run`. Testes de integração mais realistas com Postgres via Testcontainers ficam como evolução futura, não implementada nesta fase de inicialização (evitar overengineering do esqueleto).
+
+## [D-12] 2026-07-25 — Quarto como entidade própria (numero, categoria, status)
+- **Motivo**: consequência de D-05 — como a reserva agora referencia um quarto específico, o quarto precisa existir como entidade própria, com número, vínculo com `CategoriaQuarto` (de onde vem o valor da diária) e status.
+- **Status possíveis do quarto**: `DISPONIVEL`, `SUJO`, `OCUPADO`.
+- **Status**: decisão confirmada pelo solicitante do desafio.
+
+## [D-13] 2026-07-25 — Código-fonte (identificadores, mensagens de erro) em inglês
+- **Motivo**: solicitação explícita do solicitante do desafio — apesar do domínio do negócio ser descrito em português na documentação (este arquivo, `CLAUDE.md`, `feature_list.json`), o código-fonte (classes, variáveis, constantes, mensagens de erro/validação, nomes de arquivo) deve ser escrito em inglês. Vale também para nomes de classes de teste e arquivos `.spec.ts` referenciados no campo `verification` de `feature_list.json`.
+- **Impacto**: substitui a convenção anterior de nomear o domínio em português (`Hospede`, `Reserva`, `CategoriaQuarto`) — convenção atualizada em `CLAUDE.md`.
+- **Glossário de domínio** (para manter consistência entre sessões):
+  | Português | Inglês |
+  |---|---|
+  | Hóspede | `Guest` |
+  | Reserva | `Reservation` |
+  | Categoria de Quarto / `CategoriaQuarto` | `RoomCategory` |
+  | Quarto | `Room` |
+  | Diária | `DailyRate` |
+  | Taxa de estacionamento | `ParkingFee` |
+  | Check-in / Check-out | `CheckIn` / `CheckOut` (já em inglês) |
+- **Status**: decisão confirmada pelo solicitante do desafio.
