@@ -10,6 +10,7 @@ Sistema de gestão de hóspedes para um hotel: cadastro de hóspedes, reservas, 
 | Camada | Tecnologia |
 |---|---|
 | Backend | Java 17, Spring Boot 4.1.x, Spring Data JPA, PostgreSQL, Bean Validation, Maven |
+| Documentação da API | springdoc-openapi (Swagger UI) |
 | Testes backend | JUnit 5 + Mockito (`spring-boot-starter-test`), H2 em memória para rodar sem depender do Docker |
 | Frontend | Angular 19, Angular Material, RxJS |
 | Testes frontend | Karma + Jasmine (padrão do Angular CLI) |
@@ -48,6 +49,8 @@ No Windows, use `mvnw.cmd` no lugar de `./mvnw` caso o shell não reconheça o s
 
 Credenciais do banco podem ser sobrescritas via variáveis de ambiente `DB_URL`, `DB_USER` e `DB_PASSWORD` (padrão: `postgres`/`postgres`, compatível com o `docker-compose.yml`).
 
+Com a API no ar (`./mvnw spring-boot:run`), a documentação interativa (Swagger UI) fica em `http://localhost:8080/swagger-ui.html`, e o contrato OpenAPI bruto em `http://localhost:8080/v3/api-docs`. Ela se preenche automaticamente conforme os controllers de cada funcionalidade forem implementados — hoje ainda não há endpoints de negócio.
+
 #### 3. Frontend
 ```sh
 cd frontend
@@ -67,9 +70,22 @@ projeto-senior/
 ├── session-handoff.md     # transferência entre sessões (bloqueios, arquivos tocados, próximo passo)
 ├── init.sh                # verificação completa em um comando (compila + testa os dois lados)
 ├── docker-compose.yml     # PostgreSQL local
+├── docs/vault/             # base de conhecimento em Obsidian (visão geral, domínio, mapa de funcionalidades)
 ├── backend/                # API Spring Boot
 └── frontend/                # aplicação Angular
 ```
+
+## Documentação da API (Swagger / OpenAPI)
+
+O backend expõe documentação interativa via [springdoc-openapi](https://springdoc.org/):
+- Swagger UI: `http://localhost:8080/swagger-ui.html`
+- Contrato OpenAPI (JSON): `http://localhost:8080/v3/api-docs`
+
+Configuração em [`OpenApiConfig`](./backend/src/main/java/com/projetosenior/gestaohospedes/config/OpenApiConfig.java). Não é uma funcionalidade rastreada em `feature_list.json` — é infraestrutura que já preenche sozinha conforme os controllers de cada feature forem implementados.
+
+## Base de Conhecimento (Obsidian)
+
+Em [`docs/vault/`](./docs/vault/) há uma vault do [Obsidian](https://obsidian.md/) com visão geral do sistema, glossário de domínio, arquitetura e mapa de funcionalidades — útil para abrir com o Obsidian e navegar pelos links entre notas. Para usar: abra a pasta `docs/vault/` como vault no Obsidian. O conteúdo espelha `CLAUDE.md`, `DECISIONS.md` e `feature_list.json`, então deve ser atualizado junto com eles conforme os módulos forem implementados.
 
 ## Observações Importantes
 

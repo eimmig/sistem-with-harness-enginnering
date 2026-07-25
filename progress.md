@@ -1,7 +1,7 @@
 # Progresso do Projeto
 
 ## Última Atualização
-2026-07-25 — decisões de negócio revisadas e confirmadas (D-01, D-02, D-03, D-05), entidade `Quarto` (D-12) e código em inglês (D-13) adicionadas; `feature_list.json` reescrito para refletir isso; `AGENTS.md` renomeado para `CLAUDE.md`.
+2026-07-25 — adicionada documentação de API (Swagger/OpenAPI via springdoc) e base de conhecimento Obsidian em `docs/vault/` (D-14); tratadas como infraestrutura, fora do fluxo de `feature_list.json`.
 
 ## Objetivo Atual
 Fase de **inicialização** concluída (nenhuma funcionalidade de negócio implementada ainda — por design, ver `CLAUDE.md`). Todas as decisões de negócio confirmadas, `feature_list.json` atualizado. Pronto para começar `F01`.
@@ -22,6 +22,8 @@ Fase de **inicialização** concluída (nenhuma funcionalidade de negócio imple
 - [x] `docker-compose.yml` para o PostgreSQL local — validado end-to-end (backend conecta e sobe)
 - [x] `README.md` com instruções de setup testadas manualmente
 - [x] Decisões de negócio D-01, D-02, D-03, D-05 confirmadas; D-12 e D-13 registradas; `feature_list.json` atualizado (F24/F25 adicionados, identificadores em inglês)
+- [x] Swagger/OpenAPI (springdoc 3.0.3) configurado no backend (`OpenApiConfig`), validado com `./mvnw test`; D-14 registrada
+- [x] Base de conhecimento Obsidian criada em `docs/vault/` (visão geral, glossário, arquitetura, mapa de funcionalidades, uma nota por módulo)
 
 ## Em Andamento
 - (nenhum item ativo no momento — pronto para começar F01)

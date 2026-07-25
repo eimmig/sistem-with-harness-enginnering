@@ -58,3 +58,9 @@
   | Taxa de estacionamento | `ParkingFee` |
   | Check-in / Check-out | `CheckIn` / `CheckOut` (já em inglês) |
 - **Status**: decisão confirmada pelo solicitante do desafio.
+
+## [D-14] 2026-07-25 — Documentação de API (Swagger/OpenAPI) e base de conhecimento (Obsidian) como infraestrutura, fora do `feature_list.json`
+- **Motivo**: solicitação explícita do usuário para adicionar documentação via Swagger/OpenAPI e uma base de conhecimento em Obsidian sobre os módulos. Como nenhuma funcionalidade de negócio foi implementada ainda, não há endpoints reais para documentar nem módulos de código para descrever em detalhe — por isso ambas foram tratadas como infraestrutura de apoio (não entram no fluxo de uma-funcionalidade-por-vez de `feature_list.json`) e devem se preencher/atualizar conforme as features F01+ forem implementadas.
+- **Swagger/OpenAPI**: dependência `org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.3` (linha 3.x, compatível com Spring Boot 4 / Spring Framework 7 — a linha 2.x mais popular é para Spring Boot 3). Configuração mínima em `backend/src/main/java/com/projetosenior/gestaohospedes/config/OpenApiConfig.java` (apenas metadados de `Info`). UI em `/swagger-ui.html`, contrato bruto em `/v3/api-docs`, ambos habilitados por padrão. Validado com `./mvnw test` (build e contexto Spring sobem sem erro).
+- **Obsidian**: vault em `docs/vault/` (fora de `backend/` e `frontend/`, para não ser build artifact de nenhum dos dois lados). Conteúdo inicial: visão geral do sistema, glossário de domínio, arquitetura/decisões-chave e mapa de funcionalidades, com uma nota por módulo de domínio futuro (Hóspede, Categoria de Quarto, Quarto, Reserva, Diária, Taxa de Estacionamento, Check-in/Check-out) ligadas por wikilinks. Não versiona pasta `.obsidian/` (configuração local do app, não conteúdo).
+- **Status**: decisão confirmada pelo solicitante do desafio.

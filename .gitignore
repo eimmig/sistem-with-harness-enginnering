@@ -6,6 +6,9 @@ Thumbs.db
 .idea/
 .vscode/
 
+# Obsidian (configuração local do app, não conteúdo da vault)
+docs/vault/.obsidian/
+
 # Environment / secrets (nunca versionar)
 .env
 .env.local
