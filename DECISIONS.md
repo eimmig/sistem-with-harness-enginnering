@@ -60,6 +60,12 @@
   | Status do quarto: Disponível / Sujo / Ocupado | `RoomStatus`: `AVAILABLE` / `DIRTY` / `OCCUPIED` |
 - **Status**: decisão confirmada pelo solicitante do desafio.
 
+## [D-26] 2026-07-25 — F15: busca de hóspede por nome (sem autocomplete), datas via `<input type="datetime-local">`, todos os quartos no seletor (não só `AVAILABLE`)
+- **Motivo (busca de hóspede)**: não há um "seletor de todos os hóspedes" viável (lista pode crescer sem limite); reaproveita `GuestService.search()` (F02) com um campo de busca por nome + botão, mostrando resultados clicáveis para selecionar — mais simples que `mat-autocomplete` e reaproveita 100% do endpoint já existente, sem exigir mudança no backend.
+- **Motivo (datas)**: Angular Material não tem um seletor de data+hora combinado pronto; em vez de integrar uma biblioteca extra ou compor date-picker + time-picker manualmente, usa-se o input nativo HTML5 `type="datetime-local"`, cujo formato de string (`YYYY-MM-DDTHH:mm`) é aceito diretamente pelo binding Jackson de `LocalDateTime` no backend sem conversão adicional no frontend.
+- **Motivo (todos os quartos no seletor)**: consistente com D-18 — a criação de reserva não valida status do quarto (só o check-in valida `AVAILABLE`), então a tela não filtra por status; mostrar só quartos `AVAILABLE` esconderia quartos que estão `OCCUPIED`/`DIRTY` hoje mas ficarão livres na data futura da reserva.
+- **Status**: suposições registradas; ajustáveis se o solicitante do desafio quiser autocomplete de hóspede ou um date-picker dedicado.
+
 ## [D-25] 2026-07-25 — F25 adicionou `GET /api/rooms` ao backend (mesmo padrão de D-24)
 - **Motivo**: F24 só implementou `POST /api/rooms` (criar, nasce `AVAILABLE`) e `PATCH /api/rooms/{id}/status` (alterar status) — nenhuma delas listava quartos existentes. A tela de gestão de quartos (F25) precisa exibir a lista de quartos cadastrados, com um seletor de status por linha para alteração inline. Endpoint adicionado dentro do escopo de F25, mesmo raciocínio de D-24.
 - **UI**: `RoomListComponent` mostra uma tabela com número, categoria e um `mat-select` de status por linha; ao trocar, chama `PATCH /api/rooms/{id}/status` imediatamente (sem botão de confirmar separado — mudança de status é uma ação simples e reversível, diferente de check-in/check-out que têm regras de negócio mais pesadas).

@@ -3,31 +3,26 @@
 Preencha isto ao final de cada sessão de trabalho. A próxima sessão deve conseguir retomar lendo só este arquivo + `progress.md` + `feature_list.json`.
 
 ## Bloqueios
-- Nenhum. F25 implementado e passando. `feature_list.json` atualizado com evidência.
+- Nenhum. F15 implementado e passando. `feature_list.json` atualizado com evidência.
 - F23 (repositório Git público) segue como a única pendência que não pode ser resolvida por código.
 
 ## Arquivos Tocados Nesta Sessão
-- **Backend** (necessário para a tela listar quartos existentes — D-25):
-  - `backend/src/main/java/.../room/RoomController.java`: novo `GET /api/rooms`.
-  - `backend/src/test/java/.../room/RoomControllerTest.java`: +1 teste (`listsAllRooms`).
-- **Frontend** (F25):
-  - `frontend/src/app/features/room/room.model.ts` (novo): `RoomStatus`, `ROOM_STATUSES`, `ROOM_STATUS_LABELS`, `Room`, DTOs.
-  - `frontend/src/app/features/room/room.service.ts` (novo): `list()`, `create()`, `updateStatus()`.
-  - `frontend/src/app/features/room/room-form/` (novo): `RoomFormComponent` + spec (4 testes) — cadastro, seleciona categoria via `RoomCategoryService` (reaproveitado de F14).
-  - `frontend/src/app/features/room/room-list/` (novo): `RoomListComponent` + spec (3 testes) — tabela com `mat-select` de status por linha, muda status inline (sem confirmação separada).
-  - `frontend/src/app/features/room/rooms-page/` (novo): `RoomsPageComponent` (rota `/rooms`) + spec (2 testes).
-  - `frontend/src/app/app.routes.ts`: rota `/rooms` (lazy).
-- `DECISIONS.md`: D-25 registrada (endpoint de listagem + troca de status inline).
-- `feature_list.json`: F25 marcado `passing` com evidência (backend 8/8 + frontend 31/31 + `ng build` + `./init.sh` completo, exit 0).
-- `progress.md`, `docs/vault/Quarto.md`, `docs/vault/Mapa de Funcionalidades.md`, `docs/vault/Arquitetura.md`: atualizados.
+- `frontend/src/app/features/reservation/reservation.model.ts` (novo): `Reservation`, `ReservationRequest`.
+- `frontend/src/app/features/reservation/reservation.service.ts` (novo): `create()`.
+- `frontend/src/app/features/reservation/reservation-form/` (novo): `ReservationFormComponent` + spec (6 testes) — busca hóspede por nome (`GuestService.search()`), seleciona quarto (`RoomService.list()`, todos os quartos, não só `AVAILABLE` — D-26), datas via `datetime-local`, checkbox de estacionamento.
+- `frontend/src/app/features/reservation/reservations-page/` (novo): `ReservationsPageComponent` (rota `/reservations`) + spec (2 testes).
+- `frontend/src/app/app.routes.ts`: rota `/reservations` (lazy).
+- `DECISIONS.md`: D-26 registrada (busca de hóspede sem autocomplete, datas via input nativo, todos os quartos no seletor).
+- `feature_list.json`: F15 marcado `passing` com evidência (39/39 testes Karma + `ng build` + `./init.sh` completo, exit 0). Nenhuma mudança no backend foi necessária desta vez (`POST /api/reservations` já existia desde F05).
+- `progress.md`, `docs/vault/Reserva.md`, `docs/vault/Mapa de Funcionalidades.md`, `docs/vault/Arquitetura.md`: atualizados.
 
 ## Nota técnica importante para próximas features
-- Nenhuma nova além das já registradas. Padrão consolidado: toda tela de listagem+cadastro segue form + list + page component, reaproveitando serviços de outras features quando precisa (ex.: `RoomFormComponent` usa `RoomCategoryService` de F14).
+- Nenhuma nova além das já registradas. Padrão consolidado de composição entre features de frontend: um componente de tela pode injetar serviços de OUTRAS features (`ReservationFormComponent` usa `GuestService` e `RoomService`) sem duplicar lógica — é o comportamento esperado, não acoplamento indevido, já que essas features já são `passing` e seus serviços são estáveis.
 
-## Próxima Sessão
-1. Ler `progress.md` (seção "Próximo Passo Recomendado") e `feature_list.json`.
-2. Rodar `./init.sh` para confirmar que o ambiente ainda está saudável.
-3. Próxima funcionalidade: **F15** (tela de criação de reserva) — depende de F05 **e** F25, ambas `passing` agora. Precisa de um `ReservationService` novo (`POST /api/reservations`, já existe no backend); reaproveitar `GuestService.search()` e `RoomService.list()` para os seletores de hóspede/quarto. Verificação: `reservation-form.component.spec.ts`.
-4. Depois de F15: F16 (check-in) e F17 (check-out) — ambas vão precisar de uma forma de encontrar a reserva a partir da tela (não há endpoint de listagem/busca de reservas ainda). Antes de codar, decidir e registrar em `DECISIONS.md` como a tela localiza a reserva (buscar por ID digitado? listar reservas ativas? por hóspede?) — provavelmente vai exigir mais um endpoint no backend, mesmo padrão de D-24/D-25.
-5. F18/F19 são as mais simples (só consomem `GET /api/guests/in-hotel` e `/without-check-in`, já existentes) — podem ser feitas antes ou depois de F16/F17 sem problema de dependência.
-6. Atualizar `docs/vault/` antes do commit — parte obrigatória da Definição de Pronto (CLAUDE.md).
+## Próxima Sessão — decisão de escopo pendente antes de codar F16/F17
+F16 (check-in) e F17 (check-out) consomem `POST /api/reservations/{id}/check-in`/`/check-out`, mas **não existe endpoint de listagem/busca de reservas no backend**. F15 não precisou disso porque só cria; F16/F17 precisam *encontrar* uma reserva existente para agir sobre ela. Antes de implementar:
+1. Decidir como a tela localiza a reserva: opções plausíveis — (a) buscar hóspede por nome (`GuestService.search()`, já existe) e então listar as reservas desse hóspede (exige `GET /api/reservations?guestId=` novo no backend); (b) campo de "ID da reserva" digitado manualmente (não exige backend novo, mas UX ruim); (c) listar reservas "pendentes de check-in" (reaproveita `findByActualCheckInIsNull()` do `ReservationRepository`, já existe — só falta expor via endpoint). Opção (a) ou (c) são as mais realistas para uso de recepção.
+2. Registrar a decisão em `DECISIONS.md` (mesmo padrão de D-24/D-25) antes de implementar F16.
+3. F16 verifica: `check-in.component.spec.ts`. F17 verifica: `check-out.component.spec.ts`.
+4. F18/F19 não têm essa pendência — reaproveitam `GET /api/guests/in-hotel` e `/without-check-in`, já prontos.
+5. Ler `progress.md` e `feature_list.json` ao retomar; rodar `./init.sh` antes de tudo; atualizar `docs/vault/` antes do commit (parte obrigatória da Definição de Pronto, CLAUDE.md).

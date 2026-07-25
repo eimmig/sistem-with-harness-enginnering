@@ -1,0 +1,13 @@
+<h1>Reservas</h1>
+
+<section class="reservations-page-section">
+  <h2>Criar reserva</h2>
+  <app-reservation-form (reservationCreated)="onReservationCreated($event)" />
+</section>
+
+@if (lastCreatedReservation) {
+  <p data-testid="reservation-created-message">
+    Reserva #{{ lastCreatedReservation.id }} criada para {{ lastCreatedReservation.guest.name }} no quarto
+    {{ lastCreatedReservation.room.number }}.
+  </p>
+}

@@ -1,0 +1,26 @@
+.guest-picker {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  position: relative;
+}
+
+.guest-results {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+
+.reservation-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-width: 420px;
+}
+
+.error-message {
+  color: var(--mat-sys-error, #b00020);
+}

@@ -151,9 +151,9 @@
       "id": "F15",
       "name": "Tela de criacao de reserva",
       "description": "Tela de criacao de reserva, com selecao de um quarto especifico.",
-      "status": "not_started",
+      "status": "passing",
       "verification": "reservation-form.component.spec.ts passando",
-      "evidence": null,
+      "evidence": "npm run test:ci: 39/39 SUCCESS (Chrome Headless). ng build sem erros. ./init.sh completo (backend + frontend) tambem passando (exit 0).",
       "dependencies": ["F05", "F25"]
     },
     {

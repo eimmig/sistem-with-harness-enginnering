@@ -1,0 +1,67 @@
+<div class="guest-picker">
+  <mat-form-field appearance="outline">
+    <mat-label>Buscar hóspede por nome</mat-label>
+    <input matInput [formControl]="guestQuery" data-testid="reservation-guest-query-input" />
+  </mat-form-field>
+  <button mat-stroked-button type="button" (click)="searchGuests()" data-testid="reservation-guest-search-button">
+    Buscar
+  </button>
+
+  @if (guestResults.length > 0) {
+    <ul class="guest-results" data-testid="reservation-guest-results">
+      @for (guest of guestResults; track guest.id) {
+        <li>
+          <button mat-button type="button" (click)="selectGuest(guest)" [attr.data-testid]="'select-guest-' + guest.id">
+            {{ guest.name }} — {{ guest.document }}
+          </button>
+        </li>
+      }
+    </ul>
+  }
+
+  @if (selectedGuest) {
+    <p data-testid="reservation-selected-guest">Hóspede selecionado: {{ selectedGuest.name }}</p>
+  }
+</div>
+
+<form class="reservation-form" [formGroup]="form" (ngSubmit)="submit()">
+  <mat-form-field appearance="outline">
+    <mat-label>Quarto</mat-label>
+    <mat-select formControlName="roomId" data-testid="reservation-room-select">
+      @for (room of rooms; track room.id) {
+        <mat-option [value]="room.id">{{ room.number }} ({{ room.category.name }})</mat-option>
+      }
+    </mat-select>
+    @if (form.controls.roomId.invalid && form.controls.roomId.touched) {
+      <mat-error>Quarto é obrigatório</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Check-in previsto</mat-label>
+    <input matInput type="datetime-local" formControlName="expectedCheckIn" data-testid="reservation-checkin-input" />
+    @if (form.controls.expectedCheckIn.invalid && form.controls.expectedCheckIn.touched) {
+      <mat-error>Check-in previsto é obrigatório</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Check-out previsto</mat-label>
+    <input matInput type="datetime-local" formControlName="expectedCheckOut" data-testid="reservation-checkout-input" />
+    @if (form.controls.expectedCheckOut.invalid && form.controls.expectedCheckOut.touched) {
+      <mat-error>Check-out previsto é obrigatório</mat-error>
+    }
+  </mat-form-field>
+
+  <mat-checkbox formControlName="parkingRequested" data-testid="reservation-parking-checkbox">
+    Hóspede tem carro e vai usar vaga de estacionamento
+  </mat-checkbox>
+
+  <button mat-raised-button color="primary" type="submit" data-testid="reservation-submit-button">
+    Criar reserva
+  </button>
+
+  @if (errorMessage) {
+    <p class="error-message" data-testid="reservation-form-error">{{ errorMessage }}</p>
+  }
+</form>
