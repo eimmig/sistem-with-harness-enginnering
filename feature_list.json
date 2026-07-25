@@ -169,9 +169,9 @@
       "id": "F17",
       "name": "Tela de check-out",
       "description": "Tela de check-out, exibindo detalhamento do total antes de confirmar.",
-      "status": "not_started",
+      "status": "passing",
       "verification": "check-out.component.spec.ts passando",
-      "evidence": null,
+      "evidence": "./mvnw test: ReservationControllerTest/ReservationRepositoryTest 19/19 verdes (novo GET /api/reservations/pending-check-out, D-28). npm run test:ci: 47/47 SUCCESS. ng build sem erros. ./init.sh completo (backend + frontend) tambem passando (exit 0).",
       "dependencies": ["F09"]
     },
     {

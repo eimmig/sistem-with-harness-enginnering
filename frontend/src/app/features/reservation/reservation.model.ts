@@ -15,3 +15,12 @@ export interface ReservationRequest {
   expectedCheckOut: string;
   parkingRequested: boolean;
 }
+
+export interface CheckOutResult {
+  reservationId: number;
+  dailyRateTotal: number;
+  parkingFeeTotal: number;
+  lateCheckOutFee: number;
+  total: number;
+  actualCheckOut: string;
+}

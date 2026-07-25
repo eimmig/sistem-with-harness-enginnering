@@ -27,5 +27,10 @@ export const routes: Routes = [
   {
     path: 'check-in',
     loadComponent: () => import('./features/reservation/check-in/check-in.component').then((m) => m.CheckInComponent)
+  },
+  {
+    path: 'check-out',
+    loadComponent: () =>
+      import('./features/reservation/check-out/check-out.component').then((m) => m.CheckOutComponent)
   }
 ];

@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Reservation, ReservationRequest } from './reservation.model';
+import { CheckOutResult, Reservation, ReservationRequest } from './reservation.model';
 
 @Injectable({ providedIn: 'root' })
 export class ReservationService {
@@ -18,5 +18,13 @@ export class ReservationService {
 
   checkIn(id: number, confirmedByAttendant: boolean): Observable<Reservation> {
     return this.http.post<Reservation>(`${this.baseUrl}/${id}/check-in`, { confirmedByAttendant });
+  }
+
+  pendingCheckOut(): Observable<Reservation[]> {
+    return this.http.get<Reservation[]>(`${this.baseUrl}/pending-check-out`);
+  }
+
+  checkOut(id: number): Observable<CheckOutResult> {
+    return this.http.post<CheckOutResult>(`${this.baseUrl}/${id}/check-out`, {});
   }
 }

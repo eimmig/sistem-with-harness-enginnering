@@ -170,6 +170,22 @@ class ReservationControllerTest {
     }
 
     @Test
+    void listsReservationsPendingCheckOut() throws Exception {
+        Guest guest = guest();
+        Room room = room(RoomStatus.OCCUPIED);
+        Reservation reservation = new Reservation(
+                1L, guest, room, LocalDateTime.of(2026, 8, 3, 14, 0), LocalDateTime.of(2026, 8, 4, 12, 0), false);
+        reservation.setActualCheckIn(LocalDateTime.of(2026, 8, 3, 14, 0));
+        when(reservationRepository.findByActualCheckInIsNotNullAndActualCheckOutIsNull())
+                .thenReturn(List.of(reservation));
+
+        mockMvc.perform(get("/api/reservations/pending-check-out"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].guest.name").value("Maria Silva"));
+    }
+
+    @Test
     void checkInValid() throws Exception {
         Guest guest = guest();
         Room room = room(RoomStatus.AVAILABLE);

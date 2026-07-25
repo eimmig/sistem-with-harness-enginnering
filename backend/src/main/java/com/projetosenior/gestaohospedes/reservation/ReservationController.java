@@ -62,6 +62,16 @@ public class ReservationController {
         return ResponseEntity.ok(reservations);
     }
 
+    @GetMapping("/pending-check-out")
+    public ResponseEntity<List<ReservationResponse>> pendingCheckOut() {
+        List<ReservationResponse> reservations = reservationRepository
+                .findByActualCheckInIsNotNullAndActualCheckOutIsNull()
+                .stream()
+                .map(ReservationResponse::from)
+                .toList();
+        return ResponseEntity.ok(reservations);
+    }
+
     @PostMapping
     public ResponseEntity<ReservationResponse> create(@Valid @RequestBody ReservationRequest request) {
         if (!request.expectedCheckOut().isAfter(request.expectedCheckIn())) {

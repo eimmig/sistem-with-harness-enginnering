@@ -1,0 +1,55 @@
+@if (reservations.length === 0) {
+  <p data-testid="check-out-empty">Nenhuma reserva aguardando check-out.</p>
+}
+
+@if (reservations.length > 0) {
+  <table mat-table [dataSource]="reservations" data-testid="check-out-table">
+    <ng-container matColumnDef="guest">
+      <th mat-header-cell *matHeaderCellDef>Hóspede</th>
+      <td mat-cell *matCellDef="let reservation">{{ reservation.guest.name }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="room">
+      <th mat-header-cell *matHeaderCellDef>Quarto</th>
+      <td mat-cell *matCellDef="let reservation">{{ reservation.room.number }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Ações</th>
+      <td mat-cell *matCellDef="let reservation">
+        <button
+          mat-raised-button
+          color="primary"
+          type="button"
+          (click)="performCheckOut(reservation)"
+          [attr.data-testid]="'check-out-button-' + reservation.id"
+        >
+          Fazer check-out
+        </button>
+        @if (errorMessages[reservation.id]) {
+          <p class="error-message" [attr.data-testid]="'check-out-error-' + reservation.id">{{ errorMessages[reservation.id] }}</p>
+        }
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+}
+
+@if (completedCheckOuts.length > 0) {
+  <h2>Detalhamento dos check-outs realizados</h2>
+  <ul class="checkout-results" data-testid="check-out-results">
+    @for (item of completedCheckOuts; track item.result.reservationId) {
+      <li [attr.data-testid]="'check-out-result-' + item.result.reservationId">
+        <strong>{{ item.reservation.guest.name }}</strong> — quarto {{ item.reservation.room.number }}
+        <ul>
+          <li>Diárias: R$ {{ item.result.dailyRateTotal }}</li>
+          <li>Estacionamento: R$ {{ item.result.parkingFeeTotal }}</li>
+          <li>Taxa de atraso: R$ {{ item.result.lateCheckOutFee }}</li>
+          <li><strong>Total: R$ {{ item.result.total }}</strong></li>
+        </ul>
+      </li>
+    }
+  </ul>
+}

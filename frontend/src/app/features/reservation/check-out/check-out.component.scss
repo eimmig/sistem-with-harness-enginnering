@@ -1,0 +1,13 @@
+table {
+  width: 100%;
+}
+
+.error-message {
+  color: var(--mat-sys-error, #b00020);
+  margin: 4px 0 0;
+}
+
+.checkout-results {
+  list-style: none;
+  padding: 0;
+}
