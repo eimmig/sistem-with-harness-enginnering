@@ -187,9 +187,9 @@
       "id": "F19",
       "name": "Lista de hospedes sem check-in (frontend)",
       "description": "Lista de hospedes com reserva sem check-in.",
-      "status": "not_started",
+      "status": "passing",
       "verification": "guests-without-checkin.component.spec.ts passando",
-      "evidence": null,
+      "evidence": "npm run test:ci: 51/51 SUCCESS (Chrome Headless). ng build sem erros. ./init.sh completo (backend + frontend) tambem passando (exit 0). Nenhuma mudanca no backend necessaria (GET /api/guests/without-check-in ja existia desde F11).",
       "dependencies": ["F11"]
     },
     {

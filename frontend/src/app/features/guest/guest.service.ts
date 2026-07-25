@@ -29,4 +29,8 @@ export class GuestService {
   guestsInHotel(): Observable<Guest[]> {
     return this.http.get<Guest[]>(`${this.baseUrl}/in-hotel`);
   }
+
+  guestsWithoutCheckIn(): Observable<Guest[]> {
+    return this.http.get<Guest[]>(`${this.baseUrl}/without-check-in`);
+  }
 }
