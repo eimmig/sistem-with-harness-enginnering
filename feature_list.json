@@ -52,9 +52,9 @@
       "id": "F24",
       "name": "Cadastro de quarto",
       "description": "Cadastrar quarto (numero, categoria, status) e permitir alterar o status (DISPONIVEL, SUJO, OCUPADO) -- ver DECISIONS.md D-05/D-12.",
-      "status": "not_started",
+      "status": "passing",
       "verification": "RoomControllerTest passando",
-      "evidence": null,
+      "evidence": "./mvnw test -Dtest=RoomControllerTest,RoomRepositoryTest em 2026-07-25: Tests run: 7, Failures: 0, Errors: 0 (BUILD SUCCESS). ./init.sh completo (backend + frontend) tambem passando.",
       "dependencies": ["F03"]
     },
     {

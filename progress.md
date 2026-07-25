@@ -1,13 +1,13 @@
 # Progresso do Projeto
 
 ## Última Atualização
-2026-07-25 — F04 (Configuração de preço por dia da semana) implementado e passando: `RoomCategory.prices` (`Map<DayOfWeek, BigDecimal>` via `@ElementCollection`), `RoomCategoryController#updatePrices` (`PUT /api/room-categories/{id}/prices`, exige as 7 diárias com valor positivo), `RoomCategoryControllerTest` + `RoomCategoryRepositoryTest` verdes.
+2026-07-25 — F24 (Cadastro de quarto) implementado e passando: `Room` (entidade: número, categoria, status), `RoomStatus` (enum `AVAILABLE`/`DIRTY`/`OCCUPIED`), `RoomController` (`POST /api/rooms`, `PATCH /api/rooms/{id}/status`), `RoomControllerTest` + `RoomRepositoryTest` verdes.
 
 ## Objetivo Atual
-F01, F02, F03 e F04 concluídos. Pronto para escolher a próxima funcionalidade `not_started` sem dependências pendentes (candidata óbvia: F24 — cadastro de quarto — depende só de F03, que já é `passing`).
+F01–F04 e F24 concluídos. Pronto para escolher a próxima funcionalidade `not_started` sem dependências pendentes (candidata óbvia: F05 — criação de reserva — depende de F01/F24, ambas `passing`).
 
 ## Próximo Passo Recomendado
-1. Escolher a próxima funcionalidade em `feature_list.json` (F24 — cadastro de quarto) e marcar `active`. Abre caminho para F05 (criação de reserva) e F08 (check-in).
+1. Escolher a próxima funcionalidade em `feature_list.json` (F05 — criação de reserva) e marcar `active`. Abre caminho para F06/F07 (cálculo de diária/estacionamento) e F08 (check-in).
 2. Re-rodar `./init.sh` antes de considerar cada funcionalidade concluída.
 
 ## Estado Atual
@@ -28,9 +28,10 @@ F01, F02, F03 e F04 concluídos. Pronto para escolher a próxima funcionalidade 
 - [x] **F02 — Busca de hóspede**: `GuestSpecifications` (filtros `nameContains`/`documentContains`/`phoneContains`), `GuestRepository` estendendo `JpaSpecificationExecutor<Guest>`, `GuestController#search` (`GET /api/guests?name=&document=&phone=`, combinação AND, sem filtros retorna todos); `GuestControllerTest` (+3 testes) + `GuestRepositoryTest` (+3 testes) passando; decisão de design em D-15; evidência registrada em `feature_list.json`.
 - [x] **F03 — Cadastro de categoria de quarto**: `RoomCategory` (entidade, campos `id`/`name`), `RoomCategoryRepository`, `RoomCategoryRequest`/`RoomCategoryResponse` (DTOs com Bean Validation), `RoomCategoryController` (`POST /api/room-categories`); `RoomCategoryControllerTest` (2 testes) + `RoomCategoryRepositoryTest` (2 testes) passando; evidência registrada em `feature_list.json`. Preço por dia da semana fica para F04 (não incluído aqui, fora do escopo desta feature).
 - [x] **F04 — Configuração de preço por dia da semana**: `RoomCategory.prices` (`Map<DayOfWeek, BigDecimal>`, `@ElementCollection` em tabela `room_category_price`), `RoomCategoryPricesRequest` (DTO com validação `@NotNull`/`@Positive` por valor do map), `RoomCategoryController#updatePrices` (`PUT /api/room-categories/{id}/prices` — exige as 7 diárias presentes e positivas, 404 se categoria não existir); `RoomCategoryControllerTest` (+4 testes) + `RoomCategoryRepositoryTest` (+1 teste, com flush/clear do `EntityManager` para validar round-trip real no banco) passando; decisão de design em D-16; evidência registrada em `feature_list.json`.
+- [x] **F24 — Cadastro de quarto**: `Room` (entidade: `number` String, `roomCategory` ManyToOne, `status` enum), `RoomStatus` (`AVAILABLE`/`DIRTY`/`OCCUPIED` — tradução de DISPONIVEL/SUJO/OCUPADO registrada no glossário D-13), `RoomRepository`, `RoomRequest`/`RoomStatusRequest`/`RoomResponse` (DTOs), `RoomController` (`POST /api/rooms` — 404 se categoria não existir, cria com status `AVAILABLE`; `PATCH /api/rooms/{id}/status` — 404 se quarto não existir); `RoomControllerTest` (5 testes) + `RoomRepositoryTest` (2 testes) passando; decisão de design em D-17; evidência registrada em `feature_list.json`.
 
 ## Em Andamento
-- (nenhum item ativo no momento — F04 passou para `passing`)
+- (nenhum item ativo no momento — F24 passou para `passing`)
 
 ## Bloqueado / Pendente de Confirmação
 - (nenhum bloqueio no momento)

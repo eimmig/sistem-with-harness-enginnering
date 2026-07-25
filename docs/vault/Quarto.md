@@ -8,7 +8,7 @@ tags: [módulo]
 Entidade própria (D-12 em [[Arquitetura]]): número, vínculo com [[Categoria de Quarto]], status.
 
 ## Status possíveis
-`DISPONIVEL`, `SUJO`, `OCUPADO`.
+`DISPONIVEL`, `SUJO`, `OCUPADO` no domínio; no código, `RoomStatus.AVAILABLE`/`DIRTY`/`OCCUPIED` (tradução D-13).
 
 ## Regras de negócio relevantes
 - Check-in só pode ser realizado se o quarto estiver `DISPONIVEL`, independentemente do horário (regra #6, D-01 em [[Arquitetura]]).
@@ -21,4 +21,5 @@ Entidade própria (D-12 em [[Arquitetura]]): número, vínculo com [[Categoria d
 Pertence a uma [[Categoria de Quarto]]; é referenciado por uma [[Reserva]]; seu status é verificado no [[Check-in e Check-out|check-in]].
 
 ## Status atual
-Não implementado.
+- **F24 (cadastro + alteração de status) — implementado e `passing`.** `Room` (entidade: `number` String, `roomCategory` ManyToOne, `status`), `RoomRepository`, `RoomController` em `backend/src/main/java/.../room/`. `POST /api/rooms` (404 se categoria não existir; quarto nasce `AVAILABLE`), `PATCH /api/rooms/{id}/status` (404 se quarto não existir). Decisão de design em D-17 (ver [[Arquitetura]]).
+- F25 (tela de gestão de quartos) — não implementado.

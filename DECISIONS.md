@@ -57,7 +57,12 @@
   | Diária | `DailyRate` |
   | Taxa de estacionamento | `ParkingFee` |
   | Check-in / Check-out | `CheckIn` / `CheckOut` (já em inglês) |
+  | Status do quarto: Disponível / Sujo / Ocupado | `RoomStatus`: `AVAILABLE` / `DIRTY` / `OCCUPIED` |
 - **Status**: decisão confirmada pelo solicitante do desafio.
+
+## [D-17] 2026-07-25 — Número do quarto é `String`; status muda via `PATCH /api/rooms/{id}/status` já em F24
+- **Motivo**: número de quarto é tratado como rótulo, não quantidade (ex.: "101", "204B"), então `Room.number` é `String`, sem validação de formato específica além de não-vazio. Quanto ao status: a descrição de F24 em `feature_list.json` já inclui "permitir alterar o status" no escopo do backend (diferente de F03/F04, que dividiram cadastro e configuração de preço em duas features separadas) — por isso o endpoint `PATCH /api/rooms/{id}/status` foi implementado dentro de F24, e não adiado para F25 (que é só a tela). Todo quarto criado nasce com status `AVAILABLE` (regra implícita: quarto recém-cadastrado está pronto para uso).
+- **Status**: suposição registrada; ajustável se o solicitante do desafio especificar formato de número diferente (ex.: inteiro) ou status inicial diferente.
 
 ## [D-16] 2026-07-25 — Preço por dia da semana: `@ElementCollection` embutida em `RoomCategory`, atualização exige as 7 diárias completas
 - **Motivo**: a restrição #4 pede preço configurável por categoria e por dia da semana, via tela de configuração. Em vez de uma entidade própria (`RoomCategoryPrice`) com repositório dedicado, optou-se por um `Map<DayOfWeek, BigDecimal>` como `@ElementCollection` da própria `RoomCategory` (tabela auxiliar `room_category_price`, chave composta categoria+dia) — mais simples, já que os preços não têm identidade ou ciclo de vida próprios fora da categoria. O endpoint `PUT /api/room-categories/{id}/prices` exige que as 7 chaves de `DayOfWeek` estejam presentes e com valor positivo a cada atualização (não há update parcial de um único dia) — evita o estado inconsistente de uma categoria com diária sem preço configurado, o que quebraria o cálculo de diária (F06).
