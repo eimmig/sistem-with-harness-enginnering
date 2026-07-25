@@ -22,4 +22,5 @@ Pertence a uma [[Categoria de Quarto]]; é referenciado por uma [[Reserva]]; seu
 
 ## Status atual
 - **F24 (cadastro + alteração de status) — implementado e `passing`.** `Room` (entidade: `number` String, `roomCategory` ManyToOne, `status`), `RoomRepository`, `RoomController` em `backend/src/main/java/.../room/`. `POST /api/rooms` (404 se categoria não existir; quarto nasce `AVAILABLE`), `PATCH /api/rooms/{id}/status` (404 se quarto não existir). Decisão de design em D-17 (ver [[Arquitetura]]).
+- **F08 (check-in)** também muda o status do quarto para `OCCUPIED` ao confirmar o check-in (ver [[Check-in e Check-out]]) — não é feito via `PATCH /api/rooms/{id}/status` diretamente, mas como efeito colateral do `ReservationController#checkIn`.
 - F25 (tela de gestão de quartos) — não implementado.

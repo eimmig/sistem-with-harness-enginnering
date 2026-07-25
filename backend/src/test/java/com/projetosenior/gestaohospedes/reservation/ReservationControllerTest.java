@@ -8,7 +8,9 @@ import com.projetosenior.gestaohospedes.room.Room;
 import com.projetosenior.gestaohospedes.room.RoomRepository;
 import com.projetosenior.gestaohospedes.room.RoomStatus;
 import com.projetosenior.gestaohospedes.roomcategory.RoomCategory;
+import java.time.Clock;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,18 +42,27 @@ class ReservationControllerTest {
     @MockitoBean
     private RoomRepository roomRepository;
 
+    @MockitoBean
+    private Clock clock;
+
     private Guest guest() {
         return new Guest(1L, "Maria Silva", "12345678900", "11999998888");
     }
 
-    private Room room() {
-        return new Room(1L, "101", new RoomCategory(1L, "Standard"), RoomStatus.AVAILABLE);
+    private Room room(RoomStatus status) {
+        return new Room(1L, "101", new RoomCategory(1L, "Standard"), status);
+    }
+
+    private void fixClockAt(LocalDateTime dateTime) {
+        ZoneId zone = ZoneId.systemDefault();
+        when(clock.instant()).thenReturn(dateTime.atZone(zone).toInstant());
+        when(clock.getZone()).thenReturn(zone);
     }
 
     @Test
     void createReservation() throws Exception {
         Guest guest = guest();
-        Room room = room();
+        Room room = room(RoomStatus.AVAILABLE);
         LocalDateTime checkIn = LocalDateTime.of(2026, 8, 3, 14, 0);
         LocalDateTime checkOut = LocalDateTime.of(2026, 8, 4, 12, 0);
         Reservation saved = new Reservation(1L, guest, room, checkIn, checkOut, true);
@@ -113,5 +124,95 @@ class ReservationControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ReservationRequest(null, null, null, null, false))))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void checkInValid() throws Exception {
+        Guest guest = guest();
+        Room room = room(RoomStatus.AVAILABLE);
+        LocalDateTime expectedCheckIn = LocalDateTime.of(2026, 8, 3, 14, 0);
+        LocalDateTime expectedCheckOut = LocalDateTime.of(2026, 8, 4, 12, 0);
+        LocalDateTime now = LocalDateTime.of(2026, 8, 3, 15, 0);
+        Reservation existing = new Reservation(1L, guest, room, expectedCheckIn, expectedCheckOut, false);
+        Reservation checkedIn = new Reservation(1L, guest, room, expectedCheckIn, expectedCheckOut, false);
+        checkedIn.setActualCheckIn(now);
+        when(reservationRepository.findById(1L)).thenReturn(Optional.of(existing));
+        when(reservationRepository.save(any(Reservation.class))).thenReturn(checkedIn);
+        fixClockAt(now);
+
+        mockMvc.perform(post("/api/reservations/1/check-in"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.actualCheckIn").value("2026-08-03T15:00:00"));
+    }
+
+    @Test
+    void checkInBefore2pm() throws Exception {
+        Guest guest = guest();
+        Room room = room(RoomStatus.AVAILABLE);
+        LocalDateTime expectedCheckIn = LocalDateTime.of(2026, 8, 3, 14, 0);
+        LocalDateTime expectedCheckOut = LocalDateTime.of(2026, 8, 4, 12, 0);
+        LocalDateTime now = LocalDateTime.of(2026, 8, 3, 9, 0);
+        Reservation existing = new Reservation(1L, guest, room, expectedCheckIn, expectedCheckOut, false);
+        when(reservationRepository.findById(1L)).thenReturn(Optional.of(existing));
+        fixClockAt(now);
+
+        mockMvc.perform(post("/api/reservations/1/check-in"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void checkInBefore2pmWithConfirmationSucceeds() throws Exception {
+        Guest guest = guest();
+        Room room = room(RoomStatus.AVAILABLE);
+        LocalDateTime expectedCheckIn = LocalDateTime.of(2026, 8, 3, 14, 0);
+        LocalDateTime expectedCheckOut = LocalDateTime.of(2026, 8, 4, 12, 0);
+        LocalDateTime now = LocalDateTime.of(2026, 8, 3, 9, 0);
+        Reservation existing = new Reservation(1L, guest, room, expectedCheckIn, expectedCheckOut, false);
+        Reservation checkedIn = new Reservation(1L, guest, room, expectedCheckIn, expectedCheckOut, false);
+        checkedIn.setActualCheckIn(now);
+        when(reservationRepository.findById(1L)).thenReturn(Optional.of(existing));
+        when(reservationRepository.save(any(Reservation.class))).thenReturn(checkedIn);
+        fixClockAt(now);
+
+        mockMvc.perform(post("/api/reservations/1/check-in")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new CheckInRequest(true))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.actualCheckIn").value("2026-08-03T09:00:00"));
+    }
+
+    @Test
+    void checkInRoomUnavailable() throws Exception {
+        Guest guest = guest();
+        Room room = room(RoomStatus.OCCUPIED);
+        LocalDateTime expectedCheckIn = LocalDateTime.of(2026, 8, 3, 14, 0);
+        LocalDateTime expectedCheckOut = LocalDateTime.of(2026, 8, 4, 12, 0);
+        Reservation existing = new Reservation(1L, guest, room, expectedCheckIn, expectedCheckOut, false);
+        when(reservationRepository.findById(1L)).thenReturn(Optional.of(existing));
+
+        mockMvc.perform(post("/api/reservations/1/check-in"))
+                .andExpect(status().isConflict());
+    }
+
+    @Test
+    void checkInAlreadyDoneIsRejected() throws Exception {
+        Guest guest = guest();
+        Room room = room(RoomStatus.OCCUPIED);
+        LocalDateTime expectedCheckIn = LocalDateTime.of(2026, 8, 3, 14, 0);
+        LocalDateTime expectedCheckOut = LocalDateTime.of(2026, 8, 4, 12, 0);
+        Reservation existing = new Reservation(1L, guest, room, expectedCheckIn, expectedCheckOut, false);
+        existing.setActualCheckIn(LocalDateTime.of(2026, 8, 3, 15, 0));
+        when(reservationRepository.findById(1L)).thenReturn(Optional.of(existing));
+
+        mockMvc.perform(post("/api/reservations/1/check-in"))
+                .andExpect(status().isConflict());
+    }
+
+    @Test
+    void checkInReservationNotFound() throws Exception {
+        when(reservationRepository.findById(99L)).thenReturn(Optional.empty());
+
+        mockMvc.perform(post("/api/reservations/99/check-in"))
+                .andExpect(status().isNotFound());
     }
 }

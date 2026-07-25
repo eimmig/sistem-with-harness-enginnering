@@ -17,4 +17,5 @@ Efetivar a entrada e a saída de um hóspede em uma [[Reserva]], aplicando as re
 [[Mapa de Funcionalidades]]: F08 (check-in), F09 (check-out), F16 (tela de check-in), F17 (tela de check-out). Ambas dependem de F06 e F07 já estarem `passing`.
 
 ## Status atual
-Não implementado.
+- **F08 (check-in) — implementado e `passing`.** `ReservationController#checkIn` (`POST /api/reservations/{id}/check-in`) em `backend/src/main/java/.../reservation/`. 404 se a reserva não existir; 409 se já tem check-in feito ou se o quarto não está `AVAILABLE`; 400 se antes das 14h sem `confirmedByAttendant=true` no corpo; ao confirmar, grava `Reservation.actualCheckIn` (novo campo) e muda o [[Quarto]] para `OCCUPIED`. "Agora" vem de um `Clock` injetável (`ClockConfig`), não de `LocalDateTime.now()` direto — permite testes determinísticos (D-21 em [[Arquitetura]]).
+- F09 (check-out), F16/F17 (telas) — não implementados.

@@ -88,9 +88,9 @@
       "id": "F08",
       "name": "Check-in",
       "description": "Realizar check-in de uma reserva; exigir confirmacao do atendente (ver DECISIONS.md D-01) se antes das 14h; bloquear o check-in se o quarto nao estiver com status DISPONIVEL.",
-      "status": "not_started",
+      "status": "passing",
       "verification": "ReservationControllerTest#checkInBefore2pm + #checkInValid + #checkInRoomUnavailable passando",
-      "evidence": null,
+      "evidence": "./mvnw test -Dtest=ReservationControllerTest,ReservationRepositoryTest em 2026-07-25: Tests run: 12, Failures: 0, Errors: 0 (BUILD SUCCESS). ./init.sh completo (backend + frontend) tambem passando.",
       "dependencies": ["F06", "F07", "F24"]
     },
     {

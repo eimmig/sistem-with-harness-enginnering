@@ -37,6 +37,8 @@ public class Reservation {
 
     private boolean parkingRequested;
 
+    private LocalDateTime actualCheckIn;
+
     public Reservation(
             Long id,
             Guest guest,
