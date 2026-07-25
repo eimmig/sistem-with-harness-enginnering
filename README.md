@@ -3,7 +3,7 @@
 Sistema de gestão de hóspedes para um hotel: cadastro de hóspedes, reservas, check-in, check-out, cálculo de diárias (dia útil / fim de semana) e taxa de estacionamento.
 
 > Especificação original do desafio: [`Desafio Full-Stack - TA 11.pdf`](./Desafio%20Full-Stack%20-%20TA%2011.pdf).
-> Este projeto está em fase inicial (harness/infraestrutura montada, funcionalidades de negócio ainda não implementadas) — ver [`PROGRESS.md`](./PROGRESS.md) para o estado atual e [`FEATURES.md`](./FEATURES.md) para o backlog detalhado.
+> Este projeto está em fase inicial (harness/infraestrutura montada, funcionalidades de negócio ainda não implementadas) — ver [`progress.md`](./progress.md) para o estado atual e [`feature_list.json`](./feature_list.json) para o backlog detalhado.
 
 ## Stack
 
@@ -24,13 +24,21 @@ Sistema de gestão de hóspedes para um hotel: cadastro de hóspedes, reservas, 
 
 ## Como rodar o projeto do zero
 
-### 1. Subir o banco de dados
+### Opção rápida: `init.sh`
+```sh
+./init.sh
+```
+Compila e testa o backend (via H2, não depende do Docker) e faz build + testa o frontend, tudo em um comando só. É o que uma sessão nova (humana ou agente) deve rodar primeiro para confirmar que o ambiente está saudável.
+
+### Passo a passo
+
+#### 1. Subir o banco de dados
 ```sh
 docker compose up -d
 ```
 Isso sobe um PostgreSQL 16 em `localhost:5433` (porta não-padrão — propositalmente diferente de 5432 para não conflitar com uma instalação local de Postgres já existente na máquina; ver [`DECISIONS.md`](./DECISIONS.md), decisão D-09), com o banco `gestao_hospedes` já criado.
 
-### 2. Backend
+#### 2. Backend
 ```sh
 cd backend
 ./mvnw test              # roda os testes (usa H2 em memória, não depende do passo 1)
@@ -40,7 +48,7 @@ No Windows, use `mvnw.cmd` no lugar de `./mvnw` caso o shell não reconheça o s
 
 Credenciais do banco podem ser sobrescritas via variáveis de ambiente `DB_URL`, `DB_USER` e `DB_PASSWORD` (padrão: `postgres`/`postgres`, compatível com o `docker-compose.yml`).
 
-### 3. Frontend
+#### 3. Frontend
 ```sh
 cd frontend
 npm install
@@ -53,10 +61,12 @@ npm start                 # sobe em http://localhost:4200
 ```
 projeto-senior/
 ├── AGENTS.md              # regras de negócio, stack e convenções do projeto
-├── DECISIONS.md            # decisões de arquitetura e suposições assumidas sobre pontos ambíguos do PDF
-├── PROGRESS.md             # estado atual do trabalho
-├── FEATURES.md             # backlog de funcionalidades, com critério de verificação por item
-├── docker-compose.yml      # PostgreSQL local
+├── DECISIONS.md           # decisões de arquitetura e suposições assumidas sobre pontos ambíguos do PDF
+├── progress.md            # estado atual do trabalho
+├── feature_list.json      # backlog de funcionalidades, com verificação e dependências por item
+├── session-handoff.md     # transferência entre sessões (bloqueios, arquivos tocados, próximo passo)
+├── init.sh                # verificação completa em um comando (compila + testa os dois lados)
+├── docker-compose.yml     # PostgreSQL local
 ├── backend/                # API Spring Boot
 └── frontend/                # aplicação Angular
 ```
@@ -67,4 +77,4 @@ A especificação original tem alguns pontos que não respondem sozinhos (ex.: c
 
 ## Testes
 
-Testes unitários são obrigatórios nos dois lados, cobrindo os requisitos funcionais e as regras de negócio (ver `FEATURES.md` para o mapeamento de cada funcionalidade ao(s) teste(s) correspondente(s)).
+Testes unitários são obrigatórios nos dois lados, cobrindo os requisitos funcionais e as regras de negócio (ver `feature_list.json` para o mapeamento de cada funcionalidade ao(s) teste(s) correspondente(s)).

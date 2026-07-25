@@ -1,0 +1,204 @@
+{
+  "source": "Desafio Full-Stack - TA 11.pdf",
+  "activeFeature": null,
+  "rules": [
+    "Uma funcionalidade ativa (status=active) por vez. One feature at a time.",
+    "Ninguem marca um item como 'passing' manualmente -- so a evidencia (comando + resultado) permite a transicao.",
+    "status possiveis: not_started | active | blocked | passing"
+  ],
+  "notes": [
+    "F06 e F07 sao as funcionalidades de maior risco (mais regras de negocio implicitas) -- devem ganhar mais casos de teste do que as demais, cobrindo especialmente a fronteira sexta->sabado->domingo->segunda.",
+    "Itens do frontend dependem dos endpoints correspondentes do backend ja estarem 'passing'."
+  ],
+  "features": [
+    {
+      "id": "F01",
+      "name": "Cadastro de hospede",
+      "description": "Cadastrar hospede (nome, documento, telefone) de forma persistente.",
+      "status": "not_started",
+      "verification": "HospedeControllerTest + HospedeRepositoryTest passando",
+      "evidence": null,
+      "dependencies": []
+    },
+    {
+      "id": "F02",
+      "name": "Busca de hospede",
+      "description": "Buscar hospede por nome, documento ou telefone.",
+      "status": "not_started",
+      "verification": "HospedeControllerTest#buscaPorFiltro passando",
+      "evidence": null,
+      "dependencies": ["F01"]
+    },
+    {
+      "id": "F03",
+      "name": "Cadastro de categoria de quarto",
+      "description": "Cadastrar categoria de quarto (ex.: Standard, Luxo).",
+      "status": "not_started",
+      "verification": "CategoriaQuartoControllerTest passando",
+      "evidence": null,
+      "dependencies": []
+    },
+    {
+      "id": "F04",
+      "name": "Configuracao de preco por dia da semana",
+      "description": "Configurar preco por dia da semana (segunda a domingo) para cada categoria de quarto.",
+      "status": "not_started",
+      "verification": "CategoriaQuartoControllerTest#atualizaPrecos passando",
+      "evidence": null,
+      "dependencies": ["F03"]
+    },
+    {
+      "id": "F05",
+      "name": "Criacao de reserva",
+      "description": "Criar reserva (hospede + categoria + data de entrada/saida previstas).",
+      "status": "not_started",
+      "verification": "ReservaControllerTest#criarReserva passando",
+      "evidence": null,
+      "dependencies": ["F01", "F03"]
+    },
+    {
+      "id": "F06",
+      "name": "Calculo de diaria",
+      "description": "Calcular o valor da(s) diaria(s) de uma reserva, aplicando a regra de bloco unico do fim de semana (ver DECISIONS.md D-02).",
+      "status": "not_started",
+      "verification": "DiariaServiceTest passando (casos: so dia util, so fim de semana, atravessando os dois)",
+      "evidence": null,
+      "dependencies": ["F04", "F05"]
+    },
+    {
+      "id": "F07",
+      "name": "Calculo de taxa de estacionamento",
+      "description": "Calcular taxa de estacionamento por diaria (dia util vs. fim de semana; cobranca unica no bloco de fim de semana -- ver DECISIONS.md D-03).",
+      "status": "not_started",
+      "verification": "EstacionamentoServiceTest passando",
+      "evidence": null,
+      "dependencies": ["F04", "F05"]
+    },
+    {
+      "id": "F08",
+      "name": "Check-in",
+      "description": "Realizar check-in de uma reserva; emitir alerta nao bloqueante (ver DECISIONS.md D-01) se antes das 14h.",
+      "status": "not_started",
+      "verification": "ReservaControllerTest#checkinAntesDas14h + #checkinValido passando",
+      "evidence": null,
+      "dependencies": ["F06", "F07"]
+    },
+    {
+      "id": "F09",
+      "name": "Check-out",
+      "description": "Realizar check-out de uma reserva; cobrar 50% de taxa extra se apos 12h; retornar detalhamento do total.",
+      "status": "not_started",
+      "verification": "ReservaControllerTest#checkoutComAtraso + #checkoutDetalhamento passando",
+      "evidence": null,
+      "dependencies": ["F06", "F07", "F08"]
+    },
+    {
+      "id": "F10",
+      "name": "Listagem de hospedes no hotel",
+      "description": "Listar hospedes atualmente no hotel (check-in feito, sem check-out).",
+      "status": "not_started",
+      "verification": "HospedeControllerTest#hospedesNoHotel passando",
+      "evidence": null,
+      "dependencies": ["F08"]
+    },
+    {
+      "id": "F11",
+      "name": "Listagem de hospedes sem check-in",
+      "description": "Listar hospedes com reserva e sem check-in realizado.",
+      "status": "not_started",
+      "verification": "HospedeControllerTest#hospedesSemCheckin passando",
+      "evidence": null,
+      "dependencies": ["F05"]
+    },
+    {
+      "id": "F13",
+      "name": "Tela de cadastro/busca de hospedes",
+      "description": "Tela de cadastro e busca de hospedes.",
+      "status": "not_started",
+      "verification": "hospede-form.component.spec.ts + hospede-busca.component.spec.ts passando",
+      "evidence": null,
+      "dependencies": ["F01", "F02"]
+    },
+    {
+      "id": "F14",
+      "name": "Tela de configuracao de precos",
+      "description": "Tela de configuracao de precos por categoria/dia da semana.",
+      "status": "not_started",
+      "verification": "categoria-preco.component.spec.ts passando",
+      "evidence": null,
+      "dependencies": ["F03", "F04"]
+    },
+    {
+      "id": "F15",
+      "name": "Tela de criacao de reserva",
+      "description": "Tela de criacao de reserva.",
+      "status": "not_started",
+      "verification": "reserva-form.component.spec.ts passando",
+      "evidence": null,
+      "dependencies": ["F05"]
+    },
+    {
+      "id": "F16",
+      "name": "Tela de check-in",
+      "description": "Tela de check-in, exibindo alerta quando antes das 14h.",
+      "status": "not_started",
+      "verification": "checkin.component.spec.ts passando",
+      "evidence": null,
+      "dependencies": ["F08"]
+    },
+    {
+      "id": "F17",
+      "name": "Tela de check-out",
+      "description": "Tela de check-out, exibindo detalhamento do total antes de confirmar.",
+      "status": "not_started",
+      "verification": "checkout.component.spec.ts passando",
+      "evidence": null,
+      "dependencies": ["F09"]
+    },
+    {
+      "id": "F18",
+      "name": "Lista de hospedes no hotel (frontend)",
+      "description": "Lista de hospedes atualmente no hotel.",
+      "status": "not_started",
+      "verification": "hospedes-no-hotel.component.spec.ts passando",
+      "evidence": null,
+      "dependencies": ["F10"]
+    },
+    {
+      "id": "F19",
+      "name": "Lista de hospedes sem check-in (frontend)",
+      "description": "Lista de hospedes com reserva sem check-in.",
+      "status": "not_started",
+      "verification": "hospedes-sem-checkin.component.spec.ts passando",
+      "evidence": null,
+      "dependencies": ["F11"]
+    },
+    {
+      "id": "F21",
+      "name": "PostgreSQL local via Docker",
+      "description": "PostgreSQL local sobe via docker compose up -d e a aplicacao conecta nele.",
+      "status": "passing",
+      "verification": "docker compose up -d && ./mvnw spring-boot:run conecta sem erros",
+      "evidence": "Validado manualmente em 2026-07-25: container healthy, backend conecta em jdbc:postgresql://localhost:5433/gestao_hospedes sem erro.",
+      "dependencies": []
+    },
+    {
+      "id": "F22",
+      "name": "README com setup completo",
+      "description": "README.md documenta setup completo (backend, frontend, banco) do zero.",
+      "status": "passing",
+      "verification": "Uma sessao nova consegue rodar o projeto seguindo so o README / init.sh",
+      "evidence": "README.md e init.sh criados e testados em 2026-07-25.",
+      "dependencies": []
+    },
+    {
+      "id": "F23",
+      "name": "Repositorio Git publico",
+      "description": "Repositorio publicado em Git publico, link pronto para envio.",
+      "status": "not_started",
+      "verification": "Link acessivel sem autenticacao",
+      "evidence": null,
+      "dependencies": []
+    }
+  ]
+}
