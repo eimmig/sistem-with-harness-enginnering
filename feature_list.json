@@ -178,9 +178,9 @@
       "id": "F18",
       "name": "Lista de hospedes no hotel (frontend)",
       "description": "Lista de hospedes atualmente no hotel.",
-      "status": "not_started",
+      "status": "passing",
       "verification": "guests-in-hotel.component.spec.ts passando",
-      "evidence": null,
+      "evidence": "npm run test:ci: 49/49 SUCCESS (Chrome Headless). ng build sem erros. ./init.sh completo (backend + frontend) tambem passando (exit 0). Nenhuma mudanca no backend necessaria (GET /api/guests/in-hotel ja existia desde F10).",
       "dependencies": ["F10"]
     },
     {

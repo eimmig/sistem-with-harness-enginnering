@@ -25,4 +25,8 @@ export class GuestService {
     }
     return this.http.get<Guest[]>(this.baseUrl, { params });
   }
+
+  guestsInHotel(): Observable<Guest[]> {
+    return this.http.get<Guest[]>(`${this.baseUrl}/in-hotel`);
+  }
 }

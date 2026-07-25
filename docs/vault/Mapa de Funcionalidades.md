@@ -26,7 +26,7 @@ Espelha `feature_list.json`. Uma funcionalidade ativa por vez (WIP=1); `status: 
 | F15 | Tela de criação de reserva | **passing** | [[Reserva]] | F05, F25 |
 | F16 | Tela de check-in | **passing** | [[Check-in e Check-out]] | F08 |
 | F17 | Tela de check-out | **passing** | [[Check-in e Check-out]] | F09 |
-| F18 | Lista de hóspedes no hotel (frontend) | not_started | [[Hóspede]] | F10 |
+| F18 | Lista de hóspedes no hotel (frontend) | **passing** | [[Hóspede]] | F10 |
 | F19 | Lista de hóspedes sem check-in (frontend) | not_started | [[Hóspede]] | F11 |
 | F21 | PostgreSQL local via Docker | **passing** | [[Arquitetura]] | — |
 | F22 | README com setup completo | **passing** | [[Arquitetura]] | — |

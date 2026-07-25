@@ -3,28 +3,23 @@
 Preencha isto ao final de cada sessão de trabalho. A próxima sessão deve conseguir retomar lendo só este arquivo + `progress.md` + `feature_list.json`.
 
 ## Bloqueios
-- Nenhum. F17 implementado e passando. `feature_list.json` atualizado com evidência.
-- F23 (repositório Git público) segue como a única pendência que não pode ser resolvida por código — vai ser o único item restante depois de F18/F19.
+- Nenhum. F18 implementado e passando. `feature_list.json` atualizado com evidência.
+- F23 (repositório Git público) segue como a única pendência que não pode ser resolvida por código — será o único item restante depois de F19.
 
 ## Arquivos Tocados Nesta Sessão
-- **Backend** (D-28, mesmo padrão de D-24/D-25/D-27):
-  - `backend/src/main/java/.../reservation/ReservationController.java`: novo `GET /api/reservations/pending-check-out` (expõe `findByActualCheckInIsNotNullAndActualCheckOutIsNull()`, já existente).
-  - `backend/src/test/java/.../reservation/ReservationControllerTest.java`: +1 teste (`listsReservationsPendingCheckOut`).
-- **Frontend** (F17):
-  - `frontend/src/app/features/reservation/reservation.model.ts`: +`CheckOutResult`.
-  - `frontend/src/app/features/reservation/reservation.service.ts`: +`pendingCheckOut()`, +`checkOut(id)`.
-  - `frontend/src/app/features/reservation/check-out/` (novo): `CheckOutComponent` + spec (3 testes) — lista reservas pendentes, ao fazer check-out mostra detalhamento completo (diárias + estacionamento + atraso + total) numa seção de resultados.
-  - `frontend/src/app/app.routes.ts`: rota `/check-out` (lazy).
-- `DECISIONS.md`: D-28 registrada (endpoint de listagem + detalhamento pós-ação, não prévia).
-- `feature_list.json`: F17 marcado `passing` com evidência (backend 19/19 + frontend 47/47 + `ng build` + `./init.sh` completo, exit 0).
-- `progress.md`, `docs/vault/Check-in e Check-out.md`, `docs/vault/Mapa de Funcionalidades.md`, `docs/vault/Arquitetura.md`: atualizados.
+- `frontend/src/app/features/guest/guest.service.ts`: +`guestsInHotel()`.
+- `frontend/src/app/features/guest/guests-in-hotel/` (novo): `GuestsInHotelComponent` + spec (2 testes) — tabela simples, sem formulário, consome `GET /api/guests/in-hotel`.
+- `frontend/src/app/app.routes.ts`: rota `/guests-in-hotel` (lazy).
+- `frontend/src/app/app.component.html`: novo link de navegação "No Hotel".
+- `feature_list.json`: F18 marcado `passing` com evidência (49/49 testes Karma + `ng build` + `./init.sh` completo, exit 0). Nenhuma mudança no backend foi necessária.
+- `progress.md`, `docs/vault/Hóspede.md`, `docs/vault/Mapa de Funcionalidades.md`: atualizados.
 
 ## Nota técnica importante para próximas features
-- Nenhuma nova. Padrão de "tela de ação sobre reserva pendente" (F16/F17) totalmente consolidado: `GET /api/reservations/pending-*` reaproveitando queries do repositório + `POST` já existente + tratamento específico de `400`/`409`.
+- Nenhuma nova. F18 confirma que quando o endpoint já existe (caso de F10/F11), a tela de listagem é só um componente simples sem decisão de design nova — não precisou de entrada em `DECISIONS.md`.
 
 ## Próxima Sessão
 1. Ler `progress.md` (seção "Próximo Passo Recomendado") e `feature_list.json`.
 2. Rodar `./init.sh` para confirmar que o ambiente ainda está saudável.
-3. Próximas funcionalidades: **F18** (lista de hóspedes no hotel, depende de F10) e **F19** (lista de hóspedes sem check-in, depende de F11) — ambas simples, consomem `GET /api/guests/in-hotel` e `/without-check-in`, já existentes desde F10/F11. Não deve ser necessário nenhum endpoint novo no backend desta vez. Verificação: `guests-in-hotel.component.spec.ts` e `guests-without-checkin.component.spec.ts`.
-4. Depois de F18/F19, só resta **F23** (repositório Git público) — não é uma tarefa de código, é uma decisão/ação do usuário (criar/publicar o repositório, decidir a conta/organização, visibilidade). Nesse ponto, reportar ao usuário que todo o backlog de código está `passing` e que F23 é a única pendência, aguardando ação humana.
+3. Próxima funcionalidade: **F19** (lista de hóspedes sem check-in) — depende de F11, `passing`. Mesmo padrão de F18: `GuestService.guestsWithoutCheckIn()` (novo método) consumindo `GET /api/guests/without-check-in` (já existente desde F11), `GuestsWithoutCheckInComponent`, rota `/guests-without-check-in`, link de navegação. Verificação: `guests-without-checkin.component.spec.ts`.
+4. **Depois de F19, todo o backlog de código estará `passing`** (F01–F19, F21–F22, F24–F25). Resta só **F23** (repositório Git público) — não é uma tarefa de código, é uma decisão/ação do usuário (criar/publicar o repositório, decidir conta/organização, visibilidade). Nesse ponto, a sessão deve reportar ao usuário que o backlog de implementação está completo e que F23 aguarda ação humana — não tentar resolvê-la sozinha.
 5. Atualizar `docs/vault/` antes do commit — parte obrigatória da Definição de Pronto (CLAUDE.md).

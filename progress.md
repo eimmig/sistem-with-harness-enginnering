@@ -1,14 +1,14 @@
 # Progresso do Projeto
 
 ## Última Atualização
-2026-07-25 — F17 (Tela de check-out) implementada e passando: backend ganhou `GET /api/reservations/pending-check-out` (D-28); `CheckOutComponent` lista reservas pendentes, ao fazer check-out mostra o detalhamento completo (diárias + estacionamento + taxa de atraso + total) numa seção de resultados; 47/47 testes Karma passando, `ng build` sem erros.
+2026-07-25 — F18 (Lista de hóspedes no hotel) implementada e passando: `GuestsInHotelComponent` (rota `/guests-in-hotel`), consome `GET /api/guests/in-hotel` (já existente desde F10, nenhuma mudança no backend); 49/49 testes Karma passando, `ng build` sem erros.
 
 ## Objetivo Atual
-Backend de negócio central completo (F01–F11, F24). F13, F14, F25, F15, F16 e F17 são as telas de frontend concluídas até agora. Restam apenas: F18 (lista de hóspedes no hotel), F19 (lista de hóspedes sem check-in) — ambas simples, sem endpoint novo necessário; e F23 (repositório Git público — fora do escopo de automação, requer ação do usuário).
+Backend de negócio central completo (F01–F11, F24). F13, F14, F25, F15, F16, F17 e F18 são as telas de frontend concluídas até agora. Resta apenas: F19 (lista de hóspedes sem check-in — sem endpoint novo necessário); e F23 (repositório Git público — fora do escopo de automação, requer ação do usuário).
 
 ## Próximo Passo Recomendado
-1. F18/F19 são as últimas telas de negócio pendentes — consomem `GET /api/guests/in-hotel` e `/without-check-in`, ambos já existentes desde F10/F11. Não deve ser necessário nenhum endpoint novo no backend.
-2. Depois de F18/F19, restará só F23 (repositório Git público) — não pode ser concluída autonomamente, é uma decisão/ação do usuário (credenciais, conta, visibilidade do repositório). Sinalizar como bloqueio nesse ponto.
+1. F19 (lista de hóspedes sem check-in, depende de F11) é a última tela de negócio pendente — consome `GET /api/guests/without-check-in`, já existente desde F11. Mesmo padrão de F18 (componente de listagem simples, sem formulário).
+2. Depois de F19, restará só F23 (repositório Git público) — não pode ser concluída autonomamente, é uma decisão/ação do usuário (credenciais, conta, visibilidade do repositório). Sinalizar como bloqueio nesse ponto — todo o resto do backlog estará `passing`.
 3. Re-rodar `./init.sh` antes de considerar cada funcionalidade concluída.
 
 ## Concluído
@@ -38,6 +38,7 @@ Backend de negócio central completo (F01–F11, F24). F13, F14, F25, F15, F16 e
 - [x] **F15 — Tela de criação de reserva**: `ReservationFormComponent`, `ReservationsPageComponent` (rota `/reservations`).
 - [x] **F16 — Tela de check-in**: `CheckInComponent` (rota `/check-in`); backend ganhou `GET /api/reservations/pending-check-in`.
 - [x] **F17 — Tela de check-out**: `CheckOutComponent` (rota `/check-out`); backend ganhou `GET /api/reservations/pending-check-out`.
+- [x] **F18 — Lista de hóspedes no hotel**: `GuestsInHotelComponent` (rota `/guests-in-hotel`).
 
 Detalhes de cada feature (arquivos tocados, decisões, evidência) estão em `feature_list.json` (campo `evidence`) e nos commits correspondentes — não duplicados aqui para evitar desatualização.
 
