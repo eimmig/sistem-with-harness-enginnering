@@ -3,6 +3,7 @@ package com.projetosenior.gestaohospedes.room;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.projetosenior.gestaohospedes.roomcategory.RoomCategory;
 import com.projetosenior.gestaohospedes.roomcategory.RoomCategoryRepository;
+import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -31,6 +33,19 @@ class RoomControllerTest {
 
     @MockitoBean
     private RoomCategoryRepository roomCategoryRepository;
+
+    @Test
+    void listsAllRooms() throws Exception {
+        RoomCategory category = new RoomCategory(1L, "Standard");
+        Room room101 = new Room(1L, "101", category, RoomStatus.AVAILABLE);
+        Room room102 = new Room(2L, "102", category, RoomStatus.DIRTY);
+        when(roomRepository.findAll()).thenReturn(List.of(room101, room102));
+
+        mockMvc.perform(get("/api/rooms"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].number").value("101"))
+                .andExpect(jsonPath("$[1].number").value("102"));
+    }
 
     @Test
     void createsRoomAndReturnsCreated() throws Exception {

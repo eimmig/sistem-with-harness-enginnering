@@ -1,0 +1,11 @@
+<h1>Quartos</h1>
+
+<section class="rooms-page-section">
+  <h2>Cadastrar quarto</h2>
+  <app-room-form (roomCreated)="onRoomCreated($event)" />
+</section>
+
+<section class="rooms-page-section">
+  <h2>Quartos cadastrados</h2>
+  <app-room-list [refreshSignal]="lastCreatedRoom" />
+</section>

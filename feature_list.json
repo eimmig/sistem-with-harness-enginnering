@@ -142,9 +142,9 @@
       "id": "F25",
       "name": "Tela de gestao de quartos",
       "description": "Tela de cadastro de quartos e alteracao de status (DISPONIVEL, SUJO, OCUPADO).",
-      "status": "not_started",
+      "status": "passing",
       "verification": "room-form.component.spec.ts passando",
-      "evidence": null,
+      "evidence": "./mvnw test: RoomControllerTest/RoomRepositoryTest 8/8 verdes (novo GET /api/rooms, D-25). npm run test:ci: 31/31 SUCCESS. ng build sem erros. ./init.sh completo (backend + frontend) tambem passando (exit 0).",
       "dependencies": ["F24"]
     },
     {

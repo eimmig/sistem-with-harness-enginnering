@@ -60,6 +60,11 @@
   | Status do quarto: Disponível / Sujo / Ocupado | `RoomStatus`: `AVAILABLE` / `DIRTY` / `OCCUPIED` |
 - **Status**: decisão confirmada pelo solicitante do desafio.
 
+## [D-25] 2026-07-25 — F25 adicionou `GET /api/rooms` ao backend (mesmo padrão de D-24)
+- **Motivo**: F24 só implementou `POST /api/rooms` (criar, nasce `AVAILABLE`) e `PATCH /api/rooms/{id}/status` (alterar status) — nenhuma delas listava quartos existentes. A tela de gestão de quartos (F25) precisa exibir a lista de quartos cadastrados, com um seletor de status por linha para alteração inline. Endpoint adicionado dentro do escopo de F25, mesmo raciocínio de D-24.
+- **UI**: `RoomListComponent` mostra uma tabela com número, categoria e um `mat-select` de status por linha; ao trocar, chama `PATCH /api/rooms/{id}/status` imediatamente (sem botão de confirmar separado — mudança de status é uma ação simples e reversível, diferente de check-in/check-out que têm regras de negócio mais pesadas).
+- **Status**: decisão técnica, não sujeita a confirmação do solicitante do desafio.
+
 ## [D-24] 2026-07-25 — F14 adicionou `GET /api/room-categories` ao backend (não estava em nenhuma feature anterior)
 - **Motivo**: F03/F04 implementaram só `POST /api/room-categories` (criar) e `PUT /api/room-categories/{id}/prices` (configurar preço) — nenhuma delas precisava listar categorias existentes. A tela de configuração de preços (F14) precisa que o atendente escolha, entre as categorias já cadastradas, qual delas vai ter o preço configurado — o que exige uma forma de listá-las. Como esse endpoint é estritamente necessário para a própria F14 (não é "já que estou aqui, vou mexer em outra coisa"), foi adicionado dentro do escopo desta feature, em vez de virar uma nova entrada no backlog.
 - **Endpoint**: `GET /api/room-categories`, sem filtros, retorna todas as categorias (mesmo padrão de `RoomCategoryResponse` usado por `POST`/`PUT`, incluindo os preços já configurados — permite a tela pré-popular os campos ao selecionar uma categoria).

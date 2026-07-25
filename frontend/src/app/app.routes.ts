@@ -12,5 +12,9 @@ export const routes: Routes = [
       import('./features/room-category/room-categories-page/room-categories-page.component').then(
         (m) => m.RoomCategoriesPageComponent
       )
+  },
+  {
+    path: 'rooms',
+    loadComponent: () => import('./features/room/rooms-page/rooms-page.component').then((m) => m.RoomsPageComponent)
   }
 ];
