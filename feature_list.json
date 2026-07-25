@@ -79,9 +79,9 @@
       "id": "F07",
       "name": "Calculo de taxa de estacionamento",
       "description": "Calcular taxa de estacionamento cobrada por dia de estadia, usando o valor do dia util ou fim de semana conforme o dia (ver DECISIONS.md D-03).",
-      "status": "not_started",
+      "status": "passing",
       "verification": "ParkingFeeServiceTest passando",
-      "evidence": null,
+      "evidence": "./mvnw test -Dtest=ParkingFeeServiceTest,ReservationControllerTest,ReservationRepositoryTest em 2026-07-25: Tests run: 11, Failures: 0, Errors: 0 (BUILD SUCCESS). ./init.sh completo (backend + frontend) tambem passando.",
       "dependencies": ["F04", "F05"]
     },
     {

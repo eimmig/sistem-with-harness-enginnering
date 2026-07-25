@@ -18,4 +18,4 @@ Módulo de maior risco do backlog junto com [[Diária]] — mesma lógica de dia
 [[Mapa de Funcionalidades]]: F07 (cálculo de taxa de estacionamento), depende de F04 e F05.
 
 ## Status atual
-Não implementado.
+- **F07 (cálculo) — implementado e `passing`.** `ParkingFeeService` (pacote `parkingfee`, serviço puro, sem endpoint próprio ainda) em `backend/src/main/java/.../parkingfee/`. `calculate(parkingRequested, checkIn, checkOut)`: R$ 15,00/noite em dia útil (segunda-sexta), R$ 20,00/noite em fim de semana (sábado-domingo), zero se `parkingRequested=false`. A informação "hóspede tem carro e usa vaga" agora mora em `Reservation.parkingRequested` (D-20 em [[Arquitetura]]) — capturada na criação da reserva ([[Reserva]]), não no check-in.

@@ -7,7 +7,8 @@ public record ReservationResponse(
         GuestSummary guest,
         RoomSummary room,
         LocalDateTime expectedCheckIn,
-        LocalDateTime expectedCheckOut) {
+        LocalDateTime expectedCheckOut,
+        boolean parkingRequested) {
 
     public record GuestSummary(Long id, String name) {
     }
@@ -21,6 +22,7 @@ public record ReservationResponse(
                 new GuestSummary(reservation.getGuest().getId(), reservation.getGuest().getName()),
                 new RoomSummary(reservation.getRoom().getId(), reservation.getRoom().getNumber()),
                 reservation.getExpectedCheckIn(),
-                reservation.getExpectedCheckOut());
+                reservation.getExpectedCheckOut(),
+                reservation.isParkingRequested());
     }
 }

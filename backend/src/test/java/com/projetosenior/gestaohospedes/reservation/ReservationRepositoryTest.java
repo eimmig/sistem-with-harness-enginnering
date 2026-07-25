@@ -39,7 +39,7 @@ class ReservationRepositoryTest {
         LocalDateTime checkOut = LocalDateTime.of(2026, 8, 4, 12, 0);
 
         Reservation saved =
-                reservationRepository.save(new Reservation(null, guest, room, checkIn, checkOut));
+                reservationRepository.save(new Reservation(null, guest, room, checkIn, checkOut, true));
 
         assertThat(saved.getId()).isNotNull();
 
@@ -49,5 +49,6 @@ class ReservationRepositoryTest {
         assertThat(found.get().getRoom().getNumber()).isEqualTo("101");
         assertThat(found.get().getExpectedCheckIn()).isEqualTo(checkIn);
         assertThat(found.get().getExpectedCheckOut()).isEqualTo(checkOut);
+        assertThat(found.get().isParkingRequested()).isTrue();
     }
 }

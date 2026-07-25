@@ -54,20 +54,21 @@ class ReservationControllerTest {
         Room room = room();
         LocalDateTime checkIn = LocalDateTime.of(2026, 8, 3, 14, 0);
         LocalDateTime checkOut = LocalDateTime.of(2026, 8, 4, 12, 0);
-        Reservation saved = new Reservation(1L, guest, room, checkIn, checkOut);
+        Reservation saved = new Reservation(1L, guest, room, checkIn, checkOut, true);
         when(guestRepository.findById(1L)).thenReturn(Optional.of(guest));
         when(roomRepository.findById(1L)).thenReturn(Optional.of(room));
         when(reservationRepository.save(any(Reservation.class))).thenReturn(saved);
 
         mockMvc.perform(post("/api/reservations")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new ReservationRequest(1L, 1L, checkIn, checkOut))))
+                        .content(objectMapper.writeValueAsString(new ReservationRequest(1L, 1L, checkIn, checkOut, true))))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(1))
                 .andExpect(jsonPath("$.guest.id").value(1))
                 .andExpect(jsonPath("$.guest.name").value("Maria Silva"))
                 .andExpect(jsonPath("$.room.id").value(1))
-                .andExpect(jsonPath("$.room.number").value("101"));
+                .andExpect(jsonPath("$.room.number").value("101"))
+                .andExpect(jsonPath("$.parkingRequested").value(true));
     }
 
     @Test
@@ -77,7 +78,7 @@ class ReservationControllerTest {
 
         mockMvc.perform(post("/api/reservations")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new ReservationRequest(1L, 1L, checkIn, checkOut))))
+                        .content(objectMapper.writeValueAsString(new ReservationRequest(1L, 1L, checkIn, checkOut, false))))
                 .andExpect(status().isBadRequest());
     }
 
@@ -89,7 +90,7 @@ class ReservationControllerTest {
 
         mockMvc.perform(post("/api/reservations")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new ReservationRequest(99L, 1L, checkIn, checkOut))))
+                        .content(objectMapper.writeValueAsString(new ReservationRequest(99L, 1L, checkIn, checkOut, false))))
                 .andExpect(status().isNotFound());
     }
 
@@ -102,7 +103,7 @@ class ReservationControllerTest {
 
         mockMvc.perform(post("/api/reservations")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new ReservationRequest(1L, 99L, checkIn, checkOut))))
+                        .content(objectMapper.writeValueAsString(new ReservationRequest(1L, 99L, checkIn, checkOut, false))))
                 .andExpect(status().isNotFound());
     }
 
@@ -110,7 +111,7 @@ class ReservationControllerTest {
     void rejectsMissingRequiredFields() throws Exception {
         mockMvc.perform(post("/api/reservations")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new ReservationRequest(null, null, null, null))))
+                        .content(objectMapper.writeValueAsString(new ReservationRequest(null, null, null, null, false))))
                 .andExpect(status().isBadRequest());
     }
 }

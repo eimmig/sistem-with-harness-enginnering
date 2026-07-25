@@ -35,11 +35,20 @@ public class Reservation {
 
     private LocalDateTime expectedCheckOut;
 
-    public Reservation(Long id, Guest guest, Room room, LocalDateTime expectedCheckIn, LocalDateTime expectedCheckOut) {
+    private boolean parkingRequested;
+
+    public Reservation(
+            Long id,
+            Guest guest,
+            Room room,
+            LocalDateTime expectedCheckIn,
+            LocalDateTime expectedCheckOut,
+            boolean parkingRequested) {
         this.id = id;
         this.guest = guest;
         this.room = room;
         this.expectedCheckIn = expectedCheckIn;
         this.expectedCheckOut = expectedCheckOut;
+        this.parkingRequested = parkingRequested;
     }
 }

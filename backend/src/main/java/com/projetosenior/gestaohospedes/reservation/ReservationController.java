@@ -37,8 +37,8 @@ public class ReservationController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Guest not found"));
         Room room = roomRepository.findById(request.roomId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Room not found"));
-        Reservation reservation =
-                new Reservation(null, guest, room, request.expectedCheckIn(), request.expectedCheckOut());
+        Reservation reservation = new Reservation(
+                null, guest, room, request.expectedCheckIn(), request.expectedCheckOut(), request.parkingRequested());
         Reservation saved = reservationRepository.save(reservation);
         return ResponseEntity.status(HttpStatus.CREATED).body(ReservationResponse.from(saved));
     }
