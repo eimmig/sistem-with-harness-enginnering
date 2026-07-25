@@ -45,6 +45,8 @@ Isso compila e testa o backend (via H2, não depende do Docker) e faz build + te
 ## Definição de Pronto
 Uma funcionalidade só é considerada concluída quando passa no comando de verificação listado no campo `verification` do item correspondente em `feature_list.json`, e a evidência (comando + resultado) é registrada no campo `evidence` — nunca quando "o código foi escrito e parece certo".
 
+Assim que uma funcionalidade atinge esse estado (verificação passando + evidência registrada), faça um **commit imediatamente**, antes de iniciar a próxima — não espere o fim da sessão. Esse commit é um ponto de restauro: cada funcionalidade `passing` deve corresponder a um commit no histórico ao qual dá para voltar com segurança caso a próxima funcionalidade dê errado.
+
 ## Convenções
 - Código-fonte (classes, variáveis, constantes, mensagens de erro/validação) em inglês — ver D-13 em `DECISIONS.md`. A documentação do projeto (este arquivo, `DECISIONS.md`, `feature_list.json`) continua em português; é só o código que muda.
 
