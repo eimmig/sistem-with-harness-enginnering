@@ -28,8 +28,9 @@ Controller → Service → Repository, padrão Spring Data JPA. Testes de contro
 - **D-09** — Postgres do Docker exposto em `5433` (não `5432`), para não colidir com um Postgres nativo já instalado na máquina de desenvolvimento.
 - **D-12** — [[Quarto]] é entidade própria (número, categoria, status: `DISPONIVEL`/`SUJO`/`OCUPADO`).
 - **D-13** — código-fonte em inglês; ver [[Glossário de Domínio]].
+- **D-15** — busca de hóspede (`GET /api/guests`) usa filtros opcionais `name`/`document`/`phone` combinados por AND, partial match case-insensitive, via `Specification`/`JpaSpecificationExecutor` do Spring Data JPA. Ver [[Hóspede]].
 
 ## Documentação da API
-Adicionado `springdoc-openapi-starter-webmvc-ui` (versão 3.0.3, compatível com Spring Boot 4 / Spring Framework 7) como infraestrutura — não é uma funcionalidade rastreada em `feature_list.json`. Configuração em `backend/src/main/java/com/projetosenior/gestaohospedes/config/OpenApiConfig.java`. A documentação se preenche automaticamente conforme os controllers de cada feature forem implementados; hoje ainda não há endpoints de negócio.
+Adicionado `springdoc-openapi-starter-webmvc-ui` (versão 3.0.3, compatível com Spring Boot 4 / Spring Framework 7) como infraestrutura — não é uma funcionalidade rastreada em `feature_list.json`. Configuração em `backend/src/main/java/com/projetosenior/gestaohospedes/config/OpenApiConfig.java`. A documentação se preenche automaticamente conforme os controllers de cada feature forem implementados; atualmente cobre `POST`/`GET /api/guests` (F01/F02) e `POST /api/room-categories` (F03).
 
 Ver também: [[Visão Geral do Sistema]], [[Mapa de Funcionalidades]].

@@ -19,4 +19,5 @@ Agrupar [[Quarto|quartos]] (ex.: Standard, Luxo) e ser a dona do preço configur
 Cada [[Quarto]] pertence a uma categoria. A categoria é a fonte do valor usado no cálculo de [[Diária]].
 
 ## Status atual
-Não implementado.
+- **F03 (cadastro) — implementado e `passing`.** `RoomCategory` (entidade: `id`, `name`), `RoomCategoryRepository`, `RoomCategoryController` (`POST /api/room-categories`) em `backend/src/main/java/.../roomcategory/`. Validação `@NotBlank` em nome.
+- F04 (preço por dia da semana), F14 (tela de configuração) — não implementados. O preço por categoria/dia da semana (regras #2 e #4) fica fora do escopo de F03 propositalmente — é responsabilidade de F04.

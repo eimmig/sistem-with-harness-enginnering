@@ -45,7 +45,9 @@ Isso compila e testa o backend (via H2, não depende do Docker) e faz build + te
 ## Definição de Pronto
 Uma funcionalidade só é considerada concluída quando passa no comando de verificação listado no campo `verification` do item correspondente em `feature_list.json`, e a evidência (comando + resultado) é registrada no campo `evidence` — nunca quando "o código foi escrito e parece certo".
 
-Assim que uma funcionalidade atinge esse estado (verificação passando + evidência registrada), faça um **commit imediatamente**, antes de iniciar a próxima — não espere o fim da sessão. Esse commit é um ponto de restauro: cada funcionalidade `passing` deve corresponder a um commit no histórico ao qual dá para voltar com segurança caso a próxima funcionalidade dê errado.
+Antes do commit, atualize também a base de conhecimento Obsidian em `docs/vault/` (ver D-14 em `DECISIONS.md`): a nota do módulo afetado (status da feature, endpoints/campos implementados) e `Mapa de Funcionalidades.md` (status na tabela). Isso faz parte da mesma etapa de verificação — não um passo à parte, opcional ou para "depois".
+
+Assim que uma funcionalidade atinge esse estado (verificação passando + evidência registrada + vault atualizado), faça um **commit imediatamente**, antes de iniciar a próxima — não espere o fim da sessão. Esse commit é um ponto de restauro: cada funcionalidade `passing` deve corresponder a um commit no histórico ao qual dá para voltar com segurança caso a próxima funcionalidade dê errado.
 
 ## Convenções
 - Código-fonte (classes, variáveis, constantes, mensagens de erro/validação) em inglês — ver D-13 em `DECISIONS.md`. A documentação do projeto (este arquivo, `DECISIONS.md`, `feature_list.json`) continua em português; é só o código que muda.
@@ -54,6 +56,7 @@ Assim que uma funcionalidade atinge esse estado (verificação passando + evidê
 Antes de encerrar uma sessão, garanta um estado limpo e reiniciável:
 - [ ] `./init.sh` passando (build + testes de backend e frontend)
 - [ ] `feature_list.json` e `progress.md` atualizados com o estado real
+- [ ] `docs/vault/` atualizado (nota do módulo + `Mapa de Funcionalidades.md`) para cada feature que virou `passing` na sessão
 - [ ] `session-handoff.md` atualizado (bloqueios, arquivos tocados, próximo passo)
 - [ ] Nenhum código de debug (`console.log`, `System.out.println`, `TODO` esquecido) restando
 - [ ] Commit feito — a próxima sessão deve conseguir começar limpa, sem precisar perguntar nada

@@ -23,4 +23,5 @@ Um hóspede faz uma ou mais [[Reserva|reservas]]; cada reserva é o elo entre h�
 
 ## Status atual
 - **F01 (cadastro) — implementado e `passing`.** `Guest` (entidade), `GuestRepository`, `GuestController` (`POST /api/guests`) em `backend/src/main/java/.../guest/`. Validação `@NotBlank` em nome/documento/telefone.
-- F02 (busca), F10/F11 (listagens), F13/F18/F19 (telas) — não implementados.
+- **F02 (busca) — implementado e `passing`.** `GuestController#search` (`GET /api/guests?name=&document=&phone=`), filtros opcionais combinados por AND, partial match case-insensitive, via `GuestSpecifications` + `GuestRepository extends JpaSpecificationExecutor<Guest>`. Sem filtros, retorna todos os hóspedes. Decisão de design em D-15 (ver [[Arquitetura]]).
+- F10/F11 (listagens), F13/F18/F19 (telas) — não implementados.
