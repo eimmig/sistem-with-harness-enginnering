@@ -139,4 +139,26 @@ class GuestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(0));
     }
+
+    @Test
+    void guestsWithoutCheckIn() throws Exception {
+        Guest guest = new Guest(1L, "Maria Silva", "12345678900", "11999998888");
+        Reservation reservation = new Reservation(
+                1L, guest, room(), LocalDateTime.of(2026, 8, 3, 14, 0), LocalDateTime.of(2026, 8, 4, 12, 0), false);
+        when(reservationRepository.findByActualCheckInIsNull()).thenReturn(List.of(reservation));
+
+        mockMvc.perform(get("/api/guests/without-check-in"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].name").value("Maria Silva"));
+    }
+
+    @Test
+    void guestsWithoutCheckInReturnsEmptyListWhenEveryoneHasCheckedIn() throws Exception {
+        when(reservationRepository.findByActualCheckInIsNull()).thenReturn(List.of());
+
+        mockMvc.perform(get("/api/guests/without-check-in"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(0));
+    }
 }

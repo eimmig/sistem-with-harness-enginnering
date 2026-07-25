@@ -1,19 +1,16 @@
 # Progresso do Projeto
 
 ## Última Atualização
-2026-07-25 — F10 (Listagem de hóspedes no hotel) implementado e passando: `ReservationRepository.findByActualCheckInIsNotNullAndActualCheckOutIsNull()`, `GuestController#guestsInHotel` (`GET /api/guests/in-hotel`); `GuestControllerTest` (+2 testes, incluindo `guestsInHotel`) verde.
+2026-07-25 — F11 (Listagem de hóspedes sem check-in) implementado e passando: `GuestController#guestsWithoutCheckIn` (`GET /api/guests/without-check-in`), reaproveitando `ReservationRepository.findByActualCheckInIsNull()` (já declarado em F10); `GuestControllerTest` (+2 testes, incluindo `guestsWithoutCheckIn`) verde. **Com F11, todo o núcleo de negócio do backend (F01–F11, F24) está `passing`.**
 
 ## Objetivo Atual
-F01–F10 e F24 concluídos. Pronto para escolher a próxima funcionalidade `not_started` sem dependências pendentes (candidata óbvia: F11 — listagem de hóspedes sem check-in, depende de F05, `passing`).
+Backend de negócio central completo. Restam: telas do frontend (F13, F14, F16, F17, F18, F19, F25 sem dependências pendentes; F15 depende de F25) e F23 (repositório Git público — fora do escopo de automação, requer ação do usuário).
 
 ## Próximo Passo Recomendado
-1. Implementar F11 (listagem de hóspedes com reserva sem check-in: `actualCheckIn` nulo) — reaproveitar `ReservationRepository.findByActualCheckInIsNull()` (já declarado no repositório) + novo endpoint `GuestController#guestsWithoutCheckIn` (`GET /api/guests/without-check-in`).
-2. Depois de F11, o backend de negócio central estará todo `passing`; resta decidir entre continuar com as telas do frontend (F13 em diante) ou F23 (repositório público).
-3. Re-rodar `./init.sh` antes de considerar cada funcionalidade concluída.
-
-## Estado Atual
-- Status dos testes: `./mvnw test` (backend, via H2) e `npm run test:ci` (frontend, via Chrome headless) passando do zero — confirmado por `./init.sh` em 2026-07-25.
-- Backend validado também contra o PostgreSQL real do `docker-compose.yml` (sobe sem erros na porta 8080).
+1. Seguir para as telas do frontend, na ordem do `feature_list.json`: F13 (cadastro/busca de hóspedes) → F14 (configuração de preços) → F25 (gestão de quartos) → F15 (criação de reserva, depende de F25) → F16 (check-in) → F17 (check-out) → F18 (lista de hóspedes no hotel) → F19 (lista de hóspedes sem check-in).
+2. Cada tela consome os endpoints já `passing` do backend correspondente — não deve exigir mudanças no backend, só no Angular (`frontend/`).
+3. F23 (repositório Git público) não pode ser concluída autonomamente — publicar um repositório público e compartilhar o link é uma decisão/ação do usuário (credenciais, conta, visibilidade). Sinalizar como bloqueio quando for a única pendência restante.
+4. Re-rodar `./init.sh` antes de considerar cada funcionalidade concluída.
 
 ## Concluído
 - [x] Repositório Git inicializado (branch `main`)
@@ -22,23 +19,25 @@ F01–F10 e F24 concluídos. Pronto para escolher a próxima funcionalidade `not
 - [x] Esqueleto do frontend (Angular 19 + Angular Material) — `npm run test:ci` passando
 - [x] `docker-compose.yml` para o PostgreSQL local — validado end-to-end (backend conecta e sobe)
 - [x] `README.md` com instruções de setup testadas manualmente
-- [x] Decisões de negócio D-01, D-02, D-03, D-05 confirmadas; D-12 e D-13 registradas; `feature_list.json` atualizado (F24/F25 adicionados, identificadores em inglês)
-- [x] Swagger/OpenAPI (springdoc 3.0.3) configurado no backend (`OpenApiConfig`), validado com `./mvnw test`; D-14 registrada
-- [x] Base de conhecimento Obsidian criada em `docs/vault/` (visão geral, glossário, arquitetura, mapa de funcionalidades, uma nota por módulo)
-- [x] **F01 — Cadastro de hóspede**: `Guest` (entidade), `GuestRepository`, `GuestRequest`/`GuestResponse` (DTOs com Bean Validation), `GuestController` (`POST /api/guests`); `GuestControllerTest` (4 testes) + `GuestRepositoryTest` (2 testes) passando; evidência registrada em `feature_list.json`.
-- [x] **F02 — Busca de hóspede**: `GuestSpecifications` (filtros `nameContains`/`documentContains`/`phoneContains`), `GuestRepository` estendendo `JpaSpecificationExecutor<Guest>`, `GuestController#search` (`GET /api/guests?name=&document=&phone=`, combinação AND, sem filtros retorna todos); `GuestControllerTest` (+3 testes) + `GuestRepositoryTest` (+3 testes) passando; decisão de design em D-15; evidência registrada em `feature_list.json`.
-- [x] **F03 — Cadastro de categoria de quarto**: `RoomCategory` (entidade, campos `id`/`name`), `RoomCategoryRepository`, `RoomCategoryRequest`/`RoomCategoryResponse` (DTOs com Bean Validation), `RoomCategoryController` (`POST /api/room-categories`); `RoomCategoryControllerTest` (2 testes) + `RoomCategoryRepositoryTest` (2 testes) passando; evidência registrada em `feature_list.json`. Preço por dia da semana fica para F04 (não incluído aqui, fora do escopo desta feature).
-- [x] **F04 — Configuração de preço por dia da semana**: `RoomCategory.prices` (`Map<DayOfWeek, BigDecimal>`, `@ElementCollection` em tabela `room_category_price`), `RoomCategoryPricesRequest` (DTO com validação `@NotNull`/`@Positive` por valor do map), `RoomCategoryController#updatePrices` (`PUT /api/room-categories/{id}/prices` — exige as 7 diárias presentes e positivas, 404 se categoria não existir); `RoomCategoryControllerTest` (+4 testes) + `RoomCategoryRepositoryTest` (+1 teste, com flush/clear do `EntityManager` para validar round-trip real no banco) passando; decisão de design em D-16; evidência registrada em `feature_list.json`.
-- [x] **F24 — Cadastro de quarto**: `Room` (entidade: `number` String, `roomCategory` ManyToOne, `status` enum), `RoomStatus` (`AVAILABLE`/`DIRTY`/`OCCUPIED` — tradução de DISPONIVEL/SUJO/OCUPADO registrada no glossário D-13), `RoomRepository`, `RoomRequest`/`RoomStatusRequest`/`RoomResponse` (DTOs), `RoomController` (`POST /api/rooms` — 404 se categoria não existir, cria com status `AVAILABLE`; `PATCH /api/rooms/{id}/status` — 404 se quarto não existir); `RoomControllerTest` (5 testes) + `RoomRepositoryTest` (2 testes) passando; decisão de design em D-17; evidência registrada em `feature_list.json`.
-- [x] **F05 — Criação de reserva**: `Reservation` (entidade: `guest` ManyToOne, `room` ManyToOne, `expectedCheckIn`/`expectedCheckOut` `LocalDateTime`), `ReservationRepository`, `ReservationRequest`/`ReservationResponse` (DTOs, com summaries aninhados de hóspede/quarto), `ReservationController` (`POST /api/reservations` — 404 se hóspede ou quarto não existirem, 400 se check-out não for depois do check-in; **não** valida status do quarto na criação, só no check-in — ver D-18); `ReservationControllerTest` (5 testes) + `ReservationRepositoryTest` (1 teste) passando; decisão de design em D-18; evidência registrada em `feature_list.json`.
-- [x] **F06 — Cálculo de diária**: `DailyRateService` (pacote `dailyrate`, serviço puro sem endpoint), método `calculate(RoomCategory, LocalDateTime checkIn, LocalDateTime checkOut)` — número de noites via `ChronoUnit.DAYS.between` nas datas de calendário, cada noite atribuída ao dia da semana em que começa, preço somado a partir de `RoomCategory.prices`; `DailyRateServiceTest` (5 testes, incluindo o cenário exato da regra #3: sex→sáb→dom→seg 12h = 3 diárias) passando; decisão de design em D-19; evidência registrada em `feature_list.json`.
-- [x] **F07 — Cálculo de taxa de estacionamento**: `Reservation.parkingRequested` (boolean, default `false` — campo novo, decisão D-20), `ReservationRequest`/`ReservationResponse` atualizados para incluir o campo; `ParkingFeeService` (pacote `parkingfee`, serviço puro), método `calculate(boolean parkingRequested, LocalDateTime checkIn, LocalDateTime checkOut)` — R$15,00/noite em dia útil (segunda-sexta), R$20,00/noite em fim de semana (sábado-domingo), zero se `parkingRequested=false`; `ParkingFeeServiceTest` (6 testes) passando; testes de `Reservation`/`ReservationController` atualizados para o novo campo; decisão de design em D-20; evidência registrada em `feature_list.json`.
-- [x] **F08 — Check-in**: `Reservation.actualCheckIn` (campo novo, `LocalDateTime` nullable), `ClockConfig` (bean `Clock.systemDefaultZone()`, injetado no `ReservationController` para "agora" testável — mock de `Clock` nos testes via `clock.instant()`/`clock.getZone()`), `CheckInRequest` (DTO, `confirmedByAttendant` opcional), `ReservationController#checkIn` (`POST /api/reservations/{id}/check-in`): 404 se reserva não existir, 409 se já tem check-in ou quarto não está `AVAILABLE`, 400 se antes das 14h sem confirmação, senão marca `actualCheckIn` e muda quarto para `OCCUPIED`; `ReservationControllerTest` (+7 testes, incluindo os 3 exigidos pela verificação) passando; decisão de design em D-21; evidência registrada em `feature_list.json`.
-- [x] **F09 — Check-out**: `Reservation.actualCheckOut` (campo novo), `CheckOutResponse` (DTO com o detalhamento: `dailyRateTotal`, `parkingFeeTotal`, `lateCheckOutFee`, `total`, `actualCheckOut`), `ReservationController#checkOut` (`POST /api/reservations/{id}/check-out`, chamada única que já calcula e persiste — ver D-22): 404 se reserva não existir, 409 se ainda não teve check-in ou já teve check-out; reaproveita `DailyRateService`/`ParkingFeeService` (mockados no `@WebMvcTest`, já cobertos por seus próprios testes em F06/F07) usando `actualCheckIn` até "agora"; taxa de atraso = 50% do preço da última diária hospedada (dia de `actualCheckOut.minusDays(1)`) se após 12h; quarto vai para `DIRTY` (não `AVAILABLE` — precisa de limpeza); `ReservationControllerTest` (+5 testes, incluindo os 2 exigidos pela verificação) passando; decisão de design em D-22; evidência registrada em `feature_list.json`.
-- [x] **F10 — Listagem de hóspedes no hotel**: `ReservationRepository.findByActualCheckInIsNotNullAndActualCheckOutIsNull()` (novo, junto com `findByActualCheckInIsNull()` já deixado pronto para F11), `GuestController` passou a injetar `ReservationRepository` (dependência cruzada `guest`→`reservation`, aceita conscientemente), `GuestController#guestsInHotel` (`GET /api/guests/in-hotel`) mapeia cada reserva ativa para o hóspede correspondente; `GuestControllerTest` (+2 testes) passando; evidência registrada em `feature_list.json`.
+- [x] Decisões de negócio D-01 a D-22 registradas em `DECISIONS.md`; `feature_list.json` atualizado
+- [x] Swagger/OpenAPI e base de conhecimento Obsidian (`docs/vault/`) criados e mantidos atualizados a cada feature
+- [x] **F01 — Cadastro de hóspede**: `POST /api/guests`.
+- [x] **F02 — Busca de hóspede**: `GET /api/guests?name=&document=&phone=`.
+- [x] **F03 — Cadastro de categoria de quarto**: `POST /api/room-categories`.
+- [x] **F04 — Configuração de preço por dia da semana**: `PUT /api/room-categories/{id}/prices`.
+- [x] **F24 — Cadastro de quarto**: `POST /api/rooms`, `PATCH /api/rooms/{id}/status`.
+- [x] **F05 — Criação de reserva**: `POST /api/reservations`.
+- [x] **F06 — Cálculo de diária**: `DailyRateService` (serviço puro).
+- [x] **F07 — Cálculo de taxa de estacionamento**: `ParkingFeeService` (serviço puro) + `Reservation.parkingRequested`.
+- [x] **F08 — Check-in**: `POST /api/reservations/{id}/check-in`.
+- [x] **F09 — Check-out**: `POST /api/reservations/{id}/check-out`.
+- [x] **F10 — Listagem de hóspedes no hotel**: `GET /api/guests/in-hotel`.
+- [x] **F11 — Listagem de hóspedes sem check-in**: `GET /api/guests/without-check-in`.
+
+Detalhes de cada feature (arquivos tocados, decisões, evidência) estão em `feature_list.json` (campo `evidence`) e nos commits correspondentes — não duplicados aqui para evitar desatualização.
 
 ## Em Andamento
-- (nenhum item ativo no momento — F10 passou para `passing`)
+- (nenhum item ativo no momento — F11 passou para `passing`)
 
 ## Bloqueado / Pendente de Confirmação
-- (nenhum bloqueio no momento)
+- F23 (repositório Git público) depende de ação do usuário fora do escopo de implementação de código.

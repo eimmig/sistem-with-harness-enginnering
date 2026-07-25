@@ -115,9 +115,9 @@
       "id": "F11",
       "name": "Listagem de hospedes sem check-in",
       "description": "Listar hospedes com reserva e sem check-in realizado.",
-      "status": "not_started",
+      "status": "passing",
       "verification": "GuestControllerTest#guestsWithoutCheckIn passando",
-      "evidence": null,
+      "evidence": "./mvnw test -Dtest=GuestControllerTest,GuestRepositoryTest em 2026-07-25: Tests run: 16, Failures: 0, Errors: 0 (BUILD SUCCESS). ./init.sh completo (backend + frontend) tambem passando.",
       "dependencies": ["F05"]
     },
     {

@@ -61,4 +61,13 @@ public class GuestController {
                 .toList();
         return ResponseEntity.ok(guests);
     }
+
+    @GetMapping("/without-check-in")
+    public ResponseEntity<List<GuestResponse>> guestsWithoutCheckIn() {
+        List<GuestResponse> guests = reservationRepository.findByActualCheckInIsNull().stream()
+                .map(Reservation::getGuest)
+                .map(GuestResponse::from)
+                .toList();
+        return ResponseEntity.ok(guests);
+    }
 }
