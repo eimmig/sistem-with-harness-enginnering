@@ -17,7 +17,7 @@ Espelha `feature_list.json`. Uma funcionalidade ativa por vez (WIP=1); `status: 
 | F06 | Cálculo de diária | **passing** | [[Diária]] | F04, F05 |
 | F07 | Cálculo de taxa de estacionamento | **passing** | [[Taxa de Estacionamento]] | F04, F05 |
 | F08 | Check-in | **passing** | [[Check-in e Check-out]] | F06, F07, F24 |
-| F09 | Check-out | not_started | [[Check-in e Check-out]] | F06, F07, F08 |
+| F09 | Check-out | **passing** | [[Check-in e Check-out]] | F06, F07, F08 |
 | F10 | Listagem de hóspedes no hotel | not_started | [[Hóspede]] | F08 |
 | F11 | Listagem de hóspedes sem check-in | not_started | [[Hóspede]] | F05 |
 | F13 | Tela de cadastro/busca de hóspedes | not_started | [[Hóspede]] | F01, F02 |

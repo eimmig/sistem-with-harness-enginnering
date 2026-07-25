@@ -97,9 +97,9 @@
       "id": "F09",
       "name": "Check-out",
       "description": "Realizar check-out de uma reserva; cobrar 50% de taxa extra se apos 12h; retornar detalhamento do total.",
-      "status": "not_started",
+      "status": "passing",
       "verification": "ReservationControllerTest#checkOutLate + #checkOutBreakdown passando",
-      "evidence": null,
+      "evidence": "./mvnw test -Dtest=ReservationControllerTest,ReservationRepositoryTest em 2026-07-25: Tests run: 17, Failures: 0, Errors: 0 (BUILD SUCCESS). ./init.sh completo (backend + frontend) tambem passando.",
       "dependencies": ["F06", "F07", "F08"]
     },
     {

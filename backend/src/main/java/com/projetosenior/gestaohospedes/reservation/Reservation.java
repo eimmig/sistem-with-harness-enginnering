@@ -39,6 +39,8 @@ public class Reservation {
 
     private LocalDateTime actualCheckIn;
 
+    private LocalDateTime actualCheckOut;
+
     public Reservation(
             Long id,
             Guest guest,

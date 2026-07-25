@@ -3,25 +3,23 @@
 Preencha isto ao final de cada sessão de trabalho. A próxima sessão deve conseguir retomar lendo só este arquivo + `progress.md` + `feature_list.json`.
 
 ## Bloqueios
-- Nenhum. F08 implementado e passando. `feature_list.json` atualizado com evidência.
+- Nenhum. F09 implementado e passando. `feature_list.json` atualizado com evidência.
 
 ## Arquivos Tocados Nesta Sessão
-- `backend/src/main/java/.../config/ClockConfig.java` (novo): bean `Clock.systemDefaultZone()`, mesmo padrão do `OpenApiConfig`.
-- `backend/src/main/java/.../reservation/Reservation.java`: adicionado campo `actualCheckIn` (`LocalDateTime`, nullable).
-- `backend/src/main/java/.../reservation/CheckInRequest.java` (novo): DTO `confirmedByAttendant` (boolean).
-- `backend/src/main/java/.../reservation/ReservationResponse.java`: incluído `actualCheckIn`.
-- `backend/src/main/java/.../reservation/ReservationController.java`: injeta `Clock`; novo `POST /api/reservations/{id}/check-in` — 404 reserva não encontrada, 409 já tem check-in ou quarto não `AVAILABLE`, 400 antes das 14h sem confirmação; senão grava `actualCheckIn` e muda quarto para `OCCUPIED`.
-- `backend/src/test/java/.../reservation/ReservationControllerTest.java`: `@MockitoBean Clock clock` + helper `fixClockAt(LocalDateTime)`; +7 testes de check-in (`checkInValid`, `checkInBefore2pm`, `checkInBefore2pmWithConfirmationSucceeds`, `checkInRoomUnavailable`, `checkInAlreadyDoneIsRejected`, `checkInReservationNotFound`).
-- `DECISIONS.md`: D-21 registrada (Clock injetável, `actualCheckIn`, códigos HTTP 409/400).
-- `feature_list.json`: F08 marcado `passing` com evidência (`./mvnw test -Dtest=ReservationControllerTest,ReservationRepositoryTest` → 12/12 verdes; `./init.sh` completo também passando).
+- `backend/src/main/java/.../reservation/Reservation.java`: adicionado campo `actualCheckOut` (`LocalDateTime`, nullable).
+- `backend/src/main/java/.../reservation/CheckOutResponse.java` (novo): DTO com o detalhamento (`dailyRateTotal`, `parkingFeeTotal`, `lateCheckOutFee`, `total`, `actualCheckOut`).
+- `backend/src/main/java/.../reservation/ReservationController.java`: injeta `DailyRateService`/`ParkingFeeService`; novo `POST /api/reservations/{id}/check-out` — 404 reserva não encontrada, 409 sem check-in ou já com check-out; calcula diária + estacionamento (via `actualCheckIn` até "agora") + taxa de atraso de 50% se após 12h (preço da última diária hospedada); persiste `actualCheckOut`, muda quarto para `DIRTY`.
+- `backend/src/test/java/.../reservation/ReservationControllerTest.java`: `@MockitoBean DailyRateService`/`ParkingFeeService` (necessário porque `@WebMvcTest` não carrega beans `@Service` automaticamente — só descobri isso ao rodar os testes e ver `NoSuchBeanDefinitionException`); +5 testes de check-out (`checkOutLate`, `checkOutBreakdown`, `checkOutNotCheckedInYetIsRejected`, `checkOutAlreadyDoneIsRejected`, `checkOutReservationNotFound`); helper `roomWithPrices()` para os testes que dependem do cálculo real da taxa de atraso (inline no controller, não delegado a serviço).
+- `DECISIONS.md`: D-22 registrada (chamada única sem prévia; "diária vigente" = última noite hospedada; quarto vai para `DIRTY`).
+- `feature_list.json`: F09 marcado `passing` com evidência (`./mvnw test -Dtest=ReservationControllerTest,ReservationRepositoryTest` → 17/17 verdes; `./init.sh` completo também passando).
 - `progress.md`, `docs/vault/Check-in e Check-out.md`, `docs/vault/Quarto.md`, `docs/vault/Reserva.md`, `docs/vault/Mapa de Funcionalidades.md`, `docs/vault/Arquitetura.md`: atualizados.
 
 ## Nota técnica importante para próximas features
-- Para testar código que depende de "agora" (`LocalDateTime.now(clock)`), injete `java.time.Clock` via construtor e, no teste `@WebMvcTest`, use `@MockitoBean Clock clock` com `when(clock.instant()).thenReturn(...)` + `when(clock.getZone()).thenReturn(...)` — evita testes frágeis por horário real da máquina. Já há um bean de produção em `ClockConfig` (`Clock.systemDefaultZone()`) reutilizável por qualquer controller/serviço que precise de "agora".
+- **`@WebMvcTest(Controller.class)` não carrega beans `@Service`/`@Component` genéricos** — só o controller, `@ControllerAdvice`, conversores, filtros, etc. Qualquer serviço injetado no controller (mesmo que seja um serviço "de verdade" já testado em outro lugar, como `DailyRateService`/`ParkingFeeService`) precisa ser declarado como `@MockitoBean` no teste do controller, senão o contexto falha ao subir com `NoSuchBeanDefinitionException`. Vale para qualquer novo controller que reaproveite F06/F07 (ou qualquer outro `@Service`) no futuro.
 
 ## Próxima Sessão
 1. Ler `progress.md` (seção "Próximo Passo Recomendado") e `feature_list.json`.
 2. Rodar `./init.sh` para confirmar que o ambiente ainda está saudável.
-3. Próxima funcionalidade: **F09** (check-out) — depende de F06, F07 e F08, todas `passing`. Precisa: (a) `Reservation.actualCheckOut` (novo campo); (b) reaproveitar `DailyRateService` + `ParkingFeeService` para calcular o total; (c) taxa de atraso de 50% sobre "o valor da diária vigente" se check-out após 12h (regra #7) — decidir e registrar qual diária conta como "vigente" (provavelmente a diária do dia em que o check-out ocorre); (d) endpoint deve devolver o detalhamento completo (diárias + estacionamento + atraso) antes de confirmar (regra #8) — avaliar se isso é uma prévia (GET, sem persistir) seguida de uma confirmação (POST), ou um único POST que já retorna o detalhamento no response. Verificação exige `checkOutLate` + `checkOutBreakdown`.
-4. Decidir também para qual status o quarto vai após check-out — provavelmente `SUJO` (precisa de limpeza antes do próximo hóspede), não `AVAILABLE` diretamente. Registrar como decisão em `DECISIONS.md` antes de codar.
+3. Próximas funcionalidades sem dependências pendentes: **F10** (listagem de hóspedes no hotel, depende de F08) e **F11** (listagem de hóspedes sem check-in, depende de F05) — ambas simples, prováveis endpoints `GET` em `ReservationRepository`/`GuestController` usando `actualCheckIn`/`actualCheckOut` (ex.: `findByActualCheckInIsNotNullAndActualCheckOutIsNull`, `findByActualCheckInIsNull`). Verificação: `GuestControllerTest#guestsInHotel` e `GuestControllerTest#guestsWithoutCheckIn` — ou seja, apesar de os dados virem de `Reservation`, os endpoints/testes ficam no módulo `guest` (retornam hóspedes, não reservas).
+4. Depois de F10/F11, o núcleo de negócio do backend (F01–F11, F24) estará completo. Restam: telas do frontend (F13–F19, F25) e F23 (repositório Git público) — nenhuma dependência bloqueante entre elas além das já satisfeitas.
 5. Atualizar `docs/vault/` antes do commit — parte obrigatória da Definição de Pronto (CLAUDE.md).
