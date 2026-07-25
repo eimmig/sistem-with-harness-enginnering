@@ -1,0 +1,11 @@
+<h1>Hóspedes</h1>
+
+<section class="guests-page-section">
+  <h2>Cadastrar hóspede</h2>
+  <app-guest-form (guestCreated)="onGuestCreated($event)" />
+</section>
+
+<section class="guests-page-section">
+  <h2>Buscar hóspedes</h2>
+  <app-guest-search [refreshSignal]="lastCreatedGuest" />
+</section>

@@ -1,16 +1,17 @@
 # Progresso do Projeto
 
 ## Última Atualização
-2026-07-25 — F11 (Listagem de hóspedes sem check-in) implementado e passando: `GuestController#guestsWithoutCheckIn` (`GET /api/guests/without-check-in`), reaproveitando `ReservationRepository.findByActualCheckInIsNull()` (já declarado em F10); `GuestControllerTest` (+2 testes, incluindo `guestsWithoutCheckIn`) verde. **Com F11, todo o núcleo de negócio do backend (F01–F11, F24) está `passing`.**
+2026-07-25 — F13 (Tela de cadastro/busca de hóspedes) implementada e passando: infraestrutura de frontend criada (HttpClient, animações, proxy `/api` → backend, rotas standalone lazy — decisão D-23), `GuestFormComponent` + `GuestSearchComponent` + `GuestsPageComponent` (rota `/guests`) consumindo `POST/GET /api/guests`; 12/12 testes Karma passando, `ng build` sem erros.
 
 ## Objetivo Atual
-Backend de negócio central completo. Restam: telas do frontend (F13, F14, F16, F17, F18, F19, F25 sem dependências pendentes; F15 depende de F25) e F23 (repositório Git público — fora do escopo de automação, requer ação do usuário).
+Backend de negócio central completo (F01–F11, F24). F13 é a primeira tela de frontend concluída. Restam: F14, F16, F17, F18, F19, F25 (sem dependências pendentes) e F15 (depende de F25); e F23 (repositório Git público — fora do escopo de automação, requer ação do usuário).
 
 ## Próximo Passo Recomendado
-1. Seguir para as telas do frontend, na ordem do `feature_list.json`: F13 (cadastro/busca de hóspedes) → F14 (configuração de preços) → F25 (gestão de quartos) → F15 (criação de reserva, depende de F25) → F16 (check-in) → F17 (check-out) → F18 (lista de hóspedes no hotel) → F19 (lista de hóspedes sem check-in).
-2. Cada tela consome os endpoints já `passing` do backend correspondente — não deve exigir mudanças no backend, só no Angular (`frontend/`).
-3. F23 (repositório Git público) não pode ser concluída autonomamente — publicar um repositório público e compartilhar o link é uma decisão/ação do usuário (credenciais, conta, visibilidade). Sinalizar como bloqueio quando for a única pendência restante.
-4. Re-rodar `./init.sh` antes de considerar cada funcionalidade concluída.
+1. Seguir para as próximas telas do frontend, na ordem do `feature_list.json`: F14 (configuração de preços) → F25 (gestão de quartos) → F15 (criação de reserva, depende de F25) → F16 (check-in) → F17 (check-out) → F18 (lista de hóspedes no hotel) → F19 (lista de hóspedes sem check-in).
+2. Reaproveitar a infraestrutura já criada em F13 (`provideHttpClient`, `provideAnimationsAsync`, proxy `/api`, padrão de pastas `features/<domínio>/`) — não deve ser necessário repetir esse setup.
+3. Cada tela consome os endpoints já `passing` do backend correspondente — não deve exigir mudanças no backend, só no Angular (`frontend/`).
+4. F23 (repositório Git público) não pode ser concluída autonomamente — publicar um repositório público e compartilhar o link é uma decisão/ação do usuário (credenciais, conta, visibilidade). Sinalizar como bloqueio quando for a única pendência restante.
+5. Re-rodar `./init.sh` antes de considerar cada funcionalidade concluída.
 
 ## Concluído
 - [x] Repositório Git inicializado (branch `main`)
@@ -33,6 +34,7 @@ Backend de negócio central completo. Restam: telas do frontend (F13, F14, F16, 
 - [x] **F09 — Check-out**: `POST /api/reservations/{id}/check-out`.
 - [x] **F10 — Listagem de hóspedes no hotel**: `GET /api/guests/in-hotel`.
 - [x] **F11 — Listagem de hóspedes sem check-in**: `GET /api/guests/without-check-in`.
+- [x] **F13 — Tela de cadastro/busca de hóspedes**: `GuestFormComponent`, `GuestSearchComponent`, `GuestsPageComponent` (rota `/guests`).
 
 Detalhes de cada feature (arquivos tocados, decisões, evidência) estão em `feature_list.json` (campo `evidence`) e nos commits correspondentes — não duplicados aqui para evitar desatualização.
 

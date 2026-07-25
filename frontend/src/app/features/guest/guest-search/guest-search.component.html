@@ -1,0 +1,46 @@
+<form class="guest-search-form" [formGroup]="form" (ngSubmit)="search()">
+  <mat-form-field appearance="outline">
+    <mat-label>Nome</mat-label>
+    <input matInput formControlName="name" data-testid="search-name-input" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Documento</mat-label>
+    <input matInput formControlName="document" data-testid="search-document-input" />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Telefone</mat-label>
+    <input matInput formControlName="phone" data-testid="search-phone-input" />
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" type="submit" data-testid="search-submit-button">
+    Buscar
+  </button>
+</form>
+
+@if (searched && guests.length === 0) {
+  <p data-testid="guest-search-empty">Nenhum hóspede encontrado.</p>
+}
+
+@if (guests.length > 0) {
+  <table mat-table [dataSource]="guests" data-testid="guest-search-table">
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Nome</th>
+      <td mat-cell *matCellDef="let guest">{{ guest.name }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="document">
+      <th mat-header-cell *matHeaderCellDef>Documento</th>
+      <td mat-cell *matCellDef="let guest">{{ guest.document }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="phone">
+      <th mat-header-cell *matHeaderCellDef>Telefone</th>
+      <td mat-cell *matCellDef="let guest">{{ guest.phone }}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+}

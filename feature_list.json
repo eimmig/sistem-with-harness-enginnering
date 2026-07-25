@@ -124,9 +124,9 @@
       "id": "F13",
       "name": "Tela de cadastro/busca de hospedes",
       "description": "Tela de cadastro e busca de hospedes.",
-      "status": "not_started",
+      "status": "passing",
       "verification": "guest-form.component.spec.ts + guest-search.component.spec.ts passando",
-      "evidence": null,
+      "evidence": "npm run test:ci em 2026-07-25: 12/12 SUCCESS (Chrome Headless). ng build sem erros. ./init.sh completo (backend + frontend) tambem passando. Smoke test manual via ng serve + curl no index.html.",
       "dependencies": ["F01", "F02"]
     },
     {
