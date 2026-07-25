@@ -4,8 +4,10 @@ import jakarta.validation.Valid;
 import java.time.DayOfWeek;
 import java.util.EnumMap;
 import java.util.EnumSet;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -29,6 +31,13 @@ public class RoomCategoryController {
         RoomCategory roomCategory = new RoomCategory(null, request.name());
         RoomCategory saved = roomCategoryRepository.save(roomCategory);
         return ResponseEntity.status(HttpStatus.CREATED).body(RoomCategoryResponse.from(saved));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<RoomCategoryResponse>> list() {
+        List<RoomCategoryResponse> categories =
+                roomCategoryRepository.findAll().stream().map(RoomCategoryResponse::from).toList();
+        return ResponseEntity.ok(categories);
     }
 
     @PutMapping("/{id}/prices")

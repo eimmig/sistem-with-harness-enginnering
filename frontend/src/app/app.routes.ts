@@ -5,5 +5,12 @@ export const routes: Routes = [
   {
     path: 'guests',
     loadComponent: () => import('./features/guest/guests-page/guests-page.component').then((m) => m.GuestsPageComponent)
+  },
+  {
+    path: 'room-categories',
+    loadComponent: () =>
+      import('./features/room-category/room-categories-page/room-categories-page.component').then(
+        (m) => m.RoomCategoriesPageComponent
+      )
   }
 ];

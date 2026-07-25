@@ -1,0 +1,36 @@
+<mat-form-field appearance="outline">
+  <mat-label>Categoria de quarto</mat-label>
+  <mat-select data-testid="category-select" (selectionChange)="onCategorySelected($event.value)">
+    @for (category of categories; track category.id) {
+      <mat-option [value]="category.id">{{ category.name }}</mat-option>
+    }
+  </mat-select>
+</mat-form-field>
+
+@if (selectedCategoryId !== null) {
+  <form class="price-form" [formGroup]="form" (ngSubmit)="submit()">
+    @for (day of days; track day) {
+      <mat-form-field appearance="outline">
+        <mat-label>{{ dayLabels[day] }}</mat-label>
+        <input
+          matInput
+          type="number"
+          step="0.01"
+          [formControlName]="day"
+          [attr.data-testid]="'price-input-' + day"
+        />
+      </mat-form-field>
+    }
+
+    <button mat-raised-button color="primary" type="submit" data-testid="prices-submit-button">
+      Salvar preços
+    </button>
+  </form>
+
+  @if (successMessage) {
+    <p class="success-message" data-testid="prices-success">{{ successMessage }}</p>
+  }
+  @if (errorMessage) {
+    <p class="error-message" data-testid="prices-error">{{ errorMessage }}</p>
+  }
+}

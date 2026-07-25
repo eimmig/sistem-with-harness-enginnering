@@ -60,6 +60,11 @@
   | Status do quarto: Disponível / Sujo / Ocupado | `RoomStatus`: `AVAILABLE` / `DIRTY` / `OCCUPIED` |
 - **Status**: decisão confirmada pelo solicitante do desafio.
 
+## [D-24] 2026-07-25 — F14 adicionou `GET /api/room-categories` ao backend (não estava em nenhuma feature anterior)
+- **Motivo**: F03/F04 implementaram só `POST /api/room-categories` (criar) e `PUT /api/room-categories/{id}/prices` (configurar preço) — nenhuma delas precisava listar categorias existentes. A tela de configuração de preços (F14) precisa que o atendente escolha, entre as categorias já cadastradas, qual delas vai ter o preço configurado — o que exige uma forma de listá-las. Como esse endpoint é estritamente necessário para a própria F14 (não é "já que estou aqui, vou mexer em outra coisa"), foi adicionado dentro do escopo desta feature, em vez de virar uma nova entrada no backlog.
+- **Endpoint**: `GET /api/room-categories`, sem filtros, retorna todas as categorias (mesmo padrão de `RoomCategoryResponse` usado por `POST`/`PUT`, incluindo os preços já configurados — permite a tela pré-popular os campos ao selecionar uma categoria).
+- **Status**: decisão técnica, não sujeita a confirmação do solicitante do desafio.
+
 ## [D-23] 2026-07-25 — Infraestrutura do frontend: proxy para o backend, componentes standalone lazy-loaded, estrutura por feature
 - **Motivo**: o esqueleto Angular criado na inicialização do projeto era só o placeholder padrão do `ng new` (sem `HttpClient`, sem tema aplicado além do CSS prebuilt, sem rotas) — precisou de infraestrutura mínima antes da primeira tela de negócio (F13).
 - **Chamadas à API via caminho relativo `/api/...`** (não URL absoluta `http://localhost:8080/...`): evita configurar CORS no backend. Em desenvolvimento, `frontend/proxy.conf.json` redireciona `/api` para `http://localhost:8080` (configurado em `angular.json` → `serve.options.proxyConfig`); só funciona com `ng serve`, não com o build de produção servido estaticamente — aceitável porque a avaliação do desafio roda localmente via `ng serve`/`README.md`.

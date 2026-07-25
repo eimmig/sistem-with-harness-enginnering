@@ -1,0 +1,17 @@
+<form class="room-category-form" [formGroup]="form" (ngSubmit)="submit()">
+  <mat-form-field appearance="outline">
+    <mat-label>Nome da categoria</mat-label>
+    <input matInput formControlName="name" placeholder="Standard, Luxo..." data-testid="category-name-input" />
+    @if (form.controls.name.invalid && form.controls.name.touched) {
+      <mat-error>Nome é obrigatório</mat-error>
+    }
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" type="submit" data-testid="category-submit-button">
+    Cadastrar categoria
+  </button>
+
+  @if (errorMessage) {
+    <p class="error-message" data-testid="category-form-error">{{ errorMessage }}</p>
+  }
+</form>

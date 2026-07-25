@@ -133,9 +133,9 @@
       "id": "F14",
       "name": "Tela de configuracao de precos",
       "description": "Tela de configuracao de precos por categoria/dia da semana.",
-      "status": "not_started",
+      "status": "passing",
       "verification": "room-category-price.component.spec.ts passando",
-      "evidence": null,
+      "evidence": "./mvnw test em 2026-07-25: RoomCategoryControllerTest/RoomCategoryRepositoryTest 10/10 verdes (novo GET /api/room-categories, D-24). npm run test:ci: 22/22 SUCCESS. ng build sem erros. ./init.sh completo (backend + frontend) tambem passando.",
       "dependencies": ["F03", "F04"]
     },
     {

@@ -1,0 +1,11 @@
+<h1>Categorias de Quarto</h1>
+
+<section class="room-categories-page-section">
+  <h2>Cadastrar categoria</h2>
+  <app-room-category-form (categoryCreated)="onCategoryCreated($event)" />
+</section>
+
+<section class="room-categories-page-section">
+  <h2>Configurar preço por dia da semana</h2>
+  <app-room-category-price [refreshSignal]="lastCreatedCategory" />
+</section>

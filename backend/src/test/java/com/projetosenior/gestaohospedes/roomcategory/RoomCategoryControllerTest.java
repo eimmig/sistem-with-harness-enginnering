@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.math.BigDecimal;
 import java.time.DayOfWeek;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -99,6 +101,18 @@ class RoomCategoryControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new RoomCategoryPricesRequest(allDaysPrices()))))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void listsAllRoomCategories() throws Exception {
+        RoomCategory standard = new RoomCategory(1L, "Standard");
+        RoomCategory luxo = new RoomCategory(2L, "Luxo");
+        when(roomCategoryRepository.findAll()).thenReturn(List.of(standard, luxo));
+
+        mockMvc.perform(get("/api/room-categories"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].name").value("Standard"))
+                .andExpect(jsonPath("$[1].name").value("Luxo"));
     }
 
     private Map<DayOfWeek, BigDecimal> allDaysPrices() {

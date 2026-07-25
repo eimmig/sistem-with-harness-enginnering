@@ -21,7 +21,7 @@ Espelha `feature_list.json`. Uma funcionalidade ativa por vez (WIP=1); `status: 
 | F10 | Listagem de hóspedes no hotel | **passing** | [[Hóspede]] | F08 |
 | F11 | Listagem de hóspedes sem check-in | **passing** | [[Hóspede]] | F05 |
 | F13 | Tela de cadastro/busca de hóspedes | **passing** | [[Hóspede]] | F01, F02 |
-| F14 | Tela de configuração de preços | not_started | [[Categoria de Quarto]] | F03, F04 |
+| F14 | Tela de configuração de preços | **passing** | [[Categoria de Quarto]] | F03, F04 |
 | F25 | Tela de gestão de quartos | not_started | [[Quarto]] | F24 |
 | F15 | Tela de criação de reserva | not_started | [[Reserva]] | F05, F25 |
 | F16 | Tela de check-in | not_started | [[Check-in e Check-out]] | F08 |

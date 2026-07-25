@@ -1,0 +1,15 @@
+.price-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 8px;
+  max-width: 720px;
+  align-items: start;
+}
+
+.success-message {
+  color: green;
+}
+
+.error-message {
+  color: var(--mat-sys-error, #b00020);
+}
