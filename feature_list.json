@@ -34,9 +34,9 @@
       "id": "F03",
       "name": "Cadastro de categoria de quarto",
       "description": "Cadastrar categoria de quarto (ex.: Standard, Luxo).",
-      "status": "not_started",
+      "status": "passing",
       "verification": "RoomCategoryControllerTest passando",
-      "evidence": null,
+      "evidence": "./mvnw test -Dtest=RoomCategoryControllerTest,RoomCategoryRepositoryTest em 2026-07-25: Tests run: 4, Failures: 0, Errors: 0 (BUILD SUCCESS). ./init.sh completo (backend + frontend) tambem passando.",
       "dependencies": []
     },
     {
