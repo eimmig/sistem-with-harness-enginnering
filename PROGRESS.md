@@ -1,28 +1,27 @@
 # Progresso do Projeto
 
 ## Estado Atual
-- Fase: **inicialização** (nenhuma funcionalidade de negócio implementada ainda — por design, ver `AGENTS.md`).
-- Último commit: (ainda não realizado nesta sessão)
-- Status dos testes: backend e frontend ainda serão escrita/validado nesta sessão de inicialização.
+- Fase: **inicialização concluída** (nenhuma funcionalidade de negócio implementada ainda — por design, ver `AGENTS.md`).
+- Último commit: `79d964d` — chore: inicialização do harness do projeto
+- Status dos testes: `./mvnw test` (backend, via H2) e `npm run test:ci` (frontend, via Chrome headless) passando do zero.
+- Backend validado também contra o PostgreSQL real do `docker-compose.yml` (sobe sem erros na porta 8080).
 
 ## Concluído
 - [x] Repositório Git inicializado (branch `main`)
 - [x] `AGENTS.md`, `DECISIONS.md`, `PROGRESS.md`, `FEATURES.md` criados
+- [x] Esqueleto do backend (Spring Boot 4.1 + Java 17 + PostgreSQL/H2) — `./mvnw test` passando
+- [x] Esqueleto do frontend (Angular 19 + Angular Material) — `npm run test:ci` passando
+- [x] `docker-compose.yml` para o PostgreSQL local — validado end-to-end (backend conecta e sobe)
+- [x] `README.md` com instruções de setup testadas manualmente
+- [x] Commit inicial do checkpoint de inicialização
 
 ## Em Andamento
-- [ ] Esqueleto do backend (Spring Boot + PostgreSQL + JUnit)
-- [ ] Esqueleto do frontend (Angular + Material)
-- [ ] `docker-compose.yml` para o PostgreSQL local
-- [ ] `README.md` com instruções de setup
+- (nenhum item ativo no momento — pronto para começar F01)
 
 ## Bloqueado / Pendente de Confirmação
 - Três suposições de regra de negócio precisam de confirmação do solicitante do desafio antes da implementação das regras de precificação (ver `DECISIONS.md`: D-01, D-02, D-03).
 
 ## Próximos Passos
-1. Gerar esqueleto do backend via Spring Initializr (web, data-jpa, postgresql, validation, lombok).
-2. Gerar esqueleto do frontend via Angular CLI + `ng add @angular/material`.
-3. Escrever `docker-compose.yml` com o serviço PostgreSQL.
-4. Validar que `./mvnw test` e `npm test` passam do zero (checklist de prontidão).
-5. Escrever `README.md` com os comandos reais e confirmados.
-6. Commit inicial do checkpoint de inicialização.
-7. Só então começar a implementar `FEATURES.md`, uma funcionalidade por vez (WIP=1), começando por F01.
+1. Confirmar (ou ajustar) as suposições D-01, D-02 e D-03 com o solicitante do desafio.
+2. Começar `FEATURES.md` pela F01 (cadastro de hóspede), uma funcionalidade ativa por vez (WIP=1).
+3. Priorizar F06/F07 (cálculo de diária e taxa de estacionamento) com atenção especial aos casos de fronteira sexta→sábado→domingo→segunda, por serem as regras de maior risco.
