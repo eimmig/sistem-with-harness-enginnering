@@ -25,9 +25,9 @@
       "id": "F02",
       "name": "Busca de hospede",
       "description": "Buscar hospede por nome, documento ou telefone.",
-      "status": "not_started",
+      "status": "passing",
       "verification": "GuestControllerTest#searchByFilter passando",
-      "evidence": null,
+      "evidence": "./mvnw test -Dtest=GuestControllerTest,GuestRepositoryTest em 2026-07-25: Tests run: 12, Failures: 0, Errors: 0 (BUILD SUCCESS). ./init.sh completo (backend + frontend) tambem passando.",
       "dependencies": ["F01"]
     },
     {
