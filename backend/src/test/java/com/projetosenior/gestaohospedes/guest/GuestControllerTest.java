@@ -1,6 +1,12 @@
 package com.projetosenior.gestaohospedes.guest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.projetosenior.gestaohospedes.reservation.Reservation;
+import com.projetosenior.gestaohospedes.reservation.ReservationRepository;
+import com.projetosenior.gestaohospedes.room.Room;
+import com.projetosenior.gestaohospedes.room.RoomStatus;
+import com.projetosenior.gestaohospedes.roomcategory.RoomCategory;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +33,9 @@ class GuestControllerTest {
 
     @MockitoBean
     private GuestRepository guestRepository;
+
+    @MockitoBean
+    private ReservationRepository reservationRepository;
 
     @Test
     void createsGuestAndReturnsCreated() throws Exception {
@@ -99,6 +108,34 @@ class GuestControllerTest {
         when(guestRepository.findAll(org.mockito.ArgumentMatchers.<Specification<Guest>>any())).thenReturn(List.of());
 
         mockMvc.perform(get("/api/guests").param("document", "00000000000"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.length()").value(0));
+    }
+
+    private Room room() {
+        return new Room(1L, "101", new RoomCategory(1L, "Standard"), RoomStatus.OCCUPIED);
+    }
+
+    @Test
+    void guestsInHotel() throws Exception {
+        Guest guest = new Guest(1L, "Maria Silva", "12345678900", "11999998888");
+        Reservation reservation = new Reservation(
+                1L, guest, room(), LocalDateTime.of(2026, 8, 3, 14, 0), LocalDateTime.of(2026, 8, 4, 12, 0), false);
+        reservation.setActualCheckIn(LocalDateTime.of(2026, 8, 3, 14, 0));
+        when(reservationRepository.findByActualCheckInIsNotNullAndActualCheckOutIsNull())
+                .thenReturn(List.of(reservation));
+
+        mockMvc.perform(get("/api/guests/in-hotel"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].name").value("Maria Silva"));
+    }
+
+    @Test
+    void guestsInHotelReturnsEmptyListWhenNoOneIsCheckedIn() throws Exception {
+        when(reservationRepository.findByActualCheckInIsNotNullAndActualCheckOutIsNull()).thenReturn(List.of());
+
+        mockMvc.perform(get("/api/guests/in-hotel"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(0));
     }

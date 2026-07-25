@@ -1,5 +1,7 @@
 package com.projetosenior.gestaohospedes.guest;
 
+import com.projetosenior.gestaohospedes.reservation.Reservation;
+import com.projetosenior.gestaohospedes.reservation.ReservationRepository;
 import jakarta.validation.Valid;
 import java.util.List;
 import org.springframework.data.jpa.domain.Specification;
@@ -18,9 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class GuestController {
 
     private final GuestRepository guestRepository;
+    private final ReservationRepository reservationRepository;
 
-    public GuestController(GuestRepository guestRepository) {
+    public GuestController(GuestRepository guestRepository, ReservationRepository reservationRepository) {
         this.guestRepository = guestRepository;
+        this.reservationRepository = reservationRepository;
     }
 
     @PostMapping
@@ -46,6 +50,15 @@ public class GuestController {
             spec = spec.and(GuestSpecifications.phoneContains(phone));
         }
         List<GuestResponse> guests = guestRepository.findAll(spec).stream().map(GuestResponse::from).toList();
+        return ResponseEntity.ok(guests);
+    }
+
+    @GetMapping("/in-hotel")
+    public ResponseEntity<List<GuestResponse>> guestsInHotel() {
+        List<GuestResponse> guests = reservationRepository.findByActualCheckInIsNotNullAndActualCheckOutIsNull().stream()
+                .map(Reservation::getGuest)
+                .map(GuestResponse::from)
+                .toList();
         return ResponseEntity.ok(guests);
     }
 }

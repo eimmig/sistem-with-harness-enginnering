@@ -1,14 +1,14 @@
 # Progresso do Projeto
 
 ## Última Atualização
-2026-07-25 — F09 (Check-out) implementado e passando: `Reservation.actualCheckOut` (novo campo), `ReservationController#checkOut` (`POST /api/reservations/{id}/check-out`) — reaproveita `DailyRateService`/`ParkingFeeService`, calcula 50% de taxa de atraso sobre a última diária hospedada se após 12h, retorna detalhamento completo (diária + estacionamento + atraso + total), marca quarto como `DIRTY`; `ReservationControllerTest` (+5 testes, incluindo os 2 exigidos: `checkOutLate`, `checkOutBreakdown`) verde.
+2026-07-25 — F10 (Listagem de hóspedes no hotel) implementado e passando: `ReservationRepository.findByActualCheckInIsNotNullAndActualCheckOutIsNull()`, `GuestController#guestsInHotel` (`GET /api/guests/in-hotel`); `GuestControllerTest` (+2 testes, incluindo `guestsInHotel`) verde.
 
 ## Objetivo Atual
-F01–F09 e F24 concluídos. Pronto para escolher a próxima funcionalidade `not_started` sem dependências pendentes (candidatas: F10 — listagem de hóspedes no hotel, depende de F08 — e F11 — listagem de hóspedes sem check-in, depende de F05 —, ambas `passing`).
+F01–F10 e F24 concluídos. Pronto para escolher a próxima funcionalidade `not_started` sem dependências pendentes (candidata óbvia: F11 — listagem de hóspedes sem check-in, depende de F05, `passing`).
 
 ## Próximo Passo Recomendado
-1. Implementar F10 (listagem de hóspedes no hotel: `actualCheckIn` preenchido e `actualCheckOut` nulo) e F11 (listagem de hóspedes com reserva sem check-in: `actualCheckIn` nulo) — provavelmente dois endpoints simples em `GuestController` ou `ReservationController` consultando `Reservation` via query derivada (`findByActualCheckInIsNotNullAndActualCheckOutIsNull`, `findByActualCheckInIsNull`).
-2. Depois dessas duas, o backend de negócio central está todo `passing`; resta decidir entre continuar com as telas do frontend (F13 em diante) ou F23 (repositório público).
+1. Implementar F11 (listagem de hóspedes com reserva sem check-in: `actualCheckIn` nulo) — reaproveitar `ReservationRepository.findByActualCheckInIsNull()` (já declarado no repositório) + novo endpoint `GuestController#guestsWithoutCheckIn` (`GET /api/guests/without-check-in`).
+2. Depois de F11, o backend de negócio central estará todo `passing`; resta decidir entre continuar com as telas do frontend (F13 em diante) ou F23 (repositório público).
 3. Re-rodar `./init.sh` antes de considerar cada funcionalidade concluída.
 
 ## Estado Atual
@@ -35,9 +35,10 @@ F01–F09 e F24 concluídos. Pronto para escolher a próxima funcionalidade `not
 - [x] **F07 — Cálculo de taxa de estacionamento**: `Reservation.parkingRequested` (boolean, default `false` — campo novo, decisão D-20), `ReservationRequest`/`ReservationResponse` atualizados para incluir o campo; `ParkingFeeService` (pacote `parkingfee`, serviço puro), método `calculate(boolean parkingRequested, LocalDateTime checkIn, LocalDateTime checkOut)` — R$15,00/noite em dia útil (segunda-sexta), R$20,00/noite em fim de semana (sábado-domingo), zero se `parkingRequested=false`; `ParkingFeeServiceTest` (6 testes) passando; testes de `Reservation`/`ReservationController` atualizados para o novo campo; decisão de design em D-20; evidência registrada em `feature_list.json`.
 - [x] **F08 — Check-in**: `Reservation.actualCheckIn` (campo novo, `LocalDateTime` nullable), `ClockConfig` (bean `Clock.systemDefaultZone()`, injetado no `ReservationController` para "agora" testável — mock de `Clock` nos testes via `clock.instant()`/`clock.getZone()`), `CheckInRequest` (DTO, `confirmedByAttendant` opcional), `ReservationController#checkIn` (`POST /api/reservations/{id}/check-in`): 404 se reserva não existir, 409 se já tem check-in ou quarto não está `AVAILABLE`, 400 se antes das 14h sem confirmação, senão marca `actualCheckIn` e muda quarto para `OCCUPIED`; `ReservationControllerTest` (+7 testes, incluindo os 3 exigidos pela verificação) passando; decisão de design em D-21; evidência registrada em `feature_list.json`.
 - [x] **F09 — Check-out**: `Reservation.actualCheckOut` (campo novo), `CheckOutResponse` (DTO com o detalhamento: `dailyRateTotal`, `parkingFeeTotal`, `lateCheckOutFee`, `total`, `actualCheckOut`), `ReservationController#checkOut` (`POST /api/reservations/{id}/check-out`, chamada única que já calcula e persiste — ver D-22): 404 se reserva não existir, 409 se ainda não teve check-in ou já teve check-out; reaproveita `DailyRateService`/`ParkingFeeService` (mockados no `@WebMvcTest`, já cobertos por seus próprios testes em F06/F07) usando `actualCheckIn` até "agora"; taxa de atraso = 50% do preço da última diária hospedada (dia de `actualCheckOut.minusDays(1)`) se após 12h; quarto vai para `DIRTY` (não `AVAILABLE` — precisa de limpeza); `ReservationControllerTest` (+5 testes, incluindo os 2 exigidos pela verificação) passando; decisão de design em D-22; evidência registrada em `feature_list.json`.
+- [x] **F10 — Listagem de hóspedes no hotel**: `ReservationRepository.findByActualCheckInIsNotNullAndActualCheckOutIsNull()` (novo, junto com `findByActualCheckInIsNull()` já deixado pronto para F11), `GuestController` passou a injetar `ReservationRepository` (dependência cruzada `guest`→`reservation`, aceita conscientemente), `GuestController#guestsInHotel` (`GET /api/guests/in-hotel`) mapeia cada reserva ativa para o hóspede correspondente; `GuestControllerTest` (+2 testes) passando; evidência registrada em `feature_list.json`.
 
 ## Em Andamento
-- (nenhum item ativo no momento — F09 passou para `passing`)
+- (nenhum item ativo no momento — F10 passou para `passing`)
 
 ## Bloqueado / Pendente de Confirmação
 - (nenhum bloqueio no momento)
