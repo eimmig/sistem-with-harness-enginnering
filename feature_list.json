@@ -214,9 +214,9 @@
       "id": "F23",
       "name": "Repositorio Git publico",
       "description": "Repositorio publicado em Git publico, link pronto para envio.",
-      "status": "not_started",
+      "status": "passing",
       "verification": "Link acessivel sem autenticacao",
-      "evidence": null,
+      "evidence": "Repositorio publico ja existia em https://github.com/eimmig/sistem-with-harness-enginnering (confirmado com 'git ls-remote --heads origin' em 2026-07-25, acessivel sem credenciais). Estava 13 commits atrasado (parado em F06); sincronizado com 'git push origin main' em 2026-07-25 -- origin/main agora aponta para 1a64630 (F19), igual ao HEAD local.",
       "dependencies": []
     }
   ]

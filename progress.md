@@ -1,15 +1,16 @@
 # Progresso do Projeto
 
 ## Última Atualização
-2026-07-25 — F19 (Lista de hóspedes sem check-in) implementada e passando: `GuestsWithoutCheckinComponent` (rota `/guests-without-check-in`), consome `GET /api/guests/without-check-in` (já existente desde F11, nenhuma mudança no backend); 51/51 testes Karma passando, `ng build` sem erros. **Com F19, todo o backlog de implementação (F01–F19, F21, F22, F24, F25) está `passing`.**
+2026-07-25 — **F23 (repositório Git público) marcado `passing`.** O repositório já existia em `https://github.com/eimmig/sistem-with-harness-enginnering` (público, confirmado via `git ls-remote`), mas estava 13 commits atrasado (parado em F06). Sincronizado com `git push origin main` — `origin/main` agora aponta para o mesmo commit do HEAD local (F19). **Com isso, todas as 24 funcionalidades de `feature_list.json` estão `passing`. O projeto está completo.**
 
 ## Objetivo Atual
-Todo o código está implementado e verificado. **Único item restante: F23 (repositório Git público)** — não é uma tarefa de código, é uma decisão/ação do usuário: criar/publicar o repositório num host Git (GitHub, GitLab, etc.), decidir a conta/organização, garantir visibilidade pública, e compartilhar o link. Fora do escopo do que pode ser feito autonomamente nesta sessão.
+Nenhum. Todo o backlog (F01–F19, F21–F25) está implementado, testado e publicado no repositório público.
 
 ## Próximo Passo Recomendado
-1. Perguntar ao usuário como deseja publicar o repositório (conta/organização, nome do repositório) e, se autorizado, executar os comandos Git necessários (`git remote add`, `git push`) — nunca fazer push para um remoto público sem confirmação explícita do usuário.
-2. Depois de F23, todas as 24 funcionalidades de `feature_list.json` estarão `passing` — o projeto está pronto para envio.
-3. Re-rodar `./init.sh` antes de qualquer entrega final, para garantir que o estado do repositório continua saudável.
+Nenhuma funcionalidade pendente. Se for retomar o projeto:
+1. Rodar `./init.sh` para confirmar que o ambiente segue saudável.
+2. Revisar o `README.md` uma última vez antes de qualquer envio/entrega, para garantir que as instruções de setup continuam precisas.
+3. Qualquer novo trabalho a partir daqui é além do escopo original do desafio (`feature_list.json`) — checar com o usuário antes de iniciar algo novo.
 
 ## Concluído
 - [x] Repositório Git inicializado (branch `main`)
@@ -40,11 +41,12 @@ Todo o código está implementado e verificado. **Único item restante: F23 (rep
 - [x] **F17 — Tela de check-out**: `CheckOutComponent` (rota `/check-out`); backend ganhou `GET /api/reservations/pending-check-out`.
 - [x] **F18 — Lista de hóspedes no hotel**: `GuestsInHotelComponent` (rota `/guests-in-hotel`).
 - [x] **F19 — Lista de hóspedes sem check-in**: `GuestsWithoutCheckinComponent` (rota `/guests-without-check-in`).
+- [x] **F23 — Repositório Git público**: `https://github.com/eimmig/sistem-with-harness-enginnering`, sincronizado até o commit de F19.
 
 Detalhes de cada feature (arquivos tocados, decisões, evidência) estão em `feature_list.json` (campo `evidence`) e nos commits correspondentes — não duplicados aqui para evitar desatualização.
 
 ## Em Andamento
-- (nenhum item ativo no momento — F19 passou para `passing`)
+- (nenhum item ativo no momento — F23 passou para `passing`; backlog completo)
 
 ## Bloqueado / Pendente de Confirmação
-- **F23 (repositório Git público)** — única funcionalidade restante em `feature_list.json`. Depende de ação do usuário (conta/organização, nome, visibilidade do repositório, autorização para `git push` a um remoto público) — fora do escopo de implementação de código autônoma.
+- Nenhum.

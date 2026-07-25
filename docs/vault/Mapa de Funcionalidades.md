@@ -30,7 +30,7 @@ Espelha `feature_list.json`. Uma funcionalidade ativa por vez (WIP=1); `status: 
 | F19 | Lista de hóspedes sem check-in (frontend) | **passing** | [[Hóspede]] | F11 |
 | F21 | PostgreSQL local via Docker | **passing** | [[Arquitetura]] | — |
 | F22 | README com setup completo | **passing** | [[Arquitetura]] | — |
-| F23 | Repositório Git público | not_started | — | — |
+| F23 | Repositório Git público | **passing** | — | — |
 
 ## Notas de risco
 F06 e F07 são as funcionalidades de maior risco (mais regras de negócio implícitas) — devem ganhar mais casos de teste do que as demais, cobrindo especialmente a transição entre dias com preços diferentes (sexta/sábado/domingo/segunda). Ver [[Diária]] e [[Taxa de Estacionamento]].
@@ -38,6 +38,6 @@ F06 e F07 são as funcionalidades de maior risco (mais regras de negócio implí
 Itens do frontend dependem dos endpoints correspondentes do backend já estarem `passing`.
 
 ## Status geral (2026-07-25)
-Todas as 23 funcionalidades de código estão `passing`. **F23 é a única pendência** — não é uma tarefa de código, depende de decisão/ação do usuário (publicar o repositório num host Git público e compartilhar o link).
+**Todas as 24 funcionalidades estão `passing`. Projeto completo.** F23: repositório público em `https://github.com/eimmig/sistem-with-harness-enginnering`, sincronizado com o commit de F19 via `git push origin main`.
 
 Ver também: [[Visão Geral do Sistema]].
