@@ -1,14 +1,15 @@
 # Progresso do Projeto
 
 ## Última Atualização
-2026-07-25 — F05 (Criação de reserva) implementado e passando: `Reservation` (hóspede + quarto + datas previstas de entrada/saída), `ReservationController` (`POST /api/reservations`, valida existência de hóspede/quarto e que check-out é depois do check-in), `ReservationControllerTest` + `ReservationRepositoryTest` verdes.
+2026-07-25 — F06 (Cálculo de diária) implementado e passando: `DailyRateService.calculate(RoomCategory, checkIn, checkOut)` — soma o preço de cada noite conforme o dia da semana em que ela começa; `DailyRateServiceTest` (5 testes: só dia útil, só fim de semana, atravessando os dois, checkout inválido, categoria sem preço) verde.
 
 ## Objetivo Atual
-F01–F05 e F24 concluídos. Pronto para escolher a próxima funcionalidade `not_started` sem dependências pendentes (candidatas: F06 — cálculo de diária — e F07 — cálculo de taxa de estacionamento —, ambas dependem de F04/F05, já `passing`).
+F01–F06 e F24 concluídos. Pronto para escolher a próxima funcionalidade `not_started` sem dependências pendentes (candidata: F07 — cálculo de taxa de estacionamento — depende de F04/F05, já `passing`, mas tem uma decisão de escopo pendente, ver abaixo).
 
 ## Próximo Passo Recomendado
-1. Escolher a próxima funcionalidade em `feature_list.json` (F06 ou F07). Ambas sinalizadas em `feature_list.json` (campo `notes`) como as de maior risco — merecem mais casos de teste, cobrindo a transição entre dias com preços diferentes (sexta/sábado/domingo/segunda). F07 depende de decisão pendente sobre onde capturar "hóspede tem carro e usa vaga" (ver D-18 em `DECISIONS.md`) — considerar adicionar esse campo à `Reservation` como parte de F07.
-2. Re-rodar `./init.sh` antes de considerar cada funcionalidade concluída.
+1. Antes de implementar F07, decidir onde mora o campo "hóspede tem carro e usa vaga" (regra #5) — provavelmente um boolean em `Reservation` (ex. `parkingRequested`), já que ainda não existe em nenhuma entidade (ver D-18 em `DECISIONS.md`). Registrar a decisão em `DECISIONS.md` antes de codar.
+2. Implementar F07 seguindo o mesmo padrão de F06 (serviço puro, `ParkingFeeServiceTest`), reaproveitando a lógica de "uma cobrança por dia de estadia, valor conforme dia útil/fim de semana" (regra #5, D-03).
+3. Re-rodar `./init.sh` antes de considerar cada funcionalidade concluída.
 
 ## Estado Atual
 - Status dos testes: `./mvnw test` (backend, via H2) e `npm run test:ci` (frontend, via Chrome headless) passando do zero — confirmado por `./init.sh` em 2026-07-25.
@@ -30,9 +31,10 @@ F01–F05 e F24 concluídos. Pronto para escolher a próxima funcionalidade `not
 - [x] **F04 — Configuração de preço por dia da semana**: `RoomCategory.prices` (`Map<DayOfWeek, BigDecimal>`, `@ElementCollection` em tabela `room_category_price`), `RoomCategoryPricesRequest` (DTO com validação `@NotNull`/`@Positive` por valor do map), `RoomCategoryController#updatePrices` (`PUT /api/room-categories/{id}/prices` — exige as 7 diárias presentes e positivas, 404 se categoria não existir); `RoomCategoryControllerTest` (+4 testes) + `RoomCategoryRepositoryTest` (+1 teste, com flush/clear do `EntityManager` para validar round-trip real no banco) passando; decisão de design em D-16; evidência registrada em `feature_list.json`.
 - [x] **F24 — Cadastro de quarto**: `Room` (entidade: `number` String, `roomCategory` ManyToOne, `status` enum), `RoomStatus` (`AVAILABLE`/`DIRTY`/`OCCUPIED` — tradução de DISPONIVEL/SUJO/OCUPADO registrada no glossário D-13), `RoomRepository`, `RoomRequest`/`RoomStatusRequest`/`RoomResponse` (DTOs), `RoomController` (`POST /api/rooms` — 404 se categoria não existir, cria com status `AVAILABLE`; `PATCH /api/rooms/{id}/status` — 404 se quarto não existir); `RoomControllerTest` (5 testes) + `RoomRepositoryTest` (2 testes) passando; decisão de design em D-17; evidência registrada em `feature_list.json`.
 - [x] **F05 — Criação de reserva**: `Reservation` (entidade: `guest` ManyToOne, `room` ManyToOne, `expectedCheckIn`/`expectedCheckOut` `LocalDateTime`), `ReservationRepository`, `ReservationRequest`/`ReservationResponse` (DTOs, com summaries aninhados de hóspede/quarto), `ReservationController` (`POST /api/reservations` — 404 se hóspede ou quarto não existirem, 400 se check-out não for depois do check-in; **não** valida status do quarto na criação, só no check-in — ver D-18); `ReservationControllerTest` (5 testes) + `ReservationRepositoryTest` (1 teste) passando; decisão de design em D-18; evidência registrada em `feature_list.json`.
+- [x] **F06 — Cálculo de diária**: `DailyRateService` (pacote `dailyrate`, serviço puro sem endpoint), método `calculate(RoomCategory, LocalDateTime checkIn, LocalDateTime checkOut)` — número de noites via `ChronoUnit.DAYS.between` nas datas de calendário, cada noite atribuída ao dia da semana em que começa, preço somado a partir de `RoomCategory.prices`; `DailyRateServiceTest` (5 testes, incluindo o cenário exato da regra #3: sex→sáb→dom→seg 12h = 3 diárias) passando; decisão de design em D-19; evidência registrada em `feature_list.json`.
 
 ## Em Andamento
-- (nenhum item ativo no momento — F05 passou para `passing`)
+- (nenhum item ativo no momento — F06 passou para `passing`)
 
 ## Bloqueado / Pendente de Confirmação
 - (nenhum bloqueio no momento)

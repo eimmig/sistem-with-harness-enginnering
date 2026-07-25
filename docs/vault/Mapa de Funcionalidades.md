@@ -14,7 +14,7 @@ Espelha `feature_list.json`. Uma funcionalidade ativa por vez (WIP=1); `status: 
 | F04 | Configuração de preço por dia da semana | **passing** | [[Categoria de Quarto]] | F03 |
 | F24 | Cadastro de quarto | **passing** | [[Quarto]] | F03 |
 | F05 | Criação de reserva | **passing** | [[Reserva]] | F01, F24 |
-| F06 | Cálculo de diária | not_started | [[Diária]] | F04, F05 |
+| F06 | Cálculo de diária | **passing** | [[Diária]] | F04, F05 |
 | F07 | Cálculo de taxa de estacionamento | not_started | [[Taxa de Estacionamento]] | F04, F05 |
 | F08 | Check-in | not_started | [[Check-in e Check-out]] | F06, F07, F24 |
 | F09 | Check-out | not_started | [[Check-in e Check-out]] | F06, F07, F08 |

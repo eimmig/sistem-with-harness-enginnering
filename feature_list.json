@@ -70,9 +70,9 @@
       "id": "F06",
       "name": "Calculo de diaria",
       "description": "Calcular o valor da(s) diaria(s) de uma reserva somando o preco de cada dia individual (segunda a domingo) conforme a categoria do quarto reservado -- fim de semana nao e um bloco especial (ver DECISIONS.md D-02).",
-      "status": "not_started",
+      "status": "passing",
       "verification": "DailyRateServiceTest passando (casos: so dia util, so fim de semana, atravessando os dois)",
-      "evidence": null,
+      "evidence": "./mvnw test -Dtest=DailyRateServiceTest em 2026-07-25: Tests run: 5, Failures: 0, Errors: 0 (BUILD SUCCESS). ./init.sh completo (backend + frontend) tambem passando.",
       "dependencies": ["F04", "F05"]
     },
     {

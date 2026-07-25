@@ -20,4 +20,4 @@ Módulo de maior risco do backlog junto com [[Taxa de Estacionamento]] — mais 
 [[Mapa de Funcionalidades]]: F06 (cálculo de diária), depende de F04 e F05.
 
 ## Status atual
-Não implementado.
+- **F06 (cálculo) — implementado e `passing`.** `DailyRateService` (pacote `dailyrate`, serviço puro, sem endpoint HTTP próprio nesta etapa) em `backend/src/main/java/.../dailyrate/`. `calculate(RoomCategory, checkIn, checkOut)`: número de noites via diferença de datas de calendário; cada noite atribuída ao dia da semana em que **começa** (a diária sexta 14h→sábado 12h é "sexta"); preço de `RoomCategory.prices`. Decisão de design em D-19 (ver [[Arquitetura]]). Ainda não consumido por nenhum controller — será usado por F08/F09 (check-in/check-out).
