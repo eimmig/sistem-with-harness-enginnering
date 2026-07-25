@@ -16,6 +16,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -151,6 +153,20 @@ class ReservationControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ReservationRequest(null, null, null, null, false))))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void listsReservationsPendingCheckIn() throws Exception {
+        Guest guest = guest();
+        Room room = room(RoomStatus.AVAILABLE);
+        Reservation reservation = new Reservation(
+                1L, guest, room, LocalDateTime.of(2026, 8, 3, 14, 0), LocalDateTime.of(2026, 8, 4, 12, 0), false);
+        when(reservationRepository.findByActualCheckInIsNull()).thenReturn(List.of(reservation));
+
+        mockMvc.perform(get("/api/reservations/pending-check-in"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].guest.name").value("Maria Silva"));
     }
 
     @Test

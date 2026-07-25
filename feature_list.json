@@ -160,9 +160,9 @@
       "id": "F16",
       "name": "Tela de check-in",
       "description": "Tela de check-in, exibindo aviso e pedindo confirmacao do atendente quando antes das 14h.",
-      "status": "not_started",
+      "status": "passing",
       "verification": "check-in.component.spec.ts passando",
-      "evidence": null,
+      "evidence": "./mvnw test: ReservationControllerTest/ReservationRepositoryTest 18/18 verdes (novo GET /api/reservations/pending-check-in, D-27). npm run test:ci: 44/44 SUCCESS. ng build sem erros. ./init.sh completo (backend + frontend) tambem passando (exit 0).",
       "dependencies": ["F08"]
     },
     {

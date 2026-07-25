@@ -23,5 +23,9 @@ export const routes: Routes = [
       import('./features/reservation/reservations-page/reservations-page.component').then(
         (m) => m.ReservationsPageComponent
       )
+  },
+  {
+    path: 'check-in',
+    loadComponent: () => import('./features/reservation/check-in/check-in.component').then((m) => m.CheckInComponent)
   }
 ];

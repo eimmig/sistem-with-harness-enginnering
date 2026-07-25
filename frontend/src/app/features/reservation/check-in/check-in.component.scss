@@ -1,0 +1,18 @@
+table {
+  width: 100%;
+}
+
+.success-message {
+  color: green;
+}
+
+.error-message {
+  color: var(--mat-sys-error, #b00020);
+  margin: 4px 0 0;
+}
+
+.confirmation-warning {
+  display: block;
+  color: var(--mat-sys-error, #b00020);
+  margin-bottom: 4px;
+}

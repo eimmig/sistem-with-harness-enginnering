@@ -14,8 +14,10 @@ import java.time.Clock;
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -51,6 +53,13 @@ public class ReservationController {
         this.clock = clock;
         this.dailyRateService = dailyRateService;
         this.parkingFeeService = parkingFeeService;
+    }
+
+    @GetMapping("/pending-check-in")
+    public ResponseEntity<List<ReservationResponse>> pendingCheckIn() {
+        List<ReservationResponse> reservations =
+                reservationRepository.findByActualCheckInIsNull().stream().map(ReservationResponse::from).toList();
+        return ResponseEntity.ok(reservations);
     }
 
     @PostMapping

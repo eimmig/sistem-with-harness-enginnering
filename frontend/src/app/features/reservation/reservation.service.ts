@@ -11,4 +11,12 @@ export class ReservationService {
   create(request: ReservationRequest): Observable<Reservation> {
     return this.http.post<Reservation>(this.baseUrl, request);
   }
+
+  pendingCheckIn(): Observable<Reservation[]> {
+    return this.http.get<Reservation[]>(`${this.baseUrl}/pending-check-in`);
+  }
+
+  checkIn(id: number, confirmedByAttendant: boolean): Observable<Reservation> {
+    return this.http.post<Reservation>(`${this.baseUrl}/${id}/check-in`, { confirmedByAttendant });
+  }
 }

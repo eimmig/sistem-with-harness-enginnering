@@ -40,6 +40,7 @@ Controller → Service → Repository, padrão Spring Data JPA. Testes de contro
 - **D-24** — [[Categoria de Quarto]]: `GET /api/room-categories` adicionado ao backend como parte do escopo de F14 (tela precisa listar categorias existentes; F03 só tinha `POST`) — não é scope creep, é o que a própria feature de tela exige.
 - **D-25** — [[Quarto]]: `GET /api/rooms` adicionado como parte do escopo de F25, mesmo padrão de D-24; troca de status na tela é inline (sem confirmação separada), diferente de check-in/check-out que têm regras de negócio mais pesadas.
 - **D-26** — [[Reserva]] (F15): busca de hóspede por nome via `GuestService.search()` (sem autocomplete); datas via `<input type="datetime-local">` (sem date-picker dedicado); seletor de quarto mostra todos os quartos, sem filtrar por status (consistente com D-18).
+- **D-27** — [[Check-in e Check-out]] (F16): `GET /api/reservations/pending-check-in` expõe query já existente; aviso das 14h é inline na linha da tabela (sem modal) — `400` do backend dispara o aviso, `409` dispara mensagem de erro.
 
 ## Frontend
 Stack: Angular 19 standalone (sem NgModules), Angular Material (tema `azure-blue` prebuilt), rotas lazy via `loadComponent`. Estrutura por feature em `frontend/src/app/features/<domínio>/` — cada uma com `*.service.ts` (chamadas HTTP), `*.model.ts` (interfaces espelhando os DTOs do backend) e componentes standalone (um por responsabilidade, ex.: formulário e busca separados, compostos numa página que registra a rota). Ver D-23.
