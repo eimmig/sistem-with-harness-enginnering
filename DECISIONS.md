@@ -60,6 +60,12 @@
   | Status do quarto: Disponível / Sujo / Ocupado | `RoomStatus`: `AVAILABLE` / `DIRTY` / `OCCUPIED` |
 - **Status**: decisão confirmada pelo solicitante do desafio.
 
+## [D-18] 2026-07-25 — Criação de reserva não valida status do quarto; disponibilidade só é checada no check-in
+- **Motivo**: a regra #6 (quarto precisa estar `DISPONIVEL`) é explicitamente sobre check-in, não sobre criação de reserva. Como o sistema não modela um calendário de disponibilidade por data (o status do quarto é um único campo mutável, não uma agenda), exigir `DISPONIVEL` no momento da reserva impediria reservar um quarto hoje para uma data futura enquanto ele está ocupado por outro hóspede agora — comportamento normal de hotel. Por isso `POST /api/reservations` só valida que hóspede e quarto existem (404 se não) e que `expectedCheckOut` é depois de `expectedCheckIn` (400 se não); o gate de `DISPONIVEL` fica exclusivamente no check-in (F08).
+- **Alternativa descartada**: bloquear reserva se `room.status != DISPONIVEL` — rejeitada por não corresponder ao uso real (reservas são feitas com antecedência).
+- **Escopo não incluído**: taxa de estacionamento (regra #5) depende de "hóspede tiver carro e usar vaga" — não há campo para isso em `Reservation` ainda; decisão adiada para quando F07 (cálculo de taxa de estacionamento) for implementada, já que não há consenso ainda sobre se essa informação é capturada na reserva ou no check-in.
+- **Status**: suposição registrada; ajustável se o solicitante do desafio pedir checagem de disponibilidade na criação da reserva.
+
 ## [D-17] 2026-07-25 — Número do quarto é `String`; status muda via `PATCH /api/rooms/{id}/status` já em F24
 - **Motivo**: número de quarto é tratado como rótulo, não quantidade (ex.: "101", "204B"), então `Room.number` é `String`, sem validação de formato específica além de não-vazio. Quanto ao status: a descrição de F24 em `feature_list.json` já inclui "permitir alterar o status" no escopo do backend (diferente de F03/F04, que dividiram cadastro e configuração de preço em duas features separadas) — por isso o endpoint `PATCH /api/rooms/{id}/status` foi implementado dentro de F24, e não adiado para F25 (que é só a tela). Todo quarto criado nasce com status `AVAILABLE` (regra implícita: quarto recém-cadastrado está pronto para uso).
 - **Status**: suposição registrada; ajustável se o solicitante do desafio especificar formato de número diferente (ex.: inteiro) ou status inicial diferente.

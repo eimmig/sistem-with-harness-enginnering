@@ -61,9 +61,9 @@
       "id": "F05",
       "name": "Criacao de reserva",
       "description": "Criar reserva (hospede + quarto especifico + data de entrada/saida previstas) -- ver DECISIONS.md D-05.",
-      "status": "not_started",
+      "status": "passing",
       "verification": "ReservationControllerTest#createReservation passando",
-      "evidence": null,
+      "evidence": "./mvnw test -Dtest=ReservationControllerTest,ReservationRepositoryTest em 2026-07-25: Tests run: 6, Failures: 0, Errors: 0 (BUILD SUCCESS). ./init.sh completo (backend + frontend) tambem passando.",
       "dependencies": ["F01", "F24"]
     },
     {
