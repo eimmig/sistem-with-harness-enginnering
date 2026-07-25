@@ -1,0 +1,14 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# IDEs
+.idea/
+.vscode/
+
+# Environment / secrets (nunca versionar)
+.env
+.env.local
+
+# Logs de diagnóstico locais
+*.log
