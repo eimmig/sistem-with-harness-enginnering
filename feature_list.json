@@ -1,6 +1,6 @@
 {
   "source": "Desafio Full-Stack - TA 11.pdf",
-  "activeFeature": "F31",
+  "activeFeature": "F32",
   "rules": [
     "Uma funcionalidade ativa (status=active) por vez. One feature at a time.",
     "Ninguem marca um item como 'passing' manualmente -- so a evidencia (comando + resultado) permite a transicao.",
@@ -307,16 +307,16 @@
       "id": "F31",
       "name": "Testes E2E de UI - Categoria de Quarto",
       "description": "Teste E2E de navegador (Playwright): cadastrar categoria de quarto pela tela e configurar o preco por dia da semana, conferindo que os valores salvos aparecem ao reabrir a tela -- ja com a tela refeita em F35.",
-      "status": "active",
+      "status": "passing",
       "verification": "room-category-flow.e2e.spec.ts passando via Playwright (npx playwright test room-category-flow)",
-      "evidence": "",
+      "evidence": "npx playwright test room-category-flow em 2026-07-26: 1 passed, rodado duas vezes seguidas para confirmar idempotencia (dados unicos por timestamp, D-38). Cobre cadastro de categoria pela tela, selecao no mat-select (atualizado via refreshSignal), preenchimento dos 7 precos por dia da semana via mascara de moeda (digitando com virgula decimal explicita, ex. '120,00' -- typed digits sem virgula sao interpretados como inteiro pelo mask separator.2, nao como centavos), submissao com mensagem de sucesso, e reload da tela + reselecao da categoria confirmando que os precos persistidos reaparecem (regex tolerante a redisplay sem forcar 2 casas decimais, ex. 'R$ 120' em vez de 'R$ 120,00' -- o numero persistido e' o mesmo, so a formatacao de exibicao ao repopular via inputTransformFn nao repete o mask completo de digitacao). Interacao com o mat-select usa click({force:true}) porque o mat-label do campo vazio sobrepoe visualmente o trigger antes de qualquer selecao -- comportamento padrao do Angular Material outline, documentado inline no spec e em D-38 addendum.",
       "dependencies": ["F14", "F35"]
     },
     {
       "id": "F32",
       "name": "Testes E2E de UI - Quarto",
       "description": "Teste E2E de navegador (Playwright): cadastrar quarto pela tela, vinculado a uma categoria, e alterar seu status (DISPONIVEL/SUJO/OCUPADO) pela lista de gestao de quartos -- ja com a tela refeita em F36.",
-      "status": "not_started",
+      "status": "active",
       "verification": "room-flow.e2e.spec.ts passando via Playwright (npx playwright test room-flow)",
       "evidence": "",
       "dependencies": ["F25", "F36"]

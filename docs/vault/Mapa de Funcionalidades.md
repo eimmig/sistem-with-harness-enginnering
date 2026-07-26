@@ -40,7 +40,7 @@ Espelha `feature_list.json`. Uma funcionalidade ativa por vez (WIP=1); `status: 
 | F36 | Refatoração visual - Quarto | **passing** | [[Quarto]] | F25, F34 |
 | F37 | Refatoração visual - Reserva/Check-in/Check-out | **passing** | [[Reserva]], [[Check-in e Check-out]] | F15, F16, F17, F34 |
 | F30 | Testes E2E de UI - Hóspedes | **passing** | [[Hóspede]] | F13, F18, F19, F34 |
-| F31 | Testes E2E de UI - Categoria de Quarto | not_started | [[Categoria de Quarto]] | F14, F35 |
+| F31 | Testes E2E de UI - Categoria de Quarto | **passing** | [[Categoria de Quarto]] | F14, F35 |
 | F32 | Testes E2E de UI - Quarto | not_started | [[Quarto]] | F25, F36 |
 | F33 | Testes E2E de UI - Reserva/Check-in/Check-out | not_started | [[Reserva]], [[Check-in e Check-out]] | F15, F16, F17, F37 |
 
@@ -50,6 +50,6 @@ F06 e F07 são as funcionalidades de maior risco (mais regras de negócio implí
 Itens do frontend dependem dos endpoints correspondentes do backend já estarem `passing`.
 
 ## Status geral (2026-07-26)
-As 24 funcionalidades originais (F01-F19, F21-F25) estão `passing`. F23: repositório público em `https://github.com/eimmig/sistem-with-harness-enginnering`. Backlog expandido com F26-F37 (E2E de API/UI + redesign visual, ver D-29/D-30 em [[Arquitetura]]); F26-F29 (E2E de API) já `passing` — grupo completo. F34-F37 (redesign visual) também `passing` — grupo completo. F30 (E2E de UI - Hóspedes) `passing` (ver D-38 em [[Arquitetura]]). Restam F31-F33 (E2E de UI, Playwright).
+As 24 funcionalidades originais (F01-F19, F21-F25) estão `passing`. F23: repositório público em `https://github.com/eimmig/sistem-with-harness-enginnering`. Backlog expandido com F26-F37 (E2E de API/UI + redesign visual, ver D-29/D-30 em [[Arquitetura]]); F26-F29 (E2E de API) já `passing` — grupo completo. F34-F37 (redesign visual) também `passing` — grupo completo. F30/F31 (E2E de UI - Hóspedes/Categoria de Quarto) `passing` (ver D-38 em [[Arquitetura]]). Restam F32-F33 (E2E de UI, Playwright).
 
 Ver também: [[Visão Geral do Sistema]].
