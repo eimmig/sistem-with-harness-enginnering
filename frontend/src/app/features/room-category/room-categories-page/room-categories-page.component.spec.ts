@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideEnvironmentNgxMask } from 'ngx-mask';
 import { RoomCategoriesPageComponent } from './room-categories-page.component';
 import { RoomCategory } from '../room-category.model';
 
@@ -12,7 +13,7 @@ describe('RoomCategoriesPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [RoomCategoriesPageComponent],
-      providers: [provideHttpClient(), provideHttpClientTesting()]
+      providers: [provideHttpClient(), provideHttpClientTesting(), provideEnvironmentNgxMask()]
     }).compileComponents();
 
     fixture = TestBed.createComponent(RoomCategoriesPageComponent);

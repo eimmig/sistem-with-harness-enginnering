@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideEnvironmentNgxMask } from 'ngx-mask';
 import { RoomCategoryPriceComponent } from './room-category-price.component';
 import { RoomCategory } from '../room-category.model';
 
@@ -16,7 +17,7 @@ describe('RoomCategoryPriceComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [RoomCategoryPriceComponent],
-      providers: [provideHttpClient(), provideHttpClientTesting()]
+      providers: [provideHttpClient(), provideHttpClientTesting(), provideEnvironmentNgxMask()]
     }).compileComponents();
 
     fixture = TestBed.createComponent(RoomCategoryPriceComponent);

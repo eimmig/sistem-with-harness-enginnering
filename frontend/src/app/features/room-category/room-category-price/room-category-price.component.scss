@@ -1,15 +1,17 @@
 .price-form {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 8px;
-  max-width: 720px;
+  gap: 16px;
   align-items: start;
+  margin-top: 8px;
 }
 
 .success-message {
   color: green;
+  margin: 0;
 }
 
 .error-message {
   color: var(--mat-sys-error, #b00020);
+  margin: 0;
 }

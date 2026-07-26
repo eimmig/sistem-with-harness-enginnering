@@ -271,9 +271,9 @@
       "id": "F35",
       "name": "Refatoracao visual - Categoria de Quarto",
       "description": "Refazer as telas de categoria de quarto (cadastro, configuracao de preco por dia da semana): layout conciso reaproveitando o tema/estrutura comum criados em F34, mascara de moeda (R$) nos 7 campos de preco por dia da semana via ngx-mask.",
-      "status": "not_started",
+      "status": "passing",
       "verification": "room-category-price.component.spec.ts (+ form) atualizados e passando (npm run test:ci); ng build sem erros; screenshot manual confirmando mascara de moeda nos precos",
-      "evidence": "",
+      "evidence": "npm run test:ci em 2026-07-25: 51/51 SUCCESS (Chrome Headless), incluindo os 10 specs do modulo RoomCategory com o novo provider de ngx-mask. ng build sem erros. RoomCategoryPriceComponent: 7 campos de preco ganharam mask=\"separator.2\" + thousandSeparator/decimalMarker/prefix (R$) com outputTransformFn/inputTransformFn mantendo o FormControl como number puro (D-35) -- payload HTTP inalterado (numero, nao string). RoomCategoryFormComponent/RoomCategoriesPageComponent reaproveitam o layout de F34 (form-row, mat-card). Smoke test manual via ng serve + backend real + Postgres real + script Playwright ad-hoc: criada categoria via UI, selecionada, digitados os 7 precos (120,00 e 150,00) -- screenshot confirma R$ 120,00/R$ 150,00 em todos os campos; PUT /api/room-categories/{id}/prices capturado com body numerico correto ({\"MONDAY\":120,...}); resposta \"Precos atualizados com sucesso\" exibida. ./init.sh completo (backend + frontend) tambem passando.",
       "dependencies": ["F14", "F34"]
     },
     {

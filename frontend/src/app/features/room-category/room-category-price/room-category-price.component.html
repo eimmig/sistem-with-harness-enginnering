@@ -14,9 +14,14 @@
         <mat-label>{{ dayLabels[day] }}</mat-label>
         <input
           matInput
-          type="number"
-          step="0.01"
+          type="text"
+          mask="separator.2"
+          thousandSeparator="."
+          decimalMarker=","
+          prefix="R$ "
           [formControlName]="day"
+          [outputTransformFn]="priceOutputTransformFn"
+          [inputTransformFn]="priceInputTransformFn"
           [attr.data-testid]="'price-input-' + day"
         />
       </mat-form-field>
