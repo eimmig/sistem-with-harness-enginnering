@@ -1,6 +1,6 @@
 {
   "source": "Desafio Full-Stack - TA 11.pdf",
-  "activeFeature": "F32",
+  "activeFeature": "F33",
   "rules": [
     "Uma funcionalidade ativa (status=active) por vez. One feature at a time.",
     "Ninguem marca um item como 'passing' manualmente -- so a evidencia (comando + resultado) permite a transicao.",
@@ -316,16 +316,16 @@
       "id": "F32",
       "name": "Testes E2E de UI - Quarto",
       "description": "Teste E2E de navegador (Playwright): cadastrar quarto pela tela, vinculado a uma categoria, e alterar seu status (DISPONIVEL/SUJO/OCUPADO) pela lista de gestao de quartos -- ja com a tela refeita em F36.",
-      "status": "active",
+      "status": "passing",
       "verification": "room-flow.e2e.spec.ts passando via Playwright (npx playwright test room-flow)",
-      "evidence": "",
+      "evidence": "npx playwright test room-flow em 2026-07-26: 1 passed, rodado duas vezes seguidas para confirmar idempotencia (categoria e numero de quarto unicos por timestamp). Cobre: criacao de categoria de quarto (pre-requisito), cadastro de quarto pela tela vinculado a essa categoria (selecao via mat-select, mesmo click({force:true}) documentado em D-38 addendum), confirmacao de que a linha da tabela mostra numero+categoria e nasce com status 'Disponivel' (D-17), e as 3 transicoes de status pelo mat-select-trigger da lista (Disponivel->Sujo->Ocupado->Disponivel), verificando o chip colorido (F36) refletindo cada mudanca ao vivo sem reload.",
       "dependencies": ["F25", "F36"]
     },
     {
       "id": "F33",
       "name": "Testes E2E de UI - Reserva / Check-in / Check-out",
       "description": "Teste E2E de navegador (Playwright) cobrindo o fluxo completo do atendente: criar reserva pela tela, fazer check-in (incluindo o aviso de confirmacao antes das 14h), e fazer check-out conferindo o detalhamento do total exibido antes de confirmar -- ja com as telas refeitas em F37.",
-      "status": "not_started",
+      "status": "active",
       "verification": "reservation-flow.e2e.spec.ts passando via Playwright (npx playwright test reservation-flow)",
       "evidence": "",
       "dependencies": ["F15", "F16", "F17", "F37"]
