@@ -253,9 +253,9 @@
       "id": "F29",
       "name": "Testes E2E de API - Reserva / Check-in / Check-out",
       "description": "Testes end-to-end do ciclo completo de reserva: criacao de reserva, check-in (antes e depois das 14h, quarto indisponivel), check-out (no prazo e com atraso, com detalhamento do total), validando calculo de diaria e taxa de estacionamento ponta a ponta contra ReservationController via HTTP real e Postgres real (Testcontainers).",
-      "status": "not_started",
+      "status": "passing",
       "verification": "ReservationE2ETest passando (modulo Testcontainers Postgres, ./mvnw test -Dtest=ReservationE2ETest)",
-      "evidence": "",
+      "evidence": "./mvnw test -Dtest=ReservationE2ETest em 2026-07-25: Tests run: 8, Failures: 0, Errors: 0 (BUILD SUCCESS), contra Postgres real via Testcontainers, sem MockMvc/H2/mocks. Cobre criacao de reserva (+400 checkout<=checkin, +404 hospede/quarto inexistente), check-in antes das 14h com/sem confirmacao do atendente, check-in bloqueado com quarto indisponivel (409), check-out no prazo sem taxa de atraso, check-out com atraso (50% da diaria vigente) e check-out rejeitado sem check-in previo (409). Usa Clock mutavel de teste via @TestConfiguration+@Primary (spring.main.allow-bean-definition-overriding=true, escopado a esta classe -- D-33) para tornar deterministico o horario de check-in/check-out. Rodado tambem junto dos demais E2E (-Dtest=*E2ETest): Tests run: 22, Failures: 0, Errors: 0. Suite completa ./mvnw test (sem Docker) continua em 64 testes. ./init.sh completo (backend + frontend) tambem passando. Com esta feature, o grupo F26-F29 (E2E de API) esta completo.",
       "dependencies": ["F05", "F06", "F07", "F08", "F09"]
     },
     {
