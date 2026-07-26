@@ -161,6 +161,64 @@ class ReservationE2ETest {
     }
 
     @Test
+    void createReservation_rejectsOverlappingActiveReservationForSameRoom() {
+        // D-41: mesmo quarto, datas previstas sobrepostas, primeira reserva ainda sem check-out -> 409.
+        GuestResponse guestA = createGuest("Otavio Lima E2E");
+        GuestResponse guestB = createGuest("Patricia Nunes E2E");
+        RoomResponse room = createRoomWithPrices("120.00", "150.00");
+        createReservation(guestA.id(), room.id(), false); // 2026-08-03 14:00 -> 2026-08-04 12:00
+
+        ResponseEntity<String> conflicting = restTemplate.postForEntity(
+                "/api/reservations",
+                new ReservationRequest(
+                        guestB.id(),
+                        room.id(),
+                        LocalDateTime.of(2026, 8, 3, 20, 0),
+                        LocalDateTime.of(2026, 8, 5, 12, 0),
+                        false),
+                String.class);
+
+        assertThat(conflicting.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+    }
+
+    @Test
+    void createReservation_allowsOverlappingReservationWhenPreviousOneAlreadyCheckedOut() {
+        // D-41: reserva conflitante que ja teve check-out (mesmo antecipado) nao bloqueia a nova.
+        GuestResponse guestA = createGuest("Rafael Souza E2E");
+        GuestResponse guestB = createGuest("Sabrina Alves E2E");
+        RoomResponse room = createRoomWithPrices("120.00", "150.00");
+        ReservationResponse first = createReservation(guestA.id(), room.id(), false); // 2026-08-03 14:00 -> 2026-08-04 12:00
+
+        mutableClock().setNow(LocalDateTime.of(2026, 8, 3, 15, 0));
+        assertThat(restTemplate
+                        .postForEntity(
+                                "/api/reservations/" + first.id() + "/check-in",
+                                new CheckInRequest(true),
+                                ReservationResponse.class)
+                        .getStatusCode())
+                .isEqualTo(HttpStatus.OK);
+
+        mutableClock().setNow(LocalDateTime.of(2026, 8, 3, 18, 0)); // check-out no mesmo dia (D-39)
+        assertThat(restTemplate
+                        .postForEntity(
+                                "/api/reservations/" + first.id() + "/check-out", null, CheckOutResponse.class)
+                        .getStatusCode())
+                .isEqualTo(HttpStatus.OK);
+
+        ResponseEntity<ReservationResponse> second = restTemplate.postForEntity(
+                "/api/reservations",
+                new ReservationRequest(
+                        guestB.id(),
+                        room.id(),
+                        LocalDateTime.of(2026, 8, 3, 20, 0),
+                        LocalDateTime.of(2026, 8, 4, 12, 0),
+                        false),
+                ReservationResponse.class);
+
+        assertThat(second.getStatusCode()).isEqualTo(HttpStatus.CREATED);
+    }
+
+    @Test
     void createReservation_rejectsCheckOutNotAfterCheckIn() {
         GuestResponse guest = createGuest("Gabriela Rocha E2E");
         RoomResponse room = createRoomWithPrices("120.00", "150.00");

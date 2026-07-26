@@ -1,6 +1,8 @@
 # Progresso do Projeto
 
 ## Última Atualização
+2026-07-26 — **F38 (separação de camadas - ReservationService) e F39 (validação de disponibilidade de quarto) implementadas e `passing`** — adicionadas ao backlog após revisão do usuário pós-conclusão do backlog original. Usuário apontou dois problemas: (1) lógica de negócio direto nas controllers, sem camada de serviço; (2) criação de reserva não valida se o quarto está disponível para as datas pedidas. `ReservationService` (novo) concentra toda a lógica antes na `ReservationController` (D-40) — primeiro domínio do refactor de camadas, um domínio por vez (Guest/Room/RoomCategory ficam para próximos itens). `ReservationRepository#findOverlappingActiveReservations` + `ReservationService#create` rejeitam (409) reserva com datas sobrepostas a outra reserva ativa do mesmo quarto (D-41) — reserva já finalizada não conta como conflito. Verificado: `./mvnw test -Dtest=ReservationServiceTest,ReservationControllerTest` (29 testes), suíte completa `./mvnw test` (77, era 66), `./mvnw test -Dtest=ReservationE2ETest` contra Postgres real (11, era 9, +2 casos de conflito de disponibilidade), `npx playwright test` (4 specs F30-F33, rodados contra o backend reiniciado com o código refatorado), `./init.sh` completo.
+
 2026-07-26 — **F33 (E2E de UI - Reserva/Check-in/Check-out) implementada e `passing`** — **última funcionalidade do backlog; `feature_list.json` está 100% `passing`.** `frontend/e2e/reservation-flow.e2e.spec.ts` cria hóspede+categoria com preços+quarto (pré-requisitos), cria reserva pela tela, faz check-in tratando os dois estados possíveis do aviso das 14h (depende do horário real da máquina, não dá pra mockar num E2E de UI real) e faz check-out conferindo o detalhamento completo. **Essa feature encontrou um bug real**: check-out no mesmo dia calendário do check-in causava HTTP 500 não tratado em produção (`DailyRateService`/`ParkingFeeService` exigiam ≥1 dia de calendário, sem essa checagem nunca ter sido exercitada contra o backend real fora de um `Clock` mockado). Com autorização do usuário, F09 foi marcado `broken`, corrigido (agora cobra a diária/taxa mínima de 1 dia em vez de rejeitar) e revalidado — ver `DECISIONS.md` D-39. Verificado: `./mvnw test` (H2, 66 testes), `./mvnw test -Dtest=ReservationE2ETest` (Postgres real, 9 testes), `npx playwright test` (suíte completa F30-F33, 4 passed), `./init.sh` completo.
 
 2026-07-26 — **F32 (E2E de UI - Quarto) implementada e `passing`**. `frontend/e2e/room-flow.e2e.spec.ts` cria uma categoria de quarto, cadastra um quarto vinculado a ela pela tela, confirma que nasce com status "Disponível" (D-17) e testa as 3 transições de status (Disponível→Sujo→Ocupado→Disponível) pelo `mat-select-trigger` da lista, verificando o chip colorido (F36). Verificado com `npx playwright test room-flow` rodado duas vezes seguidas: 1 passed em ambas.
@@ -23,13 +25,14 @@ As 24 funcionalidades originais (F01–F19, F21–F25) continuam `passing`; nenh
 Além disso, `feature_list.json` ganhou um novo status possível, `broken` (ver `DECISIONS.md` D-31): se ao rodar F26-F33 algum teste E2E provar que uma funcionalidade hoje `passing` na verdade não funciona (regressão só visível contra Postgres/HTTP/navegador reais), ela deve ser marcada `broken` em vez de continuar `passing` silenciosamente — fica registrada para conserto numa iteração futura. Nenhuma funcionalidade está `broken` no momento; isso só vai acontecer se/quando os E2E encontrarem algo.
 
 ## Objetivo Atual
-**Nenhum item `active` (WIP=0). Backlog completo: todas as 37 funcionalidades de `feature_list.json` (F01-F19, F21-F37) estão `passing`.** Nenhuma está `broken` no momento (F09 passou por `broken` durante F33, mas foi corrigida e revalidada — ver D-39).
+**Nenhum item `active` (WIP=0). Backlog completo: todas as 39 funcionalidades de `feature_list.json` (F01-F19, F21-F39) estão `passing`.** Nenhuma está `broken` no momento.
 
 ## Próximo Passo Recomendado
-Não há próximo passo dentro do escopo atual de `feature_list.json` — está 100% `passing`. Se o usuário trouxer trabalho novo:
+Não há próximo passo obrigatório dentro do escopo atual de `feature_list.json` — está 100% `passing`. Débito técnico conhecido, registrado mas não pendente de nenhuma exigência: o refactor de camadas (D-40) só cobriu Reserva até agora — `GuestController`, `RoomController` e `RoomCategoryController` continuam sem `Service` dedicado. Se o usuário pedir para continuar esse refactor ou trouxer trabalho novo:
 1. Rodar `./init.sh` primeiro para confirmar que o ambiente segue saudável.
 2. Qualquer nova funcionalidade deve ser adicionada a `feature_list.json` antes de ser implementada, seguindo o mesmo fluxo (uma por vez, verificação + evidência, decisão registrada em `DECISIONS.md` quando houver ambiguidade, vault atualizado, commit imediato).
 3. Antes de rodar qualquer suíte Playwright (`frontend/e2e/`), confirmar que o Docker Desktop está ativo e o container `gestao-hospedes-db` (docker-compose) está `healthy` — o `webServer` do backend em `playwright.config.ts` sobe via `spring-boot:run` normal (Postgres real na porta 5433), não Testcontainers.
+4. **Se o backend estiver rodando manualmente (`spring-boot:run`) para o usuário testar pela UI**, lembrar de reiniciá-lo depois de qualquer mudança de código Java — `spring-boot:run` não recarrega classes sozinho.
 
 ## Concluído
 - [x] Repositório Git inicializado (branch `main`)
@@ -72,7 +75,9 @@ Não há próximo passo dentro do escopo atual de `feature_list.json` — está 
 - [x] **F30 — Testes E2E de UI - Hóspedes**: `@playwright/test` instalado; `playwright.config.ts` (D-38); `guest-flow.e2e.spec.ts`.
 - [x] **F31 — Testes E2E de UI - Categoria de Quarto**: `room-category-flow.e2e.spec.ts`.
 - [x] **F32 — Testes E2E de UI - Quarto**: `room-flow.e2e.spec.ts`.
-- [x] **F33 — Testes E2E de UI - Reserva/Check-in/Check-out**: `reservation-flow.e2e.spec.ts`. Grupo F30-F33 completo — **backlog 100% `passing`**. Encontrou e corrigiu bug real em F09 (D-39).
+- [x] **F33 — Testes E2E de UI - Reserva/Check-in/Check-out**: `reservation-flow.e2e.spec.ts`. Grupo F30-F33 completo — **backlog original 100% `passing`**. Encontrou e corrigiu bug real em F09 (D-39).
+- [x] **F38 — Separação de camadas - ReservationService**: `ReservationService` extraído de `ReservationController` (D-40).
+- [x] **F39 — Validação de disponibilidade de quarto na criação de reserva**: rejeita reserva com datas sobrepostas a outra reserva ativa do mesmo quarto (D-41).
 
 Detalhes de cada feature (arquivos tocados, decisões, evidência) estão em `feature_list.json` (campo `evidence`) e nos commits correspondentes — não duplicados aqui para evitar desatualização.
 
