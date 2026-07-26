@@ -1,6 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { ReservationService } from '../reservation.service';
 import { CheckOutResult, Reservation } from '../reservation.model';
@@ -13,7 +14,7 @@ interface CompletedCheckOut {
 @Component({
   selector: 'app-check-out',
   standalone: true,
-  imports: [MatTableModule, MatButtonModule],
+  imports: [MatCardModule, MatTableModule, MatButtonModule],
   templateUrl: './check-out.component.html',
   styleUrl: './check-out.component.scss'
 })

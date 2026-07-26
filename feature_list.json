@@ -289,9 +289,9 @@
       "id": "F37",
       "name": "Refatoracao visual - Reserva / Check-in / Check-out",
       "description": "Refazer as telas de reserva, check-in e check-out: layout conciso reaproveitando o tema/estrutura comum criados em F34; troca dos campos de data (hoje 'input type=datetime-local', ver DECISIONS.md D-26) por MatDatepicker (data) combinado com um campo de hora com valor padrao 14h/12h (entrada/saida) que o atendente pode ajustar -- ver DECISIONS.md D-30.",
-      "status": "not_started",
+      "status": "passing",
       "verification": "reservation-form.component.spec.ts + check-in.component.spec.ts + check-out.component.spec.ts atualizados e passando (npm run test:ci); ng build sem erros; screenshot manual confirmando date-picker Material substituindo o input nativo",
-      "evidence": "",
+      "evidence": "npm run test:ci em 2026-07-25: 52/52 SUCCESS (Chrome Headless), incluindo os 17 specs do modulo Reservation com o novo provider provideNativeDateAdapter(). ng build sem erros (bundle inicial ~511KB, dentro do budget de erro de 1MB -- D-37). ReservationFormComponent: expectedCheckIn/expectedCheckOut (strings datetime-local) trocados por 4 controles (Date + string HH:mm cada, default 14:00/12:00 -- regra #1), combineDateAndTime() funde de volta no formato yyyy-MM-ddTHH:mm que o backend ja esperava (payload HTTP inalterado). CheckInComponent/CheckOutComponent so reaproveitam layout (mat-card/page-header), sem campos de data proprios. Smoke test manual via ng serve + backend real + Postgres real + script Playwright ad-hoc: tela de reserva mostra os 2 campos de data com icone de calendario e os 2 campos de hora pre-preenchidos; clique no icone abre o calendario MatDatepicker corretamente (mes correto, dia atual destacado); campo de hora aceita edicao (testado com 15:30). Sem erros de console. ./init.sh completo (backend + frontend) tambem passando. Com esta feature, o grupo F34-F37 (redesign visual) esta completo.",
       "dependencies": ["F15", "F16", "F17", "F34"]
     },
     {

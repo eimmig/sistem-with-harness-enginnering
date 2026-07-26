@@ -1,9 +1,9 @@
 # Progresso do Projeto
 
 ## Última Atualização
-2026-07-25 — **F36 (refatoração visual - Quarto) implementada e `passing`**. `RoomListComponent` ganhou um chip colorido (verde/vermelho/laranja) para Disponível/Sujo/Ocupado via `mat-select-trigger` customizado, mantendo a troca de status pelo mesmo `mat-select`. Layout reaproveita `form-row`/`mat-card` de F34. Um erro de type-checking de template do Angular (indexar um `Record` dentro do conteúdo projetado por `mat-select-trigger`) foi contornado movendo o lookup para métodos tipados no componente — documentado em D-36. Confirmado com smoke test manual (ng serve + backend real): criar quarto → chip verde "Disponível" → trocar status → chip muda ao vivo para vermelho "Sujo".
+2026-07-25 — **F37 (refatoração visual - Reserva/Check-in/Check-out) implementada e `passing`** — **grupo F34-F37 (redesign visual) completo**. `ReservationFormComponent` trocou os campos `datetime-local` por `MatDatepicker` + campo de hora separado (padrão 14h/12h, ajustável), fundidos de volta no mesmo formato de string que o backend espera (`combineDateAndTime()`, D-37) — payload HTTP inalterado. `CheckInComponent`/`CheckOutComponent` só reaproveitaram o layout (sem campos de data próprios). Confirmado com smoke test manual completo (ng serve + backend real): calendário abre corretamente, campo de hora editável.
 
-F34/F35 (redesign - Hóspedes/Categoria de Quarto) e o grupo F26-F29 (E2E de API) foram concluídos nos passos anteriores.
+F34-F36 (redesign - Hóspedes/Categoria de Quarto/Quarto) e o grupo F26-F29 (E2E de API) foram concluídos nos passos anteriores.
 
 Backlog de **F26-F37** adicionado na sessão anterior (`status: not_started`), em três grupos:
 - **F26-F29**: E2E de API por domínio (Testcontainers Postgres + TestRestTemplate, sem MockMvc/H2). Decisão em `DECISIONS.md` D-29.
@@ -15,13 +15,13 @@ As 24 funcionalidades originais (F01–F19, F21–F25) continuam `passing`; nenh
 Além disso, `feature_list.json` ganhou um novo status possível, `broken` (ver `DECISIONS.md` D-31): se ao rodar F26-F33 algum teste E2E provar que uma funcionalidade hoje `passing` na verdade não funciona (regressão só visível contra Postgres/HTTP/navegador reais), ela deve ser marcada `broken` em vez de continuar `passing` silenciosamente — fica registrada para conserto numa iteração futura. Nenhuma funcionalidade está `broken` no momento; isso só vai acontecer se/quando os E2E encontrarem algo.
 
 ## Objetivo Atual
-Nenhum item `active` no momento (WIP=0). Grupo F26-F29 (E2E de API) completo; F34-F36 (redesign - Hóspedes/Categoria de Quarto/Quarto) também `passing`.
+Nenhum item `active` no momento (WIP=0). Grupo F26-F29 (E2E de API) completo; grupo F34-F37 (redesign visual) completo. Só falta F30-F33 (E2E de UI).
 
 ## Próximo Passo Recomendado
-1. Próxima da fila: **F37** (refatoração visual - Reserva/Check-in/Check-out), última do grupo de redesign visual. Reaproveita o layout/tema de F34-F36. Inclui a troca dos campos `<input type="datetime-local">` por `MatDatepicker` (data) + campo de hora com valor padrão (14h entrada / 12h saída) — ver D-30/D-26 em DECISIONS.md.
-2. Depois da refatoração visual de um domínio, sua E2E de UI correspondente (F30-F33, Playwright) pode ser feita — F30 (Hóspedes), F31 (Categoria de Quarto) e F32 (Quarto) já podem começar, já que F34-F36 estão prontas; F33 depende de F37.
-3. F30-F33 exigem instalar e configurar `@playwright/test` no frontend (ainda não está no `package.json`) — a primeira feature desse grupo a rodar deve incluir esse setup no seu próprio escopo. (Os smoke tests de F34-F36 usaram um script Playwright ad-hoc fora do projeto, só para verificação manual — não é a mesma coisa que a suíte `@playwright/test` versionada que F30 precisa criar.)
-4. Rodar `./init.sh` antes de começar, para confirmar que o ambiente segue saudável (não exige Docker — só a verificação pontual de cada E2E de API exigia, ver D-32; esse grupo já terminou).
+1. Próxima da fila: qualquer uma de **F30-F33** (E2E de UI, Playwright) — todas as suas dependências de redesign visual (F34-F37) já estão `passing`, então podem ser feitas em qualquer ordem. Sugestão: seguir a mesma ordem de domínio (F30 Hóspedes → F31 Categoria de Quarto → F32 Quarto → F33 Reserva/Check-in/Check-out).
+2. A primeira feature desse grupo a rodar precisa instalar e configurar `@playwright/test` no frontend (ainda não está no `package.json`) — isso faz parte do escopo dela, não é infra prévia. Convenção de nomes (D-29): pasta `frontend/e2e/`, specs `<domínio>-flow.e2e.spec.ts`.
+3. Os smoke tests de F34-F37 usaram um script Playwright ad-hoc fora do projeto (scratchpad), só para verificação manual durante a implementação — não é a mesma coisa que a suíte `@playwright/test` versionada que F30-F33 precisam criar (testes de verdade, no repositório, rodando via `npx playwright test`).
+4. Rodar `./init.sh` antes de começar, para confirmar que o ambiente segue saudável (não exige Docker nem Playwright — só a verificação pontual de cada E2E de UI vai exigir o navegador headless do Playwright instalado).
 
 ## Concluído
 - [x] Repositório Git inicializado (branch `main`)
@@ -60,11 +60,12 @@ Nenhum item `active` no momento (WIP=0). Grupo F26-F29 (E2E de API) completo; F3
 - [x] **F34 — Refatoração visual - Hóspedes**: layout compartilhado (`styles.scss`) + `ngx-mask` + `mat-card` nas telas de hóspede.
 - [x] **F35 — Refatoração visual - Categoria de Quarto**: máscara de moeda nos 7 campos de preço + `mat-card`.
 - [x] **F36 — Refatoração visual - Quarto**: chip colorido de status + `mat-card`.
+- [x] **F37 — Refatoração visual - Reserva/Check-in/Check-out**: `MatDatepicker` + campo de hora. Grupo F34-F37 completo.
 
 Detalhes de cada feature (arquivos tocados, decisões, evidência) estão em `feature_list.json` (campo `evidence`) e nos commits correspondentes — não duplicados aqui para evitar desatualização.
 
 ## Em Andamento
-- (nenhum item ativo no momento — F36 passou para `passing`; próxima é F37)
+- (nenhum item ativo no momento — F37 passou para `passing`; próxima é qualquer uma de F30-F33)
 
 ## Bloqueado / Pendente de Confirmação
 - Nenhum.

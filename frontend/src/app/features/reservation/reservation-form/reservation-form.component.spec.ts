@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideNativeDateAdapter } from '@angular/material/core';
 import { ReservationFormComponent } from './reservation-form.component';
 import { Reservation } from '../reservation.model';
 import { Guest } from '../../guest/guest.model';
@@ -17,7 +18,7 @@ describe('ReservationFormComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ReservationFormComponent],
-      providers: [provideHttpClient(), provideHttpClientTesting()]
+      providers: [provideHttpClient(), provideHttpClientTesting(), provideNativeDateAdapter()]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ReservationFormComponent);
@@ -54,8 +55,10 @@ describe('ReservationFormComponent', () => {
   it('does not submit without a selected guest', () => {
     component.form.setValue({
       roomId: 1,
-      expectedCheckIn: '2026-08-03T14:00',
-      expectedCheckOut: '2026-08-04T12:00',
+      expectedCheckInDate: new Date(2026, 7, 3),
+      expectedCheckInTime: '14:00',
+      expectedCheckOutDate: new Date(2026, 7, 4),
+      expectedCheckOutTime: '12:00',
       parkingRequested: false
     });
 
@@ -74,6 +77,11 @@ describe('ReservationFormComponent', () => {
     httpMock.expectNone('/api/reservations');
   });
 
+  it('defaults check-in time to 14:00 and check-out time to 12:00', () => {
+    expect(component.form.controls.expectedCheckInTime.value).toBe('14:00');
+    expect(component.form.controls.expectedCheckOutTime.value).toBe('12:00');
+  });
+
   it('creates a reservation and emits reservationCreated on success', () => {
     const created = jasmine.createSpy('reservationCreated');
     component.reservationCreated.subscribe(created);
@@ -81,8 +89,10 @@ describe('ReservationFormComponent', () => {
     component.selectGuest(guest);
     component.form.setValue({
       roomId: 1,
-      expectedCheckIn: '2026-08-03T14:00',
-      expectedCheckOut: '2026-08-04T12:00',
+      expectedCheckInDate: new Date(2026, 7, 3),
+      expectedCheckInTime: '14:00',
+      expectedCheckOutDate: new Date(2026, 7, 4),
+      expectedCheckOutTime: '12:00',
       parkingRequested: true
     });
 
@@ -117,8 +127,10 @@ describe('ReservationFormComponent', () => {
     component.selectGuest(guest);
     component.form.setValue({
       roomId: 1,
-      expectedCheckIn: '2026-08-03T14:00',
-      expectedCheckOut: '2026-08-04T12:00',
+      expectedCheckInDate: new Date(2026, 7, 3),
+      expectedCheckInTime: '14:00',
+      expectedCheckOutDate: new Date(2026, 7, 4),
+      expectedCheckOutTime: '12:00',
       parkingRequested: false
     });
 

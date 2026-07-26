@@ -1,54 +1,62 @@
-@if (successMessage) {
-  <p class="success-message" data-testid="check-in-success">{{ successMessage }}</p>
-}
+<header class="page-header">
+  <h1>Check-in</h1>
+</header>
 
-@if (reservations.length === 0) {
-  <p data-testid="check-in-empty">Nenhuma reserva aguardando check-in.</p>
-}
+<mat-card class="section-card">
+  <mat-card-content>
+    @if (successMessage) {
+      <p class="success-message" data-testid="check-in-success">{{ successMessage }}</p>
+    }
 
-@if (reservations.length > 0) {
-  <table mat-table [dataSource]="reservations" data-testid="check-in-table">
-    <ng-container matColumnDef="guest">
-      <th mat-header-cell *matHeaderCellDef>Hóspede</th>
-      <td mat-cell *matCellDef="let reservation">{{ reservation.guest.name }}</td>
-    </ng-container>
+    @if (reservations.length === 0) {
+      <p class="empty-state" data-testid="check-in-empty">Nenhuma reserva aguardando check-in.</p>
+    }
 
-    <ng-container matColumnDef="room">
-      <th mat-header-cell *matHeaderCellDef>Quarto</th>
-      <td mat-cell *matCellDef="let reservation">{{ reservation.room.number }}</td>
-    </ng-container>
+    @if (reservations.length > 0) {
+      <table mat-table [dataSource]="reservations" class="data-table" data-testid="check-in-table">
+        <ng-container matColumnDef="guest">
+          <th mat-header-cell *matHeaderCellDef>Hóspede</th>
+          <td mat-cell *matCellDef="let reservation">{{ reservation.guest.name }}</td>
+        </ng-container>
 
-    <ng-container matColumnDef="expectedCheckIn">
-      <th mat-header-cell *matHeaderCellDef>Check-in previsto</th>
-      <td mat-cell *matCellDef="let reservation">{{ reservation.expectedCheckIn }}</td>
-    </ng-container>
+        <ng-container matColumnDef="room">
+          <th mat-header-cell *matHeaderCellDef>Quarto</th>
+          <td mat-cell *matCellDef="let reservation">{{ reservation.room.number }}</td>
+        </ng-container>
 
-    <ng-container matColumnDef="actions">
-      <th mat-header-cell *matHeaderCellDef>Ações</th>
-      <td mat-cell *matCellDef="let reservation">
-        @if (confirmationNeededFor === reservation.id) {
-          <span class="confirmation-warning" [attr.data-testid]="'check-in-warning-' + reservation.id">
-            Check-in antes das 14h — confirma mesmo assim?
-          </span>
-          <button mat-button color="primary" type="button" (click)="confirmCheckIn(reservation)" [attr.data-testid]="'confirm-check-in-' + reservation.id">
-            Confirmar
-          </button>
-          <button mat-button type="button" (click)="cancelConfirmation()" [attr.data-testid]="'cancel-check-in-' + reservation.id">
-            Cancelar
-          </button>
-        } @else {
-          <button mat-raised-button color="primary" type="button" (click)="requestCheckIn(reservation)" [attr.data-testid]="'check-in-button-' + reservation.id">
-            Fazer check-in
-          </button>
-        }
+        <ng-container matColumnDef="expectedCheckIn">
+          <th mat-header-cell *matHeaderCellDef>Check-in previsto</th>
+          <td mat-cell *matCellDef="let reservation">{{ reservation.expectedCheckIn }}</td>
+        </ng-container>
 
-        @if (errorMessages[reservation.id]) {
-          <p class="error-message" [attr.data-testid]="'check-in-error-' + reservation.id">{{ errorMessages[reservation.id] }}</p>
-        }
-      </td>
-    </ng-container>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Ações</th>
+          <td mat-cell *matCellDef="let reservation">
+            @if (confirmationNeededFor === reservation.id) {
+              <span class="confirmation-warning" [attr.data-testid]="'check-in-warning-' + reservation.id">
+                Check-in antes das 14h — confirma mesmo assim?
+              </span>
+              <button mat-button color="primary" type="button" (click)="confirmCheckIn(reservation)" [attr.data-testid]="'confirm-check-in-' + reservation.id">
+                Confirmar
+              </button>
+              <button mat-button type="button" (click)="cancelConfirmation()" [attr.data-testid]="'cancel-check-in-' + reservation.id">
+                Cancelar
+              </button>
+            } @else {
+              <button mat-raised-button color="primary" type="button" (click)="requestCheckIn(reservation)" [attr.data-testid]="'check-in-button-' + reservation.id">
+                Fazer check-in
+              </button>
+            }
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-  </table>
-}
+            @if (errorMessages[reservation.id]) {
+              <p class="error-message" [attr.data-testid]="'check-in-error-' + reservation.id">{{ errorMessages[reservation.id] }}</p>
+            }
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    }
+  </mat-card-content>
+</mat-card>

@@ -1,13 +1,19 @@
-<h1>Reservas</h1>
+<header class="page-header">
+  <h1>Reservas</h1>
+</header>
 
-<section class="reservations-page-section">
-  <h2>Criar reserva</h2>
-  <app-reservation-form (reservationCreated)="onReservationCreated($event)" />
-</section>
+<mat-card class="section-card">
+  <mat-card-header>
+    <mat-card-title>Criar reserva</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <app-reservation-form (reservationCreated)="onReservationCreated($event)" />
 
-@if (lastCreatedReservation) {
-  <p data-testid="reservation-created-message">
-    Reserva #{{ lastCreatedReservation.id }} criada para {{ lastCreatedReservation.guest.name }} no quarto
-    {{ lastCreatedReservation.room.number }}.
-  </p>
-}
+    @if (lastCreatedReservation) {
+      <p class="success-message" data-testid="reservation-created-message">
+        Reserva #{{ lastCreatedReservation.id }} criada para {{ lastCreatedReservation.guest.name }} no quarto
+        {{ lastCreatedReservation.room.number }}.
+      </p>
+    }
+  </mat-card-content>
+</mat-card>
