@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { selectMatOption } from './mat-select-helper';
 
 test.describe('Fluxo de quarto', () => {
   test('cadastra quarto vinculado a uma categoria e altera seu status pela lista de gestao', async ({ page }) => {
@@ -14,9 +15,7 @@ test.describe('Fluxo de quarto', () => {
     await page.goto('/rooms');
 
     await page.getByTestId('room-number-input').fill(roomNumber);
-    // Clique forcado: mat-select vazio tem o mat-label sobreposto ao trigger (D-38 addendum).
-    await page.getByTestId('room-category-select').click({ force: true });
-    await page.getByRole('option', { name: categoryName }).click();
+    await selectMatOption(page, 'room-category-select', categoryName);
     await page.getByTestId('room-submit-button').click();
 
     const row = page.locator('[data-testid="room-list-table"] tbody tr').filter({ hasText: roomNumber });

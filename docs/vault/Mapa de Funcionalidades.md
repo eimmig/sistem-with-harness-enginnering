@@ -45,6 +45,7 @@ Espelha `feature_list.json`. Uma funcionalidade ativa por vez (WIP=1); `status: 
 | F33 | Testes E2E de UI - Reserva/Check-in/Check-out | **passing** | [[Reserva]], [[Check-in e Check-out]] | F15, F16, F17, F37 |
 | F38 | Separação de camadas - ReservationService | **passing** | [[Reserva]] | F05, F06, F07, F08, F09 |
 | F39 | Validação de disponibilidade de quarto na criação de reserva | **passing** | [[Reserva]] | F38 |
+| F40 | Isolamento do banco de dados nos testes E2E de UI | **passing** | — | F30, F31, F32, F33 |
 
 ## Notas de risco
 F06 e F07 são as funcionalidades de maior risco (mais regras de negócio implícitas) — devem ganhar mais casos de teste do que as demais, cobrindo especialmente a transição entre dias com preços diferentes (sexta/sábado/domingo/segunda). Ver [[Diária]] e [[Taxa de Estacionamento]].
@@ -52,6 +53,6 @@ F06 e F07 são as funcionalidades de maior risco (mais regras de negócio implí
 Itens do frontend dependem dos endpoints correspondentes do backend já estarem `passing`.
 
 ## Status geral (2026-07-26)
-**Backlog completo: todas as 39 funcionalidades (F01-F19, F21-F39) estão `passing`.** F23: repositório público em `https://github.com/eimmig/sistem-with-harness-enginnering`. F26-F29 (E2E de API), F34-F37 (redesign visual) e F30-F33 (E2E de UI, Playwright, D-38) — todos os três grupos completos. Durante F33, o E2E de UI real (sem mock de relógio) encontrou um bug genuíno em F09 (check-out no mesmo dia do check-in causava 500) — F09 foi marcado `broken`, corrigido e revalidado (D-39 em [[Arquitetura]]), permanecendo `passing`. Após revisão do usuário pós-backlog, F38 (separação de camadas — `ReservationService` extraído de `ReservationController`, D-40) e F39 (validação de disponibilidade de quarto na criação de reserva, D-41) foram adicionadas e concluídas — primeiro domínio de um refactor de camadas que continua um domínio por vez (Guest/Room/RoomCategory ainda pendentes, débito técnico conhecido). Nenhuma funcionalidade está `broken`.
+**Backlog completo: todas as 40 funcionalidades (F01-F19, F21-F40) estão `passing`.** F23: repositório público em `https://github.com/eimmig/sistem-with-harness-enginnering`. F26-F29 (E2E de API), F34-F37 (redesign visual) e F30-F33 (E2E de UI, Playwright, D-38) — todos os três grupos completos. Durante F33, o E2E de UI real (sem mock de relógio) encontrou um bug genuíno em F09 (check-out no mesmo dia do check-in causava 500) — F09 foi marcado `broken`, corrigido e revalidado (D-39 em [[Arquitetura]]), permanecendo `passing`. Após revisão do usuário pós-backlog: F38 (separação de camadas — `ReservationService` extraído de `ReservationController`, D-40) e F39 (validação de disponibilidade de quarto na criação de reserva, D-41) foram adicionadas e concluídas — primeiro domínio de um refactor de camadas que continua um domínio por vez (Guest/Room/RoomCategory ainda pendentes, débito técnico conhecido); e F40 (Postgres efêmero dedicado aos testes Playwright, D-42), depois que o usuário notou dados de teste poluindo o banco de desenvolvimento. Nenhuma funcionalidade está `broken`.
 
 Ver também: [[Visão Geral do Sistema]].

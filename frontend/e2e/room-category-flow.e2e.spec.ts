@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { selectMatOption } from './mat-select-helper';
 
 const WEEKDAY_TESTIDS = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY'];
 const WEEKEND_TESTIDS = ['SATURDAY', 'SUNDAY'];
@@ -15,10 +16,7 @@ test.describe('Fluxo de categoria de quarto', () => {
     await page.getByTestId('category-submit-button').click();
 
     // O select de categorias e' atualizado automaticamente (refreshSignal) apos o cadastro.
-    // O clique e' forcado porque o mat-label (outline vazio) sobrepoe visualmente o trigger
-    // ate' que uma opcao seja selecionada -- comportamento padrao do Angular Material, nao um bug da tela.
-    await page.getByTestId('category-select').click({ force: true });
-    await page.getByRole('option', { name: categoryName }).click();
+    await selectMatOption(page, 'category-select', categoryName);
 
     for (const day of WEEKDAY_TESTIDS) {
       await page.locator(`[data-testid="price-input-${day}"]`).pressSequentially('120,00');
@@ -33,8 +31,7 @@ test.describe('Fluxo de categoria de quarto', () => {
     // Reabre a tela (reload) e confere que os valores salvos aparecem ao reselecionar a categoria.
     await page.reload();
     await page.waitForLoadState('networkidle');
-    await page.getByTestId('category-select').click({ force: true });
-    await page.getByRole('option', { name: categoryName }).click();
+    await selectMatOption(page, 'category-select', categoryName);
 
     // Ao reabrir, o valor pode ser reexibido sem forcar 2 casas decimais (ex.: "R$ 120" em vez de
     // "R$ 120,00") -- o que importa e' o numero persistido, nao a formatacao exata de redisplay.

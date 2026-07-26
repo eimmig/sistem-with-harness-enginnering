@@ -1,5 +1,4 @@
 import { defineConfig } from '@playwright/test';
-import path from 'node:path';
 
 export default defineConfig({
   testDir: './e2e',
@@ -8,18 +7,12 @@ export default defineConfig({
   workers: 1,
   retries: 0,
   timeout: 30000,
+  globalSetup: require.resolve('./e2e/global-setup.ts'),
   use: {
     baseURL: 'http://localhost:4200',
     trace: 'retain-on-failure'
   },
   webServer: [
-    {
-      command: '.\\mvnw.cmd spring-boot:run',
-      cwd: path.join(__dirname, '../backend'),
-      url: 'http://localhost:8080/api/guests',
-      reuseExistingServer: true,
-      timeout: 180000
-    },
     {
       command: 'npm start',
       cwd: __dirname,

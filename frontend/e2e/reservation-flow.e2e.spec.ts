@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { selectMatOption } from './mat-select-helper';
 
 const DAYS_OF_WEEK = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
 
@@ -28,9 +29,7 @@ test.describe('Fluxo de reserva / check-in / check-out', () => {
     await page.goto('/room-categories');
     await page.getByTestId('category-name-input').fill(categoryName);
     await page.getByTestId('category-submit-button').click();
-    // Clique forcado: mat-select vazio tem o mat-label sobreposto ao trigger (D-38 addendum).
-    await page.getByTestId('category-select').click({ force: true });
-    await page.getByRole('option', { name: categoryName }).click();
+    await selectMatOption(page, 'category-select', categoryName);
     for (const day of DAYS_OF_WEEK) {
       await page.locator(`[data-testid="price-input-${day}"]`).pressSequentially('120,00');
     }
@@ -39,8 +38,7 @@ test.describe('Fluxo de reserva / check-in / check-out', () => {
 
     await page.goto('/rooms');
     await page.getByTestId('room-number-input').fill(roomNumber);
-    await page.getByTestId('room-category-select').click({ force: true });
-    await page.getByRole('option', { name: categoryName }).click();
+    await selectMatOption(page, 'room-category-select', categoryName);
     await page.getByTestId('room-submit-button').click();
     await expect(
       page.locator('[data-testid="room-list-table"] tbody tr').filter({ hasText: roomNumber })
@@ -53,8 +51,7 @@ test.describe('Fluxo de reserva / check-in / check-out', () => {
     await page.getByRole('button', { name: guestName }).click();
     await expect(page.getByTestId('reservation-selected-guest')).toContainText(guestName);
 
-    await page.getByTestId('reservation-room-select').click({ force: true });
-    await page.getByRole('option', { name: roomNumber }).click();
+    await selectMatOption(page, 'reservation-room-select', roomNumber);
 
     const today = new Date();
     const tomorrow = new Date(today.getTime() + 24 * 60 * 60 * 1000);
