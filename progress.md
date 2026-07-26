@@ -1,6 +1,8 @@
 # Progresso do Projeto
 
 ## Última Atualização
+2026-07-26 — **F30 (E2E de UI - Hóspedes) implementada e `passing`** — primeira feature do grupo F30-F33. `@playwright/test@1.62.0` instalado no frontend; `playwright.config.ts` criado com `webServer` array subindo backend real (`mvnw.cmd spring-boot:run`) + Postgres real (docker-compose) e frontend real (`ng serve`) juntos (D-38). `frontend/e2e/guest-flow.e2e.spec.ts` cobre cadastro pela tela, busca por nome/documento/telefone e navegação para as listas de hóspedes no hotel/sem check-in. Verificado com `npx playwright test guest-flow`: 1 passed.
+
 2026-07-25 — **F37 (refatoração visual - Reserva/Check-in/Check-out) implementada e `passing`** — **grupo F34-F37 (redesign visual) completo**. `ReservationFormComponent` trocou os campos `datetime-local` por `MatDatepicker` + campo de hora separado (padrão 14h/12h, ajustável), fundidos de volta no mesmo formato de string que o backend espera (`combineDateAndTime()`, D-37) — payload HTTP inalterado. `CheckInComponent`/`CheckOutComponent` só reaproveitaram o layout (sem campos de data próprios). Confirmado com smoke test manual completo (ng serve + backend real): calendário abre corretamente, campo de hora editável.
 
 F34-F36 (redesign - Hóspedes/Categoria de Quarto/Quarto) e o grupo F26-F29 (E2E de API) foram concluídos nos passos anteriores.
@@ -15,13 +17,13 @@ As 24 funcionalidades originais (F01–F19, F21–F25) continuam `passing`; nenh
 Além disso, `feature_list.json` ganhou um novo status possível, `broken` (ver `DECISIONS.md` D-31): se ao rodar F26-F33 algum teste E2E provar que uma funcionalidade hoje `passing` na verdade não funciona (regressão só visível contra Postgres/HTTP/navegador reais), ela deve ser marcada `broken` em vez de continuar `passing` silenciosamente — fica registrada para conserto numa iteração futura. Nenhuma funcionalidade está `broken` no momento; isso só vai acontecer se/quando os E2E encontrarem algo.
 
 ## Objetivo Atual
-Nenhum item `active` no momento (WIP=0). Grupo F26-F29 (E2E de API) completo; grupo F34-F37 (redesign visual) completo. Só falta F30-F33 (E2E de UI).
+F31 (E2E de UI - Categoria de Quarto) marcado `active`. F30 completo; grupo F26-F29 (E2E de API) completo; grupo F34-F37 (redesign visual) completo. Restam F31-F33.
 
 ## Próximo Passo Recomendado
-1. Próxima da fila: qualquer uma de **F30-F33** (E2E de UI, Playwright) — todas as suas dependências de redesign visual (F34-F37) já estão `passing`, então podem ser feitas em qualquer ordem. Sugestão: seguir a mesma ordem de domínio (F30 Hóspedes → F31 Categoria de Quarto → F32 Quarto → F33 Reserva/Check-in/Check-out).
-2. A primeira feature desse grupo a rodar precisa instalar e configurar `@playwright/test` no frontend (ainda não está no `package.json`) — isso faz parte do escopo dela, não é infra prévia. Convenção de nomes (D-29): pasta `frontend/e2e/`, specs `<domínio>-flow.e2e.spec.ts`.
-3. Os smoke tests de F34-F37 usaram um script Playwright ad-hoc fora do projeto (scratchpad), só para verificação manual durante a implementação — não é a mesma coisa que a suíte `@playwright/test` versionada que F30-F33 precisam criar (testes de verdade, no repositório, rodando via `npx playwright test`).
-4. Rodar `./init.sh` antes de começar, para confirmar que o ambiente segue saudável (não exige Docker nem Playwright — só a verificação pontual de cada E2E de UI vai exigir o navegador headless do Playwright instalado).
+1. Continuar com **F31** (E2E de UI - Categoria de Quarto), depois F32 (Quarto) e F33 (Reserva/Check-in/Check-out) — infra do Playwright (`@playwright/test`, `playwright.config.ts`, D-38) já criada por F30 e reaproveitável por todas.
+2. Antes de rodar qualquer suíte Playwright, confirmar que o Docker Desktop está ativo e o container `gestao-hospedes-db` (docker-compose) está `healthy` — o `webServer` do backend em `playwright.config.ts` sobe via `spring-boot:run` normal (Postgres real na porta 5433), não Testcontainers. Se o Docker não estiver rodando, iniciar com `Start-Process 'C:\Program Files\Docker\Docker\Docker Desktop.exe'` e aguardar (~20-30s) antes de rodar `npx playwright test`.
+3. Cada spec deve gerar dados únicos por timestamp (`Date.now()`) para evitar colisão entre execuções, já que o Postgres do docker-compose persiste dados entre runs (ver D-38).
+4. Rodar `./init.sh` antes de cada feature nova, para confirmar que o ambiente segue saudável (não exige Docker nem Playwright — só a verificação pontual de cada E2E de UI vai exigir o navegador headless do Playwright instalado e o Docker rodando).
 
 ## Concluído
 - [x] Repositório Git inicializado (branch `main`)
@@ -61,11 +63,12 @@ Nenhum item `active` no momento (WIP=0). Grupo F26-F29 (E2E de API) completo; gr
 - [x] **F35 — Refatoração visual - Categoria de Quarto**: máscara de moeda nos 7 campos de preço + `mat-card`.
 - [x] **F36 — Refatoração visual - Quarto**: chip colorido de status + `mat-card`.
 - [x] **F37 — Refatoração visual - Reserva/Check-in/Check-out**: `MatDatepicker` + campo de hora. Grupo F34-F37 completo.
+- [x] **F30 — Testes E2E de UI - Hóspedes**: `@playwright/test` instalado; `playwright.config.ts` (D-38); `guest-flow.e2e.spec.ts`.
 
 Detalhes de cada feature (arquivos tocados, decisões, evidência) estão em `feature_list.json` (campo `evidence`) e nos commits correspondentes — não duplicados aqui para evitar desatualização.
 
 ## Em Andamento
-- (nenhum item ativo no momento — F37 passou para `passing`; próxima é qualquer uma de F30-F33)
+- **F31 (E2E de UI - Categoria de Quarto)** — active.
 
 ## Bloqueado / Pendente de Confirmação
 - Nenhum.

@@ -1,6 +1,6 @@
 {
   "source": "Desafio Full-Stack - TA 11.pdf",
-  "activeFeature": null,
+  "activeFeature": "F31",
   "rules": [
     "Uma funcionalidade ativa (status=active) por vez. One feature at a time.",
     "Ninguem marca um item como 'passing' manualmente -- so a evidencia (comando + resultado) permite a transicao.",
@@ -298,16 +298,16 @@
       "id": "F30",
       "name": "Testes E2E de UI - Hospedes",
       "description": "Teste E2E de navegador (Playwright) simulando o atendente: cadastrar hospede pela tela, buscar por nome/documento/telefone, e conferir as listas de hospedes no hotel e sem check-in -- frontend e backend reais rodando juntos, ja com a tela refeita em F34.",
-      "status": "not_started",
+      "status": "passing",
       "verification": "guest-flow.e2e.spec.ts passando via Playwright (npx playwright test guest-flow)",
-      "evidence": "",
+      "evidence": "npx playwright test guest-flow em 2026-07-26: 1 passed (1.1m), contra backend real (mvnw spring-boot:run) + Postgres real (docker-compose, ja rodando) + frontend real (ng serve), navegador Chromium via Playwright. @playwright/test@1.62.0 instalado como devDependency; playwright.config.ts criado com webServer array (backend via '.\\mvnw.cmd spring-boot:run' cwd=../backend, frontend via 'npm start'), baseURL http://localhost:4200, testDir './e2e'. Fluxo coberto: cadastro de hospede pela tela (dados unicos por timestamp para nao colidir entre execucoes, ja que o Postgres real persiste dados entre runs), atualizacao automatica da tabela de busca (refreshSignal) apos cadastro, busca filtrada por nome/documento/telefone isoladamente (cada uma reencontra o hospede criado), busca sem resultado (empty-state), e navegacao para /guests-in-hotel e /guests-without-check-in confirmando titulo e presenca de tabela ou empty-state. Apos o teste, confirmado via Get-NetTCPConnection que Playwright encerrou os processos das portas 8080/4200 (webServer nao deixou processos residuais). ./init.sh (backend H2 + frontend Karma) continua passando, sem exigir Playwright/Docker.",
       "dependencies": ["F13", "F18", "F19", "F34"]
     },
     {
       "id": "F31",
       "name": "Testes E2E de UI - Categoria de Quarto",
       "description": "Teste E2E de navegador (Playwright): cadastrar categoria de quarto pela tela e configurar o preco por dia da semana, conferindo que os valores salvos aparecem ao reabrir a tela -- ja com a tela refeita em F35.",
-      "status": "not_started",
+      "status": "active",
       "verification": "room-category-flow.e2e.spec.ts passando via Playwright (npx playwright test room-category-flow)",
       "evidence": "",
       "dependencies": ["F14", "F35"]
