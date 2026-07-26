@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideEnvironmentNgxMask } from 'ngx-mask';
 import { GuestSearchComponent } from './guest-search.component';
 import { Guest } from '../guest.model';
 
@@ -12,7 +13,7 @@ describe('GuestSearchComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [GuestSearchComponent],
-      providers: [provideHttpClient(), provideHttpClientTesting()]
+      providers: [provideHttpClient(), provideHttpClientTesting(), provideEnvironmentNgxMask()]
     }).compileComponents();
 
     fixture = TestBed.createComponent(GuestSearchComponent);

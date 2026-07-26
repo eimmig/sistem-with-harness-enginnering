@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
 import { GuestFormComponent } from '../guest-form/guest-form.component';
 import { GuestSearchComponent } from '../guest-search/guest-search.component';
 import { Guest } from '../guest.model';
@@ -6,7 +7,7 @@ import { Guest } from '../guest.model';
 @Component({
   selector: 'app-guests-page',
   standalone: true,
-  imports: [GuestFormComponent, GuestSearchComponent],
+  imports: [MatCardModule, GuestFormComponent, GuestSearchComponent],
   templateUrl: './guests-page.component.html',
   styleUrl: './guests-page.component.scss'
 })

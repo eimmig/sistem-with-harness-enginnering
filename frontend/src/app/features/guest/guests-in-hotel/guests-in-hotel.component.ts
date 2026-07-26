@@ -1,4 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { GuestService } from '../guest.service';
 import { Guest } from '../guest.model';
@@ -6,7 +7,7 @@ import { Guest } from '../guest.model';
 @Component({
   selector: 'app-guests-in-hotel',
   standalone: true,
-  imports: [MatTableModule],
+  imports: [MatCardModule, MatTableModule],
   templateUrl: './guests-in-hotel.component.html',
   styleUrl: './guests-in-hotel.component.scss'
 })

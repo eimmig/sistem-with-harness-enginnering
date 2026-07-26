@@ -3,13 +3,14 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { NgxMaskDirective } from 'ngx-mask';
 import { GuestService } from '../guest.service';
 import { Guest } from '../guest.model';
 
 @Component({
   selector: 'app-guest-form',
   standalone: true,
-  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule],
+  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, NgxMaskDirective],
   templateUrl: './guest-form.component.html',
   styleUrl: './guest-form.component.scss'
 })

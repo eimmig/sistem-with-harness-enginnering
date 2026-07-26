@@ -4,13 +4,21 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTableModule } from '@angular/material/table';
+import { NgxMaskDirective } from 'ngx-mask';
 import { GuestService } from '../guest.service';
 import { Guest } from '../guest.model';
 
 @Component({
   selector: 'app-guest-search',
   standalone: true,
-  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatButtonModule, MatTableModule],
+  imports: [
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatTableModule,
+    NgxMaskDirective
+  ],
   templateUrl: './guest-search.component.html',
   styleUrl: './guest-search.component.scss'
 })

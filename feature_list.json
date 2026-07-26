@@ -262,9 +262,9 @@
       "id": "F34",
       "name": "Refatoracao visual - Hospedes",
       "description": "Refazer as telas de hospedes (cadastro, busca, lista de hospedes no hotel, lista de hospedes sem check-in): layout mais conciso com Angular Material (menos poluicao visual, agrupamento claro de campos/acoes), mascara de CPF no campo documento e de telefone BR no campo telefone via ngx-mask. Primeira feature do grupo de redesign: tambem estabelece o tema/paleta Material e o layout comum (cabecalho, espacamento, tipografia) reaproveitado pelas demais telas -- mesmo padrao de infra-dentro-do-escopo de D-23/D-24.",
-      "status": "not_started",
+      "status": "passing",
       "verification": "guest-form.component.spec.ts + guest-search.component.spec.ts + guests-in-hotel.component.spec.ts + guests-without-checkin.component.spec.ts atualizados e passando (npm run test:ci); ng build sem erros; screenshot manual via ng serve confirmando novo layout e mascaras de CPF/telefone aplicadas",
-      "evidence": "",
+      "evidence": "npm run test:ci em 2026-07-25: 51/51 SUCCESS (Chrome Headless), incluindo os 13 specs do modulo Guest com os novos providers de ngx-mask. ng build sem erros. Instalado ngx-mask@19.0.7 (D-34 -- versao mais recente exige Angular 22, incompativel com o Angular 19 do projeto) + provideEnvironmentNgxMask() em app.config.ts. Layout compartilhado criado em styles.scss (.page-header, .section-card, .form-row, .form-field-compact, .data-table, .empty-state), reaproveitavel por F35-F37. GuestFormComponent/GuestSearchComponent ganharam mascara de CPF (000.000.000-00) e telefone BR ((00) 00000-0000); GuestsPageComponent/GuestsInHotelComponent/GuestsWithoutCheckinComponent passaram a usar mat-card. Smoke test manual via ng serve + Playwright ad-hoc (node scratchpad script, nao commitado): screenshot confirma layout em cards e os dois campos mascarados renderizando 123.456.789-00 e (11) 99999-8888 a partir dos digitos brutos digitados; valor do FormControl continua so digitos (dropSpecialCharacters=true), payload HTTP inalterado. ./init.sh completo (backend + frontend) tambem passando.",
       "dependencies": ["F13", "F18", "F19"]
     },
     {

@@ -1,27 +1,39 @@
 <form class="guest-form" [formGroup]="form" (ngSubmit)="submit()">
-  <mat-form-field appearance="outline">
-    <mat-label>Nome</mat-label>
-    <input matInput formControlName="name" data-testid="guest-name-input" />
-    @if (form.controls.name.invalid && form.controls.name.touched) {
-      <mat-error>Nome é obrigatório</mat-error>
-    }
-  </mat-form-field>
+  <div class="form-row">
+    <mat-form-field appearance="outline" class="form-field-compact">
+      <mat-label>Nome</mat-label>
+      <input matInput formControlName="name" data-testid="guest-name-input" />
+      @if (form.controls.name.invalid && form.controls.name.touched) {
+        <mat-error>Nome é obrigatório</mat-error>
+      }
+    </mat-form-field>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Documento</mat-label>
-    <input matInput formControlName="document" data-testid="guest-document-input" />
-    @if (form.controls.document.invalid && form.controls.document.touched) {
-      <mat-error>Documento é obrigatório</mat-error>
-    }
-  </mat-form-field>
+    <mat-form-field appearance="outline" class="form-field-compact">
+      <mat-label>Documento (CPF)</mat-label>
+      <input
+        matInput
+        formControlName="document"
+        mask="000.000.000-00"
+        data-testid="guest-document-input"
+      />
+      @if (form.controls.document.invalid && form.controls.document.touched) {
+        <mat-error>Documento é obrigatório</mat-error>
+      }
+    </mat-form-field>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Telefone</mat-label>
-    <input matInput formControlName="phone" data-testid="guest-phone-input" />
-    @if (form.controls.phone.invalid && form.controls.phone.touched) {
-      <mat-error>Telefone é obrigatório</mat-error>
-    }
-  </mat-form-field>
+    <mat-form-field appearance="outline" class="form-field-compact">
+      <mat-label>Telefone</mat-label>
+      <input
+        matInput
+        formControlName="phone"
+        mask="(00) 00000-0000"
+        data-testid="guest-phone-input"
+      />
+      @if (form.controls.phone.invalid && form.controls.phone.touched) {
+        <mat-error>Telefone é obrigatório</mat-error>
+      }
+    </mat-form-field>
+  </div>
 
   <button mat-raised-button color="primary" type="submit" data-testid="guest-submit-button">
     Cadastrar hóspede

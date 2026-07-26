@@ -1,11 +1,21 @@
-<h1>Hóspedes</h1>
+<header class="page-header">
+  <h1>Hóspedes</h1>
+</header>
 
-<section class="guests-page-section">
-  <h2>Cadastrar hóspede</h2>
-  <app-guest-form (guestCreated)="onGuestCreated($event)" />
-</section>
+<mat-card class="section-card">
+  <mat-card-header>
+    <mat-card-title>Cadastrar hóspede</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <app-guest-form (guestCreated)="onGuestCreated($event)" />
+  </mat-card-content>
+</mat-card>
 
-<section class="guests-page-section">
-  <h2>Buscar hóspedes</h2>
-  <app-guest-search [refreshSignal]="lastCreatedGuest" />
-</section>
+<mat-card class="section-card">
+  <mat-card-header>
+    <mat-card-title>Buscar hóspedes</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <app-guest-search [refreshSignal]="lastCreatedGuest" />
+  </mat-card-content>
+</mat-card>

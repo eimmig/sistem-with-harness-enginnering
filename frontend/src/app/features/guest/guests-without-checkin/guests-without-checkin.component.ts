@@ -1,4 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
+import { MatCardModule } from '@angular/material/card';
 import { MatTableModule } from '@angular/material/table';
 import { GuestService } from '../guest.service';
 import { Guest } from '../guest.model';
@@ -6,7 +7,7 @@ import { Guest } from '../guest.model';
 @Component({
   selector: 'app-guests-without-checkin',
   standalone: true,
-  imports: [MatTableModule],
+  imports: [MatCardModule, MatTableModule],
   templateUrl: './guests-without-checkin.component.html',
   styleUrl: './guests-without-checkin.component.scss'
 })
