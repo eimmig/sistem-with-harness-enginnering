@@ -1,7 +1,7 @@
 # Progresso do Projeto
 
 ## Última Atualização
-2026-07-25 — **F26 (E2E de API - Hóspedes) implementada e `passing`**. `GuestE2ETest` cobre cadastro, busca por nome/documento/telefone, listagem no hotel e listagem sem check-in, contra Postgres real via Testcontainers e HTTP real via `TestRestTemplate` (sem MockMvc/H2/mocks). Backend ganhou dependências de teste novas (Testcontainers, `spring-boot-resttestclient`) e uma exclusão no Surefire (D-32) para que `init.sh`/`./mvnw test` continuem sem depender de Docker — só a verificação pontual de cada feature E2E exige.
+2026-07-25 — **F27 (E2E de API - Categoria de Quarto) implementada e `passing`**. `RoomCategoryE2ETest` reaproveita a infra Testcontainers/`TestRestTemplate` de F26: cadastro, listagem, atualização de preço (7 dias) e as rejeições (semana incompleta, categoria inexistente). F26 (Hóspedes) já estava `passing` desde o passo anterior.
 
 Backlog de **F26-F37** adicionado na sessão anterior (`status: not_started`), em três grupos:
 - **F26-F29**: E2E de API por domínio (Testcontainers Postgres + TestRestTemplate, sem MockMvc/H2). Decisão em `DECISIONS.md` D-29.
@@ -13,10 +13,10 @@ As 24 funcionalidades originais (F01–F19, F21–F25) continuam `passing`; nenh
 Além disso, `feature_list.json` ganhou um novo status possível, `broken` (ver `DECISIONS.md` D-31): se ao rodar F26-F33 algum teste E2E provar que uma funcionalidade hoje `passing` na verdade não funciona (regressão só visível contra Postgres/HTTP/navegador reais), ela deve ser marcada `broken` em vez de continuar `passing` silenciosamente — fica registrada para conserto numa iteração futura. Nenhuma funcionalidade está `broken` no momento; isso só vai acontecer se/quando os E2E encontrarem algo.
 
 ## Objetivo Atual
-Nenhum item `active` no momento (WIP=0). F26 acabou de virar `passing`.
+Nenhum item `active` no momento (WIP=0). F26 e F27 acabaram de virar `passing`.
 
 ## Próximo Passo Recomendado
-1. Próxima da fila: **F27** (E2E de API - Categoria de Quarto), reaproveitando a infra Testcontainers/`TestRestTemplate` já criada em F26 (`RoomCategoryE2ETest` no mesmo pacote `e2e`). Depois F28 (Quarto) e F29 (Reserva/Check-in/Check-out) — todas independentes da UI, podem seguir em qualquer ordem.
+1. Próxima da fila: **F28** (E2E de API - Quarto), reaproveitando a infra Testcontainers/`TestRestTemplate` já criada em F26/F27 (`RoomE2ETest` no mesmo pacote `e2e`). Depois F29 (Reserva/Check-in/Check-out) — independentes da UI, podem seguir em qualquer ordem.
 2. Depois de F26-F29: refatoração visual (F34-F37) → E2E de UI daquele domínio (F30-F33).
 3. F34 (primeira do grupo de redesign) precisa instalar `ngx-mask` e definir o tema/layout comum reaproveitado por F35-F37.
 4. F30-F33 exigem instalar e configurar `@playwright/test` no frontend (ainda não está no `package.json`) — a primeira feature desse grupo a rodar deve incluir esse setup no seu próprio escopo.
@@ -53,11 +53,12 @@ Nenhum item `active` no momento (WIP=0). F26 acabou de virar `passing`.
 - [x] **F19 — Lista de hóspedes sem check-in**: `GuestsWithoutCheckinComponent` (rota `/guests-without-check-in`).
 - [x] **F23 — Repositório Git público**: `https://github.com/eimmig/sistem-with-harness-enginnering`, sincronizado até o commit de F19.
 - [x] **F26 — Testes E2E de API - Hóspedes**: `GuestE2ETest` (Testcontainers Postgres + `TestRestTemplate`, pacote `e2e`).
+- [x] **F27 — Testes E2E de API - Categoria de Quarto**: `RoomCategoryE2ETest`.
 
 Detalhes de cada feature (arquivos tocados, decisões, evidência) estão em `feature_list.json` (campo `evidence`) e nos commits correspondentes — não duplicados aqui para evitar desatualização.
 
 ## Em Andamento
-- (nenhum item ativo no momento — F26 passou para `passing`; próxima é F27)
+- (nenhum item ativo no momento — F27 passou para `passing`; próxima é F28)
 
 ## Bloqueado / Pendente de Confirmação
 - Nenhum.

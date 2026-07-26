@@ -235,9 +235,9 @@
       "id": "F27",
       "name": "Testes E2E de API - Categoria de Quarto",
       "description": "Testes end-to-end do dominio de categoria de quarto: cadastro de categoria, configuracao de preco por dia da semana e listagem, chamando RoomCategoryController via HTTP real contra Postgres real (Testcontainers).",
-      "status": "not_started",
+      "status": "passing",
       "verification": "RoomCategoryE2ETest passando (modulo Testcontainers Postgres, ./mvnw test -Dtest=RoomCategoryE2ETest)",
-      "evidence": "",
+      "evidence": "./mvnw test -Dtest=RoomCategoryE2ETest em 2026-07-25: Tests run: 5, Failures: 0, Errors: 0 (BUILD SUCCESS), contra Postgres real via Testcontainers, sem MockMvc/H2/mocks. Cobre cadastro, listagem, update de precos (7 dias, persistido e refletido em novo GET) e rejeicoes (semana incompleta -> 400, categoria inexistente -> 404). Rodado tambem junto de GuestE2ETest (-Dtest=*E2ETest): Tests run: 9, Failures: 0, Errors: 0. Suite completa ./mvnw test (sem Docker) continua em 64 testes. ./init.sh completo (backend + frontend) tambem passando.",
       "dependencies": ["F03", "F04"]
     },
     {
