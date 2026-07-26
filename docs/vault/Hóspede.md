@@ -16,7 +16,7 @@ Nome, documento, telefone (regra #12 em [[Visão Geral do Sistema]]).
 - Listar hóspedes com reserva mas sem check-in realizado (regra #11).
 
 ## Funcionalidades relacionadas
-[[Mapa de Funcionalidades]]: F01 (cadastro), F02 (busca), F10 (listagem no hotel), F11 (listagem sem check-in), F13 (tela cadastro/busca), F18/F19 (telas de listagem).
+[[Mapa de Funcionalidades]]: F01 (cadastro), F02 (busca), F10 (listagem no hotel), F11 (listagem sem check-in), F13 (tela cadastro/busca), F18/F19 (telas de listagem), F26 (E2E de API).
 
 ## Relações
 Um hóspede faz uma ou mais [[Reserva|reservas]]; cada reserva é o elo entre hóspede e [[Quarto]].
@@ -29,3 +29,4 @@ Um hóspede faz uma ou mais [[Reserva|reservas]]; cada reserva é o elo entre h�
 - **F13 (tela cadastro/busca) — implementada e `passing`.** `GuestFormComponent` + `GuestSearchComponent`, compostos em `GuestsPageComponent` (rota `/guests`), em `frontend/src/app/features/guest/`. Consomem `POST`/`GET /api/guests`. Infraestrutura de frontend criada nesta feature (proxy, HttpClient, animações — D-23 em [[Arquitetura]]).
 - **F18 (lista no hotel, frontend) — implementada e `passing`.** `GuestsInHotelComponent` (rota `/guests-in-hotel`) em `frontend/src/app/features/guest/guests-in-hotel/`, consome `GET /api/guests/in-hotel` (já existente desde F10) — nenhuma mudança de backend foi necessária.
 - **F19 (lista sem check-in, frontend) — implementada e `passing`.** `GuestsWithoutCheckinComponent` (rota `/guests-without-check-in`) em `frontend/src/app/features/guest/guests-without-checkin/`, consome `GET /api/guests/without-check-in` (já existente desde F11) — nenhuma mudança de backend foi necessária. Com esta feature, o módulo Hóspede está com todas as suas funcionalidades (F01, F02, F10, F11, F13, F18, F19) `passing`.
+- **F26 (E2E de API) — implementado e `passing`.** `GuestE2ETest` em `backend/src/test/java/.../e2e/`: `@SpringBootTest(webEnvironment=RANDOM_PORT)` + `@Testcontainers` com `PostgreSQLContainer` (`@ServiceConnection`) e `TestRestTemplate` (`@AutoConfigureTestRestTemplate`), sem MockMvc/H2/mocks. Cobre cadastro, busca por nome/documento/telefone, listagem no hotel (via fluxo real de reserva + check-in) e listagem sem check-in. Ver D-29 (escopo E2E) e D-32 (por que o pacote `e2e` é excluído do `./mvnw test` padrão) em [[Arquitetura]].

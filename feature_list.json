@@ -226,9 +226,9 @@
       "id": "F26",
       "name": "Testes E2E de API - Hospedes",
       "description": "Testes end-to-end do dominio de hospedes: sobem o Spring Boot real (RANDOM_PORT) contra um Postgres real via Testcontainers e chamam os endpoints de GuestController via HTTP de verdade (TestRestTemplate), sem MockMvc/H2 -- cadastro, busca por nome/documento/telefone, listagem de hospedes no hotel e listagem de hospedes sem check-in.",
-      "status": "not_started",
+      "status": "passing",
       "verification": "GuestE2ETest passando (modulo Testcontainers Postgres, ./mvnw test -Dtest=GuestE2ETest)",
-      "evidence": "",
+      "evidence": "./mvnw test -Dtest=GuestE2ETest em 2026-07-25: Tests run: 4, Failures: 0, Errors: 0 (BUILD SUCCESS), contra Postgres real via Testcontainers (postgres:16-alpine), sem MockMvc/H2/mocks. Suite completa ./mvnw test (sem Docker) tambem passando: Tests run: 64. pom.xml ganhou spring-boot-testcontainers, spring-boot-resttestclient, spring-boot-restclient, org.testcontainers:testcontainers/testcontainers-junit-jupiter/testcontainers-postgresql (D-32). maven-surefire-plugin exclui **/e2e/**/*E2ETest.java do run padrao para init.sh continuar sem exigir Docker (D-32); verificado que -Dtest=GuestE2ETest ainda roda a classe apesar do exclude. ./init.sh completo (backend + frontend) tambem passando.",
       "dependencies": ["F01", "F02", "F10", "F11"]
     },
     {
