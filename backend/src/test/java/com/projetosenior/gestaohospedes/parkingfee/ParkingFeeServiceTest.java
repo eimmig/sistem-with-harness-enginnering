@@ -58,9 +58,20 @@ class ParkingFeeServiceTest {
     }
 
     @Test
-    void rejectsCheckOutNotAfterCheckInDate() {
+    void chargesMinimumOneDayWhenCheckOutSameCalendarDayAsCheckIn() {
+        // Segunda 2026-08-03 14:00 -> Segunda 2026-08-03 18:00: mesmo dia, cobra a taxa minima de 1 dia.
         LocalDateTime checkIn = LocalDateTime.of(2026, 8, 3, 14, 0);
         LocalDateTime checkOut = LocalDateTime.of(2026, 8, 3, 18, 0);
+
+        BigDecimal total = parkingFeeService.calculate(true, checkIn, checkOut);
+
+        assertThat(total).isEqualByComparingTo(WEEKDAY_FEE);
+    }
+
+    @Test
+    void rejectsCheckOutNotAfterCheckIn() {
+        LocalDateTime checkIn = LocalDateTime.of(2026, 8, 3, 14, 0);
+        LocalDateTime checkOut = LocalDateTime.of(2026, 8, 3, 10, 0);
 
         assertThatThrownBy(() -> parkingFeeService.calculate(true, checkIn, checkOut))
                 .isInstanceOf(IllegalArgumentException.class);

@@ -1,6 +1,6 @@
 {
   "source": "Desafio Full-Stack - TA 11.pdf",
-  "activeFeature": "F33",
+  "activeFeature": null,
   "rules": [
     "Uma funcionalidade ativa (status=active) por vez. One feature at a time.",
     "Ninguem marca um item como 'passing' manualmente -- so a evidencia (comando + resultado) permite a transicao.",
@@ -102,7 +102,7 @@
       "description": "Realizar check-out de uma reserva; cobrar 50% de taxa extra se apos 12h; retornar detalhamento do total.",
       "status": "passing",
       "verification": "ReservationControllerTest#checkOutLate + #checkOutBreakdown passando",
-      "evidence": "./mvnw test -Dtest=ReservationControllerTest,ReservationRepositoryTest em 2026-07-25: Tests run: 17, Failures: 0, Errors: 0 (BUILD SUCCESS). ./init.sh completo (backend + frontend) tambem passando.",
+      "evidence": "./mvnw test -Dtest=ReservationControllerTest,ReservationRepositoryTest em 2026-07-25: Tests run: 17, Failures: 0, Errors: 0 (BUILD SUCCESS). ./init.sh completo (backend + frontend) tambem passando. || MARCADO 'broken' EM 2026-07-26: ao escrever reservation-flow.e2e.spec.ts (F33, E2E de UI real, sem mock de relogio), fazer check-in e check-out de uma mesma reserva em sequencia rapida (poucos minutos, mesmo dia real) causou HTTP 500 nao tratado em POST /api/reservations/{id}/check-out -- confirmado via trace do Playwright (resposta 500 'Internal Server Error' generica do Spring, sem handler customizado). Causa raiz: DailyRateService.calculate e ParkingFeeService.calculate exigiam 'pelo menos 1 dia de calendario' entre actualCheckIn e 'agora', lancando IllegalArgumentException nao capturada quando check-out acontece no mesmo dia do check-in (regra so testada anteriormente com Clock mockado espacando os dois em pelo menos 1 dia, D-19/D-29) -- esperado: 200 com detalhamento; observado: 500 sem corpo util. || CORRIGIDO E REVALIDADO EM 2026-07-26 (D-39): DailyRateService/ParkingFeeService passaram a cobrar a diaria/taxa minima de 1 dia (o dia do check-in) em vez de rejeitar quando check-out cai no mesmo dia calendario do check-in; so continuam rejeitando se check-out nao for cronologicamente depois do check-in. ./mvnw test -Dtest=DailyRateServiceTest,ParkingFeeServiceTest: Tests run: 12, Failures: 0 (2 testes novos: cobranca minima de 1 dia + rejeicao por timestamp invertido). Suite completa ./mvnw test (H2): Tests run: 66, Failures: 0 (era 64). ./mvnw test -Dtest=ReservationE2ETest (Testcontainers Postgres real): Tests run: 9, Failures: 0 (novo caso checkOut_sameCalendarDayAsCheckIn_chargesMinimumOneNightInsteadOfFailing, era 8). Voltou a 'passing'.",
       "dependencies": ["F06", "F07", "F08"]
     },
     {
@@ -325,9 +325,9 @@
       "id": "F33",
       "name": "Testes E2E de UI - Reserva / Check-in / Check-out",
       "description": "Teste E2E de navegador (Playwright) cobrindo o fluxo completo do atendente: criar reserva pela tela, fazer check-in (incluindo o aviso de confirmacao antes das 14h), e fazer check-out conferindo o detalhamento do total exibido antes de confirmar -- ja com as telas refeitas em F37.",
-      "status": "active",
+      "status": "passing",
       "verification": "reservation-flow.e2e.spec.ts passando via Playwright (npx playwright test reservation-flow)",
-      "evidence": "",
+      "evidence": "npx playwright test reservation-flow em 2026-07-26: 1 passed, rodado duas vezes seguidas para confirmar idempotencia (dados unicos por timestamp). Suite completa (npx playwright test, 4 specs F30-F33 juntos): 4 passed. Cobre: criacao de hospede+categoria com precos+quarto (pre-requisitos), criacao de reserva pela tela (busca de hospede, selecao de quarto, datas via MatDatepicker preenchidas com fill() em formato M/D/YYYY), check-in tratando os dois estados possiveis do aviso das 14h (o teste espera confirmButton.or(successMessage) ficar visivel e so clica em 'Confirmar' se necessario, ja que depende do horario real da maquina no momento da execucao -- nao da' para mockar o Clock do servidor num E2E de UI real), e check-out conferindo que o detalhamento (Diarias/Estacionamento/Taxa de atraso/Total) aparece na secao de resultados. Esta feature revelou um bug real (ver D-39 em DECISIONS.md): check-out no mesmo dia calendario do check-in causava HTTP 500 nao tratado; F09 foi marcado 'broken' e corrigido (DailyRateService/ParkingFeeService passam a cobrar a diaria/taxa minima de 1 dia em vez de rejeitar), revalidado e voltou a 'passing' antes deste teste passar. Com esta feature, o backlog completo de feature_list.json (F01-F19, F21-F37) esta 'passing'.",
       "dependencies": ["F15", "F16", "F17", "F37"]
     }
   ]

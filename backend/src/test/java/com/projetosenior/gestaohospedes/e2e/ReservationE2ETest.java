@@ -289,4 +289,34 @@ class ReservationE2ETest {
 
         assertThat(checkOut.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
     }
+
+    @Test
+    void checkOut_sameCalendarDayAsCheckIn_chargesMinimumOneNightInsteadOfFailing() {
+        // Regressao encontrada por F33 (E2E de UI): check-in e check-out no mesmo dia real
+        // (ex.: hospede sai poucas horas depois) causava 500 nao tratado antes da correcao,
+        // porque DailyRateService/ParkingFeeService exigiam pelo menos 1 dia de calendario entre
+        // os dois horarios. Agora cobra a diaria/taxa minima do dia do check-in.
+        GuestResponse guest = createGuest("Nicolas Alves E2E");
+        RoomResponse room = createRoomWithPrices("120.00", "150.00");
+        ReservationResponse reservation = createReservation(guest.id(), room.id(), true);
+        mutableClock().setNow(LocalDateTime.of(2026, 8, 3, 9, 0)); // Monday 9am, check-in
+        assertThat(restTemplate
+                        .postForEntity(
+                                "/api/reservations/" + reservation.id() + "/check-in",
+                                new CheckInRequest(true),
+                                ReservationResponse.class)
+                        .getStatusCode())
+                .isEqualTo(HttpStatus.OK);
+
+        mutableClock().setNow(LocalDateTime.of(2026, 8, 3, 11, 0)); // Monday 11am, ainda antes das 12h -> sem atraso
+        ResponseEntity<CheckOutResponse> checkOut = restTemplate.postForEntity(
+                "/api/reservations/" + reservation.id() + "/check-out", null, CheckOutResponse.class);
+
+        assertThat(checkOut.getStatusCode()).isEqualTo(HttpStatus.OK);
+        CheckOutResponse body = checkOut.getBody();
+        assertThat(body.dailyRateTotal()).isEqualByComparingTo("120.00");
+        assertThat(body.parkingFeeTotal()).isEqualByComparingTo("15.00");
+        assertThat(body.lateCheckOutFee()).isEqualByComparingTo("0");
+        assertThat(body.total()).isEqualByComparingTo("135.00");
+    }
 }

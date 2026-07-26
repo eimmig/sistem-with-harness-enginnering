@@ -42,7 +42,7 @@ Espelha `feature_list.json`. Uma funcionalidade ativa por vez (WIP=1); `status: 
 | F30 | Testes E2E de UI - Hóspedes | **passing** | [[Hóspede]] | F13, F18, F19, F34 |
 | F31 | Testes E2E de UI - Categoria de Quarto | **passing** | [[Categoria de Quarto]] | F14, F35 |
 | F32 | Testes E2E de UI - Quarto | **passing** | [[Quarto]] | F25, F36 |
-| F33 | Testes E2E de UI - Reserva/Check-in/Check-out | not_started | [[Reserva]], [[Check-in e Check-out]] | F15, F16, F17, F37 |
+| F33 | Testes E2E de UI - Reserva/Check-in/Check-out | **passing** | [[Reserva]], [[Check-in e Check-out]] | F15, F16, F17, F37 |
 
 ## Notas de risco
 F06 e F07 são as funcionalidades de maior risco (mais regras de negócio implícitas) — devem ganhar mais casos de teste do que as demais, cobrindo especialmente a transição entre dias com preços diferentes (sexta/sábado/domingo/segunda). Ver [[Diária]] e [[Taxa de Estacionamento]].
@@ -50,6 +50,6 @@ F06 e F07 são as funcionalidades de maior risco (mais regras de negócio implí
 Itens do frontend dependem dos endpoints correspondentes do backend já estarem `passing`.
 
 ## Status geral (2026-07-26)
-As 24 funcionalidades originais (F01-F19, F21-F25) estão `passing`. F23: repositório público em `https://github.com/eimmig/sistem-with-harness-enginnering`. Backlog expandido com F26-F37 (E2E de API/UI + redesign visual, ver D-29/D-30 em [[Arquitetura]]); F26-F29 (E2E de API) já `passing` — grupo completo. F34-F37 (redesign visual) também `passing` — grupo completo. F30/F31/F32 (E2E de UI - Hóspedes/Categoria de Quarto/Quarto) `passing` (ver D-38 em [[Arquitetura]]). Resta só F33 (E2E de UI, Playwright).
+**Backlog completo: todas as 37 funcionalidades (F01-F19, F21-F37) estão `passing`.** F23: repositório público em `https://github.com/eimmig/sistem-with-harness-enginnering`. F26-F29 (E2E de API), F34-F37 (redesign visual) e F30-F33 (E2E de UI, Playwright, D-38) — todos os três grupos completos. Durante F33, o E2E de UI real (sem mock de relógio) encontrou um bug genuíno em F09 (check-out no mesmo dia do check-in causava 500) — F09 foi marcado `broken`, corrigido e revalidado (D-39 em [[Arquitetura]]), permanecendo `passing`. Nenhuma outra funcionalidade está `broken`.
 
 Ver também: [[Visão Geral do Sistema]].

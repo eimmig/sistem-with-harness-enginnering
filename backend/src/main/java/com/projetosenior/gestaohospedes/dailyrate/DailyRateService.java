@@ -12,12 +12,15 @@ import org.springframework.stereotype.Service;
 public class DailyRateService {
 
     public BigDecimal calculate(RoomCategory roomCategory, LocalDateTime checkIn, LocalDateTime checkOut) {
+        if (!checkOut.isAfter(checkIn)) {
+            throw new IllegalArgumentException("Check-out must be after check-in");
+        }
+
         LocalDate checkInDate = checkIn.toLocalDate();
         LocalDate checkOutDate = checkOut.toLocalDate();
-        long nights = ChronoUnit.DAYS.between(checkInDate, checkOutDate);
-        if (nights < 1) {
-            throw new IllegalArgumentException("Check-out must be at least one day after check-in");
-        }
+        // Check-out no mesmo dia do check-in (ex.: day-use, ou check-in/check-out reais feitos em
+        // sequencia rapida) ainda cobra a diaria minima do dia do check-in, em vez de rejeitar.
+        long nights = Math.max(1, ChronoUnit.DAYS.between(checkInDate, checkOutDate));
 
         BigDecimal total = BigDecimal.ZERO;
         for (long i = 0; i < nights; i++) {

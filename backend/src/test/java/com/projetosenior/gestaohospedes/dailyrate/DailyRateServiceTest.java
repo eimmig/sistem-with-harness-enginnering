@@ -66,9 +66,21 @@ class DailyRateServiceTest {
     }
 
     @Test
-    void rejectsCheckOutNotAfterCheckInDate() {
+    void chargesMinimumOneNightWhenCheckOutSameCalendarDayAsCheckIn() {
+        // Segunda 2026-08-03 14:00 -> Segunda 2026-08-03 18:00: mesmo dia (ex.: day-use), cobra a
+        // diaria minima do dia do check-in em vez de rejeitar.
         LocalDateTime checkIn = LocalDateTime.of(2026, 8, 3, 14, 0);
         LocalDateTime checkOut = LocalDateTime.of(2026, 8, 3, 18, 0);
+
+        BigDecimal total = dailyRateService.calculate(categoryWithPrices(), checkIn, checkOut);
+
+        assertThat(total).isEqualByComparingTo(WEEKDAY_PRICE);
+    }
+
+    @Test
+    void rejectsCheckOutNotAfterCheckIn() {
+        LocalDateTime checkIn = LocalDateTime.of(2026, 8, 3, 14, 0);
+        LocalDateTime checkOut = LocalDateTime.of(2026, 8, 3, 10, 0);
 
         assertThatThrownBy(() -> dailyRateService.calculate(categoryWithPrices(), checkIn, checkOut))
                 .isInstanceOf(IllegalArgumentException.class);

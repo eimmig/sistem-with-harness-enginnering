@@ -19,3 +19,4 @@ Módulo de maior risco do backlog junto com [[Diária]] — mesma lógica de dia
 
 ## Status atual
 - **F07 (cálculo) — implementado e `passing`.** `ParkingFeeService` (pacote `parkingfee`, serviço puro, sem endpoint próprio ainda) em `backend/src/main/java/.../parkingfee/`. `calculate(parkingRequested, checkIn, checkOut)`: R$ 15,00/noite em dia útil (segunda-sexta), R$ 20,00/noite em fim de semana (sábado-domingo), zero se `parkingRequested=false`. A informação "hóspede tem carro e usa vaga" agora mora em `Reservation.parkingRequested` (D-20 em [[Arquitetura]]) — capturada na criação da reserva ([[Reserva]]), não no check-in.
+- **Ajuste (D-39, 2026-07-26)**: mesma correção de [[Diária]] — check-out no mesmo dia calendário do check-in cobra a taxa mínima de 1 dia em vez de rejeitar.

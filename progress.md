@@ -1,6 +1,8 @@
 # Progresso do Projeto
 
 ## Última Atualização
+2026-07-26 — **F33 (E2E de UI - Reserva/Check-in/Check-out) implementada e `passing`** — **última funcionalidade do backlog; `feature_list.json` está 100% `passing`.** `frontend/e2e/reservation-flow.e2e.spec.ts` cria hóspede+categoria com preços+quarto (pré-requisitos), cria reserva pela tela, faz check-in tratando os dois estados possíveis do aviso das 14h (depende do horário real da máquina, não dá pra mockar num E2E de UI real) e faz check-out conferindo o detalhamento completo. **Essa feature encontrou um bug real**: check-out no mesmo dia calendário do check-in causava HTTP 500 não tratado em produção (`DailyRateService`/`ParkingFeeService` exigiam ≥1 dia de calendário, sem essa checagem nunca ter sido exercitada contra o backend real fora de um `Clock` mockado). Com autorização do usuário, F09 foi marcado `broken`, corrigido (agora cobra a diária/taxa mínima de 1 dia em vez de rejeitar) e revalidado — ver `DECISIONS.md` D-39. Verificado: `./mvnw test` (H2, 66 testes), `./mvnw test -Dtest=ReservationE2ETest` (Postgres real, 9 testes), `npx playwright test` (suíte completa F30-F33, 4 passed), `./init.sh` completo.
+
 2026-07-26 — **F32 (E2E de UI - Quarto) implementada e `passing`**. `frontend/e2e/room-flow.e2e.spec.ts` cria uma categoria de quarto, cadastra um quarto vinculado a ela pela tela, confirma que nasce com status "Disponível" (D-17) e testa as 3 transições de status (Disponível→Sujo→Ocupado→Disponível) pelo `mat-select-trigger` da lista, verificando o chip colorido (F36). Verificado com `npx playwright test room-flow` rodado duas vezes seguidas: 1 passed em ambas.
 
 2026-07-26 — **F31 (E2E de UI - Categoria de Quarto) implementada e `passing`**. `frontend/e2e/room-category-flow.e2e.spec.ts` cobre cadastro de categoria, seleção no `mat-select`, configuração dos 7 preços por dia da semana (com vírgula decimal explícita na digitação) e confirmação de persistência ao recarregar a tela. Observações técnicas sobre interação com `mat-select`/máscara de moeda em testes automatizados registradas em addendum de D-38. Verificado com `npx playwright test room-category-flow` rodado duas vezes seguidas: 1 passed em ambas.
@@ -21,13 +23,13 @@ As 24 funcionalidades originais (F01–F19, F21–F25) continuam `passing`; nenh
 Além disso, `feature_list.json` ganhou um novo status possível, `broken` (ver `DECISIONS.md` D-31): se ao rodar F26-F33 algum teste E2E provar que uma funcionalidade hoje `passing` na verdade não funciona (regressão só visível contra Postgres/HTTP/navegador reais), ela deve ser marcada `broken` em vez de continuar `passing` silenciosamente — fica registrada para conserto numa iteração futura. Nenhuma funcionalidade está `broken` no momento; isso só vai acontecer se/quando os E2E encontrarem algo.
 
 ## Objetivo Atual
-F33 (E2E de UI - Reserva/Check-in/Check-out) marcado `active` — última funcionalidade do backlog. F30/F31/F32 completos; grupo F26-F29 (E2E de API) completo; grupo F34-F37 (redesign visual) completo.
+**Nenhum item `active` (WIP=0). Backlog completo: todas as 37 funcionalidades de `feature_list.json` (F01-F19, F21-F37) estão `passing`.** Nenhuma está `broken` no momento (F09 passou por `broken` durante F33, mas foi corrigida e revalidada — ver D-39).
 
 ## Próximo Passo Recomendado
-1. Implementar **F33** (E2E de UI - Reserva/Check-in/Check-out) — infra do Playwright (`@playwright/test`, `playwright.config.ts`, D-38) já criada por F30 e reaproveitável. Com F33 `passing`, todo o `feature_list.json` estará completo.
-2. Antes de rodar qualquer suíte Playwright, confirmar que o Docker Desktop está ativo e o container `gestao-hospedes-db` (docker-compose) está `healthy` — o `webServer` do backend em `playwright.config.ts` sobe via `spring-boot:run` normal (Postgres real na porta 5433), não Testcontainers. Se o Docker não estiver rodando, iniciar com `Start-Process 'C:\Program Files\Docker\Docker\Docker Desktop.exe'` e aguardar (~20-30s) antes de rodar `npx playwright test`.
-3. Cada spec deve gerar dados únicos por timestamp (`Date.now()`) para evitar colisão entre execuções, já que o Postgres do docker-compose persiste dados entre runs (ver D-38).
-4. Rodar `./init.sh` antes de cada feature nova, para confirmar que o ambiente segue saudável (não exige Docker nem Playwright — só a verificação pontual de cada E2E de UI vai exigir o navegador headless do Playwright instalado e o Docker rodando).
+Não há próximo passo dentro do escopo atual de `feature_list.json` — está 100% `passing`. Se o usuário trouxer trabalho novo:
+1. Rodar `./init.sh` primeiro para confirmar que o ambiente segue saudável.
+2. Qualquer nova funcionalidade deve ser adicionada a `feature_list.json` antes de ser implementada, seguindo o mesmo fluxo (uma por vez, verificação + evidência, decisão registrada em `DECISIONS.md` quando houver ambiguidade, vault atualizado, commit imediato).
+3. Antes de rodar qualquer suíte Playwright (`frontend/e2e/`), confirmar que o Docker Desktop está ativo e o container `gestao-hospedes-db` (docker-compose) está `healthy` — o `webServer` do backend em `playwright.config.ts` sobe via `spring-boot:run` normal (Postgres real na porta 5433), não Testcontainers.
 
 ## Concluído
 - [x] Repositório Git inicializado (branch `main`)
@@ -70,11 +72,12 @@ F33 (E2E de UI - Reserva/Check-in/Check-out) marcado `active` — última funcio
 - [x] **F30 — Testes E2E de UI - Hóspedes**: `@playwright/test` instalado; `playwright.config.ts` (D-38); `guest-flow.e2e.spec.ts`.
 - [x] **F31 — Testes E2E de UI - Categoria de Quarto**: `room-category-flow.e2e.spec.ts`.
 - [x] **F32 — Testes E2E de UI - Quarto**: `room-flow.e2e.spec.ts`.
+- [x] **F33 — Testes E2E de UI - Reserva/Check-in/Check-out**: `reservation-flow.e2e.spec.ts`. Grupo F30-F33 completo — **backlog 100% `passing`**. Encontrou e corrigiu bug real em F09 (D-39).
 
 Detalhes de cada feature (arquivos tocados, decisões, evidência) estão em `feature_list.json` (campo `evidence`) e nos commits correspondentes — não duplicados aqui para evitar desatualização.
 
 ## Em Andamento
-- **F33 (E2E de UI - Reserva/Check-in/Check-out)** — active.
+- Nenhum item ativo. Backlog completo.
 
 ## Bloqueado / Pendente de Confirmação
 - Nenhum.
