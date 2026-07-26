@@ -33,7 +33,7 @@ Espelha `feature_list.json`. Uma funcionalidade ativa por vez (WIP=1); `status: 
 | F23 | Repositório Git público | **passing** | — | — |
 | F26 | Testes E2E de API - Hóspedes | **passing** | [[Hóspede]] | F01, F02, F10, F11 |
 | F27 | Testes E2E de API - Categoria de Quarto | **passing** | [[Categoria de Quarto]] | F03, F04 |
-| F28 | Testes E2E de API - Quarto | not_started | [[Quarto]] | F24 |
+| F28 | Testes E2E de API - Quarto | **passing** | [[Quarto]] | F24 |
 | F29 | Testes E2E de API - Reserva/Check-in/Check-out | not_started | [[Reserva]], [[Check-in e Check-out]] | F05, F06, F07, F08, F09 |
 | F34 | Refatoração visual - Hóspedes | not_started | [[Hóspede]] | F13, F18, F19 |
 | F35 | Refatoração visual - Categoria de Quarto | not_started | [[Categoria de Quarto]] | F14, F34 |
@@ -50,6 +50,6 @@ F06 e F07 são as funcionalidades de maior risco (mais regras de negócio implí
 Itens do frontend dependem dos endpoints correspondentes do backend já estarem `passing`.
 
 ## Status geral (2026-07-25)
-As 24 funcionalidades originais (F01-F19, F21-F25) estão `passing`. F23: repositório público em `https://github.com/eimmig/sistem-with-harness-enginnering`. Backlog expandido com F26-F37 (E2E de API/UI + redesign visual, ver D-29/D-30 em [[Arquitetura]]); F26 e F27 já `passing`, demais `not_started`.
+As 24 funcionalidades originais (F01-F19, F21-F25) estão `passing`. F23: repositório público em `https://github.com/eimmig/sistem-with-harness-enginnering`. Backlog expandido com F26-F37 (E2E de API/UI + redesign visual, ver D-29/D-30 em [[Arquitetura]]); F26, F27 e F28 já `passing`, demais `not_started`.
 
 Ver também: [[Visão Geral do Sistema]].

@@ -244,9 +244,9 @@
       "id": "F28",
       "name": "Testes E2E de API - Quarto",
       "description": "Testes end-to-end do dominio de quarto: cadastro, alteracao de status (DISPONIVEL/SUJO/OCUPADO) e listagem, chamando RoomController via HTTP real contra Postgres real (Testcontainers).",
-      "status": "not_started",
+      "status": "passing",
       "verification": "RoomE2ETest passando (modulo Testcontainers Postgres, ./mvnw test -Dtest=RoomE2ETest)",
-      "evidence": "",
+      "evidence": "./mvnw test -Dtest=RoomE2ETest em 2026-07-25: Tests run: 5, Failures: 0, Errors: 0 (BUILD SUCCESS), contra Postgres real via Testcontainers, sem MockMvc/H2/mocks. Cobre cadastro (nasce AVAILABLE, 404 se categoria nao existir), listagem, alteracao de status (persistida e refletida em novo GET) e 404 para quarto inexistente. Rodado tambem junto dos demais E2E (-Dtest=*E2ETest): Tests run: 14, Failures: 0, Errors: 0. Suite completa ./mvnw test (sem Docker) continua em 64 testes. ./init.sh completo (backend + frontend) tambem passando.",
       "dependencies": ["F24"]
     },
     {
