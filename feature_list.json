@@ -4,12 +4,15 @@
   "rules": [
     "Uma funcionalidade ativa (status=active) por vez. One feature at a time.",
     "Ninguem marca um item como 'passing' manualmente -- so a evidencia (comando + resultado) permite a transicao.",
-    "status possiveis: not_started | active | blocked | passing"
+    "status possiveis: not_started | active | blocked | passing | broken",
+    "'broken': usado quando uma funcionalidade que estava 'passing' e comprovada como nao funcional por um teste E2E (tipicamente F26-F33, que rodam contra Postgres/HTTP/navegador reais, sem MockMvc/H2/mock) -- sinal de que a verificacao anterior, mais leve, nao pegou um defeito real. A transicao para 'broken' segue a mesma exigencia de evidencia da transicao para 'passing': o campo 'evidence' deve citar qual teste E2E encontrou o problema e o que exatamente falhou (esperado vs. observado), sem apagar a evidencia antiga (append, nao substituicao). Uma funcionalidade 'broken' nao trava o restante do trabalho de E2E em andamento; fica registrada para ser corrigida numa iteracao futura -- volta a 'active' quando alguem assumir o conserto, e so retorna a 'passing' com nova evidencia. Enquanto 'broken', nenhuma outra funcionalidade nova deve declara-la como dependencia satisfeita (equivale a nao 'passing' para efeito da regra de dependencias do CLAUDE.md)."
   ],
   "notes": [
     "F06 e F07 sao as funcionalidades de maior risco (mais regras de negocio implicitas) -- devem ganhar mais casos de teste do que as demais, cobrindo especialmente a transicao entre dias com precos diferentes (sexta/sabado/domingo/segunda).",
     "Itens do frontend dependem dos endpoints correspondentes do backend ja estarem 'passing'.",
-    "Identificadores de codigo (classes, variaveis, constantes, mensagens de erro, nomes de arquivo) devem ser em ingles (ver DECISIONS.md D-13) -- por isso o campo 'verification' ja usa nomes de classe/arquivo em ingles (ex.: GuestControllerTest, room-form.component.spec.ts). Os campos 'name' e 'description' de cada feature continuam em portugues (sao documentacao do backlog, nao codigo). Glossario de traducao do dominio em DECISIONS.md D-13."
+    "Identificadores de codigo (classes, variaveis, constantes, mensagens de erro, nomes de arquivo) devem ser em ingles (ver DECISIONS.md D-13) -- por isso o campo 'verification' ja usa nomes de classe/arquivo em ingles (ex.: GuestControllerTest, room-form.component.spec.ts). Os campos 'name' e 'description' de cada feature continuam em portugues (sao documentacao do backlog, nao codigo). Glossario de traducao do dominio em DECISIONS.md D-13.",
+    "F26-F33 sao a evolucao dos testes de integracao mencionada como pendencia em DECISIONS.md D-08: testes E2E de verdade, sem MockMvc/H2 nem servicos mockados. F26-F29 sao E2E de API por dominio de controller (Testcontainers Postgres + TestRestTemplate contra o Spring Boot real em RANDOM_PORT); F30-F33 sao E2E de UI pelo mesmo agrupamento de dominio (Playwright dirigindo o navegador contra frontend+backend reais rodando juntos). Ferramentas e escopo registrados em DECISIONS.md D-29.",
+    "F34-F37 sao a refatoracao visual do frontend (layout conciso, mascaras de CPF/telefone/moeda, date-picker Material no lugar de datetime-local), pelo mesmo agrupamento de dominio de F26-F33. Precisam rodar ANTES das E2E de UI correspondentes -- F30-F33 ganharam F34-F37 como dependencia adicional, para que os testes E2E sejam escritos contra a tela final, nao contra a tela atual que vai mudar. Escopo e ferramentas (ngx-mask, MatDatepicker) registrados em DECISIONS.md D-30."
   ],
   "features": [
     {
@@ -218,6 +221,114 @@
       "verification": "Link acessivel sem autenticacao",
       "evidence": "Repositorio publico ja existia em https://github.com/eimmig/sistem-with-harness-enginnering (confirmado com 'git ls-remote --heads origin' em 2026-07-25, acessivel sem credenciais). Estava 13 commits atrasado (parado em F06); sincronizado com 'git push origin main' em 2026-07-25 -- origin/main agora aponta para 1a64630 (F19), igual ao HEAD local.",
       "dependencies": []
+    },
+    {
+      "id": "F26",
+      "name": "Testes E2E de API - Hospedes",
+      "description": "Testes end-to-end do dominio de hospedes: sobem o Spring Boot real (RANDOM_PORT) contra um Postgres real via Testcontainers e chamam os endpoints de GuestController via HTTP de verdade (TestRestTemplate), sem MockMvc/H2 -- cadastro, busca por nome/documento/telefone, listagem de hospedes no hotel e listagem de hospedes sem check-in.",
+      "status": "not_started",
+      "verification": "GuestE2ETest passando (modulo Testcontainers Postgres, ./mvnw test -Dtest=GuestE2ETest)",
+      "evidence": "",
+      "dependencies": ["F01", "F02", "F10", "F11"]
+    },
+    {
+      "id": "F27",
+      "name": "Testes E2E de API - Categoria de Quarto",
+      "description": "Testes end-to-end do dominio de categoria de quarto: cadastro de categoria, configuracao de preco por dia da semana e listagem, chamando RoomCategoryController via HTTP real contra Postgres real (Testcontainers).",
+      "status": "not_started",
+      "verification": "RoomCategoryE2ETest passando (modulo Testcontainers Postgres, ./mvnw test -Dtest=RoomCategoryE2ETest)",
+      "evidence": "",
+      "dependencies": ["F03", "F04"]
+    },
+    {
+      "id": "F28",
+      "name": "Testes E2E de API - Quarto",
+      "description": "Testes end-to-end do dominio de quarto: cadastro, alteracao de status (DISPONIVEL/SUJO/OCUPADO) e listagem, chamando RoomController via HTTP real contra Postgres real (Testcontainers).",
+      "status": "not_started",
+      "verification": "RoomE2ETest passando (modulo Testcontainers Postgres, ./mvnw test -Dtest=RoomE2ETest)",
+      "evidence": "",
+      "dependencies": ["F24"]
+    },
+    {
+      "id": "F29",
+      "name": "Testes E2E de API - Reserva / Check-in / Check-out",
+      "description": "Testes end-to-end do ciclo completo de reserva: criacao de reserva, check-in (antes e depois das 14h, quarto indisponivel), check-out (no prazo e com atraso, com detalhamento do total), validando calculo de diaria e taxa de estacionamento ponta a ponta contra ReservationController via HTTP real e Postgres real (Testcontainers).",
+      "status": "not_started",
+      "verification": "ReservationE2ETest passando (modulo Testcontainers Postgres, ./mvnw test -Dtest=ReservationE2ETest)",
+      "evidence": "",
+      "dependencies": ["F05", "F06", "F07", "F08", "F09"]
+    },
+    {
+      "id": "F34",
+      "name": "Refatoracao visual - Hospedes",
+      "description": "Refazer as telas de hospedes (cadastro, busca, lista de hospedes no hotel, lista de hospedes sem check-in): layout mais conciso com Angular Material (menos poluicao visual, agrupamento claro de campos/acoes), mascara de CPF no campo documento e de telefone BR no campo telefone via ngx-mask. Primeira feature do grupo de redesign: tambem estabelece o tema/paleta Material e o layout comum (cabecalho, espacamento, tipografia) reaproveitado pelas demais telas -- mesmo padrao de infra-dentro-do-escopo de D-23/D-24.",
+      "status": "not_started",
+      "verification": "guest-form.component.spec.ts + guest-search.component.spec.ts + guests-in-hotel.component.spec.ts + guests-without-checkin.component.spec.ts atualizados e passando (npm run test:ci); ng build sem erros; screenshot manual via ng serve confirmando novo layout e mascaras de CPF/telefone aplicadas",
+      "evidence": "",
+      "dependencies": ["F13", "F18", "F19"]
+    },
+    {
+      "id": "F35",
+      "name": "Refatoracao visual - Categoria de Quarto",
+      "description": "Refazer as telas de categoria de quarto (cadastro, configuracao de preco por dia da semana): layout conciso reaproveitando o tema/estrutura comum criados em F34, mascara de moeda (R$) nos 7 campos de preco por dia da semana via ngx-mask.",
+      "status": "not_started",
+      "verification": "room-category-price.component.spec.ts (+ form) atualizados e passando (npm run test:ci); ng build sem erros; screenshot manual confirmando mascara de moeda nos precos",
+      "evidence": "",
+      "dependencies": ["F14", "F34"]
+    },
+    {
+      "id": "F36",
+      "name": "Refatoracao visual - Quarto",
+      "description": "Refazer as telas de quarto (cadastro, lista com alteracao de status): layout conciso reaproveitando o tema/estrutura comum criados em F34, revisao da tabela de status (DISPONIVEL/SUJO/OCUPADO) para leitura mais rapida (ex.: chip colorido em vez de texto simples).",
+      "status": "not_started",
+      "verification": "room-form.component.spec.ts atualizado e passando (npm run test:ci); ng build sem erros; screenshot manual confirmando novo layout",
+      "evidence": "",
+      "dependencies": ["F25", "F34"]
+    },
+    {
+      "id": "F37",
+      "name": "Refatoracao visual - Reserva / Check-in / Check-out",
+      "description": "Refazer as telas de reserva, check-in e check-out: layout conciso reaproveitando o tema/estrutura comum criados em F34; troca dos campos de data (hoje 'input type=datetime-local', ver DECISIONS.md D-26) por MatDatepicker (data) combinado com um campo de hora com valor padrao 14h/12h (entrada/saida) que o atendente pode ajustar -- ver DECISIONS.md D-30.",
+      "status": "not_started",
+      "verification": "reservation-form.component.spec.ts + check-in.component.spec.ts + check-out.component.spec.ts atualizados e passando (npm run test:ci); ng build sem erros; screenshot manual confirmando date-picker Material substituindo o input nativo",
+      "evidence": "",
+      "dependencies": ["F15", "F16", "F17", "F34"]
+    },
+    {
+      "id": "F30",
+      "name": "Testes E2E de UI - Hospedes",
+      "description": "Teste E2E de navegador (Playwright) simulando o atendente: cadastrar hospede pela tela, buscar por nome/documento/telefone, e conferir as listas de hospedes no hotel e sem check-in -- frontend e backend reais rodando juntos, ja com a tela refeita em F34.",
+      "status": "not_started",
+      "verification": "guest-flow.e2e.spec.ts passando via Playwright (npx playwright test guest-flow)",
+      "evidence": "",
+      "dependencies": ["F13", "F18", "F19", "F34"]
+    },
+    {
+      "id": "F31",
+      "name": "Testes E2E de UI - Categoria de Quarto",
+      "description": "Teste E2E de navegador (Playwright): cadastrar categoria de quarto pela tela e configurar o preco por dia da semana, conferindo que os valores salvos aparecem ao reabrir a tela -- ja com a tela refeita em F35.",
+      "status": "not_started",
+      "verification": "room-category-flow.e2e.spec.ts passando via Playwright (npx playwright test room-category-flow)",
+      "evidence": "",
+      "dependencies": ["F14", "F35"]
+    },
+    {
+      "id": "F32",
+      "name": "Testes E2E de UI - Quarto",
+      "description": "Teste E2E de navegador (Playwright): cadastrar quarto pela tela, vinculado a uma categoria, e alterar seu status (DISPONIVEL/SUJO/OCUPADO) pela lista de gestao de quartos -- ja com a tela refeita em F36.",
+      "status": "not_started",
+      "verification": "room-flow.e2e.spec.ts passando via Playwright (npx playwright test room-flow)",
+      "evidence": "",
+      "dependencies": ["F25", "F36"]
+    },
+    {
+      "id": "F33",
+      "name": "Testes E2E de UI - Reserva / Check-in / Check-out",
+      "description": "Teste E2E de navegador (Playwright) cobrindo o fluxo completo do atendente: criar reserva pela tela, fazer check-in (incluindo o aviso de confirmacao antes das 14h), e fazer check-out conferindo o detalhamento do total exibido antes de confirmar -- ja com as telas refeitas em F37.",
+      "status": "not_started",
+      "verification": "reservation-flow.e2e.spec.ts passando via Playwright (npx playwright test reservation-flow)",
+      "evidence": "",
+      "dependencies": ["F15", "F16", "F17", "F37"]
     }
   ]
 }

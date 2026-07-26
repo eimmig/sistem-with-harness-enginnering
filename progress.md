@@ -1,16 +1,24 @@
 # Progresso do Projeto
 
 ## Última Atualização
-2026-07-25 — **F23 (repositório Git público) marcado `passing`.** O repositório já existia em `https://github.com/eimmig/sistem-with-harness-enginnering` (público, confirmado via `git ls-remote`), mas estava 13 commits atrasado (parado em F06). Sincronizado com `git push origin main` — `origin/main` agora aponta para o mesmo commit do HEAD local (F19). **Com isso, todas as 24 funcionalidades de `feature_list.json` estão `passing`. O projeto está completo.**
+2026-07-25 — **F26-F37 adicionadas ao backlog** (`status: not_started`), em três grupos:
+- **F26-F29**: E2E de API por domínio (Testcontainers Postgres + TestRestTemplate, sem MockMvc/H2). Decisão em `DECISIONS.md` D-29.
+- **F34-F37**: refatoração visual do frontend por domínio (layout conciso, máscara de CPF/telefone/moeda via ngx-mask, `MatDatepicker` no lugar de `datetime-local`). Decisão em `DECISIONS.md` D-30.
+- **F30-F33**: E2E de UI por domínio (Playwright). Passaram a depender também da refatoração visual do mesmo domínio (F34→F30, F35→F31, F36→F32, F37→F33), porque devem ser escritos contra a tela final, não contra a tela atual.
+
+As 24 funcionalidades originais (F01–F19, F21–F25) continuam `passing`; nenhuma delas foi tocada.
+
+Além disso, `feature_list.json` ganhou um novo status possível, `broken` (ver `DECISIONS.md` D-31): se ao rodar F26-F33 algum teste E2E provar que uma funcionalidade hoje `passing` na verdade não funciona (regressão só visível contra Postgres/HTTP/navegador reais), ela deve ser marcada `broken` em vez de continuar `passing` silenciosamente — fica registrada para conserto numa iteração futura. Nenhuma funcionalidade está `broken` no momento; isso só vai acontecer se/quando os E2E encontrarem algo.
 
 ## Objetivo Atual
-Nenhum. Todo o backlog (F01–F19, F21–F25) está implementado, testado e publicado no repositório público.
+Nenhum item `active` no momento (WIP=0).
 
 ## Próximo Passo Recomendado
-Nenhuma funcionalidade pendente. Se for retomar o projeto:
-1. Rodar `./init.sh` para confirmar que o ambiente segue saudável.
-2. Revisar o `README.md` uma última vez antes de qualquer envio/entrega, para garantir que as instruções de setup continuam precisas.
-3. Qualquer novo trabalho a partir daqui é além do escopo original do desafio (`feature_list.json`) — checar com o usuário antes de iniciar algo novo.
+1. Escolher uma feature para marcar `active` (uma por vez, WIP=1). Ordem sugerida por domínio: refatoração visual (F34-F37) → E2E de UI daquele domínio (F30-F33). F26-F29 (E2E de API) são independentes da UI e podem ser feitas em paralelo com qualquer uma das outras, em qualquer ordem.
+2. F26-F29 exigem adicionar `testcontainers` + `testcontainers-junit-jupiter` + `testcontainers-postgresql` como dependências de teste do backend (ainda não estão no `pom.xml`).
+3. F34 (primeira do grupo de redesign) precisa instalar `ngx-mask` e definir o tema/layout comum reaproveitado por F35-F37.
+4. F30-F33 exigem instalar e configurar `@playwright/test` no frontend (ainda não está no `package.json`) — a primeira feature desse grupo a rodar deve incluir esse setup no seu próprio escopo.
+5. Rodar `./init.sh` antes de começar, para confirmar que o ambiente segue saudável.
 
 ## Concluído
 - [x] Repositório Git inicializado (branch `main`)
