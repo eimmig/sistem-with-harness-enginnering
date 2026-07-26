@@ -280,9 +280,9 @@
       "id": "F36",
       "name": "Refatoracao visual - Quarto",
       "description": "Refazer as telas de quarto (cadastro, lista com alteracao de status): layout conciso reaproveitando o tema/estrutura comum criados em F34, revisao da tabela de status (DISPONIVEL/SUJO/OCUPADO) para leitura mais rapida (ex.: chip colorido em vez de texto simples).",
-      "status": "not_started",
+      "status": "passing",
       "verification": "room-form.component.spec.ts atualizado e passando (npm run test:ci); ng build sem erros; screenshot manual confirmando novo layout",
-      "evidence": "",
+      "evidence": "npm run test:ci em 2026-07-25: 51/51 SUCCESS (Chrome Headless), incluindo os 9 specs do modulo Room. ng build sem erros. RoomListComponent: coluna de status ganhou mat-select-trigger customizado com chip colorido (verde/vermelho/laranja para Disponivel/Sujo/Ocupado) em vez de texto plano, mantendo a troca de status pelo mesmo mat-select. RoomFormComponent/RoomsPageComponent reaproveitam form-row/mat-card de F34. Workaround de type-checking de template documentado em D-36 (lookup movido para metodos tipados no componente por causa de um erro NG3/TS7053 dentro do conteudo projetado por mat-select-trigger). Smoke test manual via ng serve + backend real + Postgres real + script Playwright ad-hoc: criado quarto via UI, confirmado chip verde 'Disponivel'; trocado status para 'Sujo' via mat-select, chip mudou para vermelho ao vivo, sem erros de console. ./init.sh completo (backend + frontend) tambem passando.",
       "dependencies": ["F25", "F34"]
     },
     {

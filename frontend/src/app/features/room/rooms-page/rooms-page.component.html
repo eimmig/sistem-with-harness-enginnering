@@ -1,11 +1,21 @@
-<h1>Quartos</h1>
+<header class="page-header">
+  <h1>Quartos</h1>
+</header>
 
-<section class="rooms-page-section">
-  <h2>Cadastrar quarto</h2>
-  <app-room-form (roomCreated)="onRoomCreated($event)" />
-</section>
+<mat-card class="section-card">
+  <mat-card-header>
+    <mat-card-title>Cadastrar quarto</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <app-room-form (roomCreated)="onRoomCreated($event)" />
+  </mat-card-content>
+</mat-card>
 
-<section class="rooms-page-section">
-  <h2>Quartos cadastrados</h2>
-  <app-room-list [refreshSignal]="lastCreatedRoom" />
-</section>
+<mat-card class="section-card">
+  <mat-card-header>
+    <mat-card-title>Quartos cadastrados</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <app-room-list [refreshSignal]="lastCreatedRoom" />
+  </mat-card-content>
+</mat-card>

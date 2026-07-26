@@ -1,3 +1,23 @@
-table {
-  width: 100%;
+.status-chip {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+.status-chip-available {
+  background: #e6f4ea;
+  color: #1e7e34;
+}
+
+.status-chip-dirty {
+  background: #fdecea;
+  color: #b71c1c;
+}
+
+.status-chip-occupied {
+  background: #fff4e5;
+  color: #8a4300;
 }

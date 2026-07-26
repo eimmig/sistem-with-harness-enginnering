@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges, inject } from '@angular/core';
+import { NgClass } from '@angular/common';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { RoomService } from '../room.service';
@@ -7,7 +8,7 @@ import { ROOM_STATUSES, ROOM_STATUS_LABELS, Room, RoomStatus } from '../room.mod
 @Component({
   selector: 'app-room-list',
   standalone: true,
-  imports: [MatTableModule, MatSelectModule],
+  imports: [MatTableModule, MatSelectModule, NgClass],
   templateUrl: './room-list.component.html',
   styleUrl: './room-list.component.scss'
 })
@@ -42,5 +43,13 @@ export class RoomListComponent implements OnInit, OnChanges {
     this.roomService.updateStatus(room.id, status).subscribe((updated) => {
       room.status = updated.status;
     });
+  }
+
+  statusLabel(status: RoomStatus): string {
+    return this.statusLabels[status];
+  }
+
+  statusClass(status: RoomStatus): string {
+    return status.toLowerCase();
   }
 }
